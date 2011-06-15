@@ -1,0 +1,13 @@
+Sequtus is my first RTS and designed to help me learn how to make an RTS
+engine for any future games.
+
+Sequtus is set in space and is a 2D RTS including construction, resource
+gathering and tactical gameplay.
+
+Dependancies:
+    Python 2.6.1
+    PyGame
+
+Run as:
+    python main.py
+
