@@ -9,18 +9,44 @@ class Screen (object):
         
         self.sprites = pygame.sprite.RenderUpdates()
         self.name = ""
+        self.engine = None
         
         self.buttons = []
         
-        self.scrollx, self.scrolly = 0, 0
         self.mouse_is_down = False
         self.keys_down = {}
         self.mouse = [0,0]
         
         self.engine = None
+        self.background_image = None
     
     def add_button(self, b):
         self.buttons.append(b)
+    
+    def update(self):
+        """
+        This is called every execution loop to allow the game to do 'stuff'
+        """
+        raise Exception("{0}.game_logic() is not implemented".format(self.__class__))
+    
+    # Drawing
+    def redraw(self):
+        """Called every main loop cycle"""
+        self.sprites.update(pygame.time.get_ticks())
+        rectlist = self.sprites.draw(self.display)
+        self.sprites.update(pygame.time.get_ticks())
+        rectlist = self.sprites.draw(self.display)
+        
+        pygame.display.update(rectlist)
+        self.sprites.clear(self.display, self.background)
+    
+    def update_window(self):
+        """Used when we've changed screen or want to simply redraw everything"""
+        self.background = self.background_image.copy()
+        self.display.blit(self.background, pygame.Rect(0, 0, self.engine.window_width, self.engine.window_height))
+        
+        pygame.display.flip()
+        self.redraw()
     
     
     # Event handlers
@@ -41,10 +67,18 @@ class Screen (object):
         pass
     
     def _handle_keyup(self, event):
-        del(self.keys_down[event.key])
+        if event.key in self.keys_down:
+            del(self.keys_down[event.key])
         self.handle_keyup(event)
     
     def handle_keyup(self, event):
+        pass
+    
+    def _handle_keyhold(self):
+        if len(self.keys_down) > 0:
+            self.handle_keyhold()
+
+    def handle_keyhold(self):
         pass
     
     def _handle_mousedown(self, event):

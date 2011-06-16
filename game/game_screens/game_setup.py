@@ -19,7 +19,7 @@ def background(buttons):
         i += 1
         
         # Test for invisible buttons
-        r = s.fill((0, 100, 0), pygame.Rect(300, 110 + i*60, 400, 40))
+        # r = s.fill((100, 0, 0), pygame.Rect(300, 110 + i*60, 400, 40))
         
         # Centre the text
         font_obj = pygame.font.SysFont("Helvetica", 24)
@@ -34,14 +34,12 @@ def build(seq_game):
     s = screen.Screen()
     
     buttons = (
-        ("B 1", seq_game.set_screen,    [""]),
-        ("B 2", None,   []),
-        ("B 3", s.quit, []),
+        ("Start game",  seq_game.set_screen,    ["Battle screen"]),
+        ("Back",        seq_game.set_screen,    ["Main menu"]),
     )
     
-    s.name = "Sequtus main menu"
+    s.name = "Quick start"
     s.background = background(buttons)
-    
     
     i = -1
     for b_text, b_func, b_args in buttons:
@@ -49,12 +47,8 @@ def build(seq_game):
         
         c = controls.InvisibleButton((300, 110 + i*60), (400, 40))
         
-        if b_func:
-            c.button_up = b_func
-            c.button_up_args = b_args
-        else:
-            c.button_up = p_func
-            c.button_up_args = ["Button %d" % i]
+        c.button_up = b_func
+        c.button_up_args = b_args
         
         s.add_button(c)
     

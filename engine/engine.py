@@ -28,12 +28,6 @@ class EngineV3 (object):
         self.current_screen = None
         self.images = {}
     
-    def game_logic(self):
-        """
-        This is called every execution loop to allow the game to execute game logic
-        """
-        raise Exception("{0}.game_logic() is not implemented".format(self.__class__))
-    
     def quit(self, event=None):
         pygame.quit()
         sys.exit()
@@ -43,67 +37,40 @@ class EngineV3 (object):
         self.clock = pygame.time.Clock()
         
         self.display = pygame.display.set_mode((self.window_width, self.window_height))
-        
-        # Draw screen
-        # self.update_window()
     
     def set_screen(self, s):
         # s can be a screen instance or the name of a screen in self.screens
         if s in self.screens:
             s = self.screens[s]
+        elif type(s) == str:
+            raise KeyError("Screen '%s' not found in screen dictionary" % s)
         
         s.engine = self
+        s.display = self.display
         
         pygame.display.set_caption(s.name)
         self.current_screen = s
-        self.update_window()
-    
-    # Drawing
-    def redraw(self):
-        """Called every main loop cycle"""
-        sprite_list = self.current_screen.sprites
-        
-        sprite_list.update(pygame.time.get_ticks())
-        rectlist = sprite_list.draw(self.display)
-        sprite_list.update(pygame.time.get_ticks())
-        rectlist = sprite_list.draw(self.display)
-        
-        pygame.display.update(rectlist)
-        sprite_list.clear(self.display, self.background)
-    
-    def update_window(self):
-        """Used when we've changed screen or want to simply redraw everything"""
-        self.background = self.current_screen.background.copy() 
-        self.display.blit(self.background, pygame.Rect(0, 0, self.window_width, self.window_height))
-        
-        pygame.display.flip()
-        
-        self.redraw()
+        self.current_screen.update_window()
     
     # Contains main execution loop
     def start(self):
         self.startup()
         
-        func_dict = {
-            ACTIVEEVENT:        self.current_screen._handle_active,
-            KEYDOWN:            self.current_screen._handle_keydown,
-            KEYUP:              self.current_screen._handle_keyup,
-            MOUSEBUTTONUP:      self.current_screen._handle_mouseup,
-            MOUSEBUTTONDOWN:    self.current_screen._handle_mousedown,
-            MOUSEMOTION:        self.current_screen._handle_mousemotion,
-            QUIT:               self.current_screen.quit,
-        }
-        
         while True:
             for event in pygame.event.get():
-                if event.type in func_dict:
-                    func_dict[event.type](event)
-                else:
-                    # raise Exception("Unhanded event {0}".format(event))
-                    pass
+                if event.type == ACTIVEEVENT:       self.current_screen._handle_active(event)
+                if event.type == KEYDOWN:           self.current_screen._handle_keydown(event)
+                if event.type == KEYUP:             self.current_screen._handle_keyup(event)
+                if event.type == MOUSEBUTTONUP:     self.current_screen._handle_mouseup(event)
+                if event.type == MOUSEBUTTONDOWN:   self.current_screen._handle_mousedown(event)
+                if event.type == MOUSEMOTION:       self.current_screen._handle_mousemotion(event)
+                if event.type == QUIT:              self.current_screen.quit(event)
             
-            self.game_logic()
-            self.redraw()
+            # Check to see if a key has been held down
+            self.current_screen._handle_keyhold()
+            
+            self.current_screen.update()
+            self.current_screen.redraw()
             self.clock.tick(self.fps)
         
         self.quit()

@@ -4,11 +4,7 @@ from engine import screen, controls
 
 from game import image_composition
 
-def p_func(*args):
-    for a in args:
-        print(a)
-
-def background(buttons):
+def make_bg_image(buttons):
     s = pygame.Surface((1000, 1000))
     
     r = s.fill((100, 100, 100), pygame.Rect(200, 100, 600, 800))
@@ -19,7 +15,7 @@ def background(buttons):
         i += 1
         
         # Test for invisible buttons
-        r = s.fill((100, 0, 0), pygame.Rect(300, 110 + i*60, 400, 40))
+        # r = s.fill((100, 0, 0), pygame.Rect(300, 110 + i*60, 400, 40))
         
         # Centre the text
         font_obj = pygame.font.SysFont("Helvetica", 24)
@@ -30,32 +26,30 @@ def background(buttons):
     
     return s
 
-def build(seq_game):
-    s = screen.Screen()
-    
-    buttons = (
-        ("Quick start", seq_game.set_screen,    ["Game setup"]),
-        ("Campaign",    None,   []),
-        ("Quit",        s.quit, []),
-    )
-    
-    s.name = "Sequtus main menu"
-    s.background = background(buttons)
-    
-    
-    i = -1
-    for b_text, b_func, b_args in buttons:
-        i += 1
+class MainMenu (screen.Screen):
+    def __init__(self, seq_game):
+        super(MainMenu, self).__init__()
+        self.engine = seq_game
         
-        c = controls.InvisibleButton((300, 110 + i*60), (400, 40))
+        buttons = (
+            ("Quick start", seq_game.set_screen,    ["Battle screen"]),
+            # ("Campaign",    None,   []),
+            ("Quit",        seq_game.quit, []),
+        )
         
-        if b_func:
+        self.name = "Sequtus main menu"
+        self.background_image = make_bg_image(buttons)
+        
+        i = -1
+        for b_text, b_func, b_args in buttons:
+            i += 1
+            
+            c = controls.InvisibleButton((300, 110 + i*60), (400, 40))
+            
             c.button_up = b_func
             c.button_up_args = b_args
-        else:
-            c.button_up = p_func
-            c.button_up_args = ["Button %d" % i]
-        
-        s.add_button(c)
+            
+            self.add_button(c)
     
-    return s
+    def update(self):
+        pass

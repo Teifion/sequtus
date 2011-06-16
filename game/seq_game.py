@@ -7,7 +7,7 @@ import pygame
 
 from engine import engine
 from game import image_composition
-from game_screens import main_menu, game_setup
+from game_screens import main_menu, game_setup, battle
 
 class Sequtus (engine.EngineV3):
     name = "Sequtus"
@@ -23,17 +23,18 @@ class Sequtus (engine.EngineV3):
         super(Sequtus, self).__init__()
         
         self.images = {
-            "background":     image_composition.starfield(),
+            "background":       image_composition.starfield(),
+            
+            "battlefield":      pygame.image.load('media/battlefield.png'),
         }
     
     def startup(self):
         super(Sequtus, self).startup()
         
-        self.screens['Main menu'] = main_menu.build(self)
+        self.screens['Main menu'] = main_menu.MainMenu(self)
         self.screens['Game setup'] = game_setup.build(self)
+        self.screens['Battle screen'] = battle.Battle(self)
         
-        self.set_screen('Main menu')
-    
-    def game_logic(self):
-        pass
+        # self.set_screen('Main menu')
+        self.set_screen('Battle screen')
     
