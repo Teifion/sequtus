@@ -27,6 +27,10 @@ class EngineV3 (object):
         self.screens = {}
         self.current_screen = None
         self.images = {}
+        
+        # Set these before loading screens that will use them
+        self.screen_args = []
+        self.screen_kwargs = {}
     
     def quit(self, event=None):
         pygame.quit()
@@ -45,11 +49,16 @@ class EngineV3 (object):
         elif type(s) == str:
             raise KeyError("Screen '%s' not found in screen dictionary" % s)
         
+        # Is it an instance or a class? If the latter we make a new instance of it
+        if type(s) == type:
+            s = s(self, *self.screen_args, **self.screen_kwargs)
+        
         s.engine = self
         s.display = self.display
         
         pygame.display.set_caption(s.name)
         self.current_screen = s
+        self.current_screen.activate()
         self.current_screen.update_window()
     
     # Contains main execution loop

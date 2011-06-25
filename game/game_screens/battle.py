@@ -1,31 +1,43 @@
 import pygame
 
-from engine import battle_screen, controls
-
+from engine import battle_screen, controls, actors
 from game import image_composition
+from game.battle_lib import battle_sim
+
+class Dummy (actors.Actor):
+    def __init__(self, screen, position=[0,0], velocity=[0,0]):
+        super(Dummy, self).__init__(screen, position, velocity)
 
 class Battle (battle_screen.BattleScreen):
     def __init__(self, seq_game):
         super(Battle, self).__init__()
         self.engine = seq_game
         
+        self.scroll_boundaries = (seq_game.window_width-2000, seq_game.window_height-2000, 0, 0)
+        
         self.name = "Sequtus"
         
         self.background_image = seq_game.images['battlefield'].copy()
+        
+        self.bs = battle_sim.BattleSim(self)
     
     def update(self):
-        pass
+        super(Battle, self).update()
+        
+        for i, s in enumerate(self.sprites):
+            if i == 0:
+                s.rect.top += 1
     
     def handle_keyhold(self):
-        # Up arrow
-        if 273 in self.keys_down: self.scroll_y -= 10
-        
-        # Down arrow
-        if 274 in self.keys_down: self.scroll_y += 10
-        
-        # Right arrow
-        if 275 in self.keys_down: self.scroll_x += 10
-        
-        # Left arrow
-        if 276 in self.keys_down: self.scroll_x -= 10
+        super(Battle, self).handle_keyhold()
     
+    def activate(self):
+        dummy = actors.Actor(self)
+        dummy.new_image(pygame.image.load('media/red_rune.png').copy())
+        dummy.rect.topleft = 450, 450
+        self.add_actor(dummy)
+        
+        dummy = actors.Actor(self)
+        dummy.new_image(pygame.image.load('media/blue_rune.png').copy())
+        dummy.rect.topleft = 500, 500
+        self.add_actor(dummy)

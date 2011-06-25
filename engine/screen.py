@@ -117,7 +117,7 @@ class Screen (object):
         
         if self.mouse_is_down:
             self._handle_mousedrag(event)
-        
+    
     def handle_mousemotion(self, event):
         pass
     
@@ -125,6 +125,10 @@ class Screen (object):
         self.handle_mousedrag(event)
     
     def handle_mousedrag(self, event):
+        pass
+    
+    def activate(self):
+        """The screen is now active and ready to roll"""
         pass
     
     def quit(self, event=None):

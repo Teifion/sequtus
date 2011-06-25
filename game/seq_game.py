@@ -33,7 +33,7 @@ class Sequtus (engine.EngineV3):
         
         self.screens['Main menu'] = main_menu.MainMenu(self)
         self.screens['Game setup'] = game_setup.build(self)
-        self.screens['Battle screen'] = battle.Battle(self)
+        self.screens['Battle screen'] = battle.Battle
         
         # self.set_screen('Main menu')
         self.set_screen('Battle screen')
