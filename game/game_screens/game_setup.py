@@ -31,7 +31,7 @@ def background(buttons):
     return s
 
 def build(seq_game):
-    s = screen.Screen()
+    s = screen.Screen((seq_game.window_width, seq_game.window_height))
     
     buttons = (
         ("Start game",  seq_game.set_screen,    ["Battle screen"]),

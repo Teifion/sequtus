@@ -4,10 +4,10 @@ import pygame
 from pygame.locals import *
 
 class Screen (object):
-    def __init__(self):
+    def __init__(self, dimensions):
         super(Screen, self).__init__()
         
-        self.sprites = pygame.sprite.RenderUpdates()
+        self.actors = []
         self.name = ""
         self.engine = None
         
@@ -16,9 +16,12 @@ class Screen (object):
         self.mouse_is_down = False
         self.keys_down = {}
         self.mouse = [0,0]
+        self.mouse_down_at = [0,0]
         
         self.engine = None
         self.background_image = None
+        
+        self.surf = pygame.Surface(dimensions)
     
     def add_button(self, b):
         self.buttons.append(b)
@@ -32,13 +35,13 @@ class Screen (object):
     # Drawing
     def redraw(self):
         """Called every main loop cycle"""
-        self.sprites.update(pygame.time.get_ticks())
-        rectlist = self.sprites.draw(self.display)
-        self.sprites.update(pygame.time.get_ticks())
-        rectlist = self.sprites.draw(self.display)
+        self.actors.update(pygame.time.get_ticks())
+        rectlist = self.actors.draw(self.display)
+        self.actors.update(pygame.time.get_ticks())
+        rectlist = self.actors.draw(self.display)
         
-        pygame.display.update(rectlist)
-        self.sprites.clear(self.display, self.background)
+        pygame.display.update()
+        self.actors.clear(self.display, self.background)
     
     def update_window(self):
         """Used when we've changed screen or want to simply redraw everything"""
@@ -57,6 +60,15 @@ class Screen (object):
     
     def handle_active(self, event):
         pass
+    
+    def get_control_keys(self):
+        """Gets a list of keys such as Shift and Ctrl that may be held down"""
+        keys = []
+        # Right and Left shift
+        if 303 in self.keys_down or 304 in self.keys_down:
+            keys.append("shift")
+        
+        return keys
     
     def _handle_keydown(self, event):
         self.keys_down[event.key] = time.time()
@@ -82,6 +94,8 @@ class Screen (object):
         pass
     
     def _handle_mousedown(self, event):
+        self.mouse_down_at = event.pos
+        
         for b in self.buttons:
             if b.button_down != None:
                 if b.contains(event.pos):
@@ -106,9 +120,13 @@ class Screen (object):
                         raise
         
         self.mouse_is_down = False
-        self.handle_mouseup(event)
+        if event.pos == self.mouse_down_at:
+            self.handle_mouseup(event, drag=False)
+        else:
+            self._handle_mousedragup(event)
+            self.handle_mouseup(event, drag=True)
     
-    def handle_mouseup(self, event):
+    def handle_mouseup(self, event, drag=False):
         pass
     
     def _handle_mousemotion(self, event):
@@ -122,9 +140,27 @@ class Screen (object):
         pass
     
     def _handle_mousedrag(self, event):
-        self.handle_mousedrag(event)
+        drag_rect = (
+            min(self.mouse_down_at[0], event.pos[0]),
+            min(self.mouse_down_at[1], event.pos[1]),
+            max(self.mouse_down_at[0], event.pos[0]),
+            max(self.mouse_down_at[1], event.pos[1]),
+        )
+        self.handle_mousedrag(event, drag_rect)
     
-    def handle_mousedrag(self, event):
+    def handle_mousedrag(self, event, drag_rect):
+        pass
+    
+    def _handle_mousedragup(self, event):
+        drag_rect = (
+            min(self.mouse_down_at[0], event.pos[0]),
+            min(self.mouse_down_at[1], event.pos[1]),
+            max(self.mouse_down_at[0], event.pos[0]),
+            max(self.mouse_down_at[1], event.pos[1]),
+        )
+        self.handle_mousedragup(event, drag_rect)
+    
+    def handle_mousedragup(self, event, drag_rect):
         pass
     
     def activate(self):

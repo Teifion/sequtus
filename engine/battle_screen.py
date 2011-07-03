@@ -12,8 +12,8 @@ RIGHT_ARROW = 275
 LEFT_ARROW = 276
 
 class BattleScreen (screen.Screen):
-    def __init__(self):
-        super(BattleScreen, self).__init__()
+    def __init__(self, dimensions):
+        super(BattleScreen, self).__init__(dimensions)
         
         self.background = None
         self.scroll_x, self.scroll_y = 0, 0
@@ -32,31 +32,27 @@ class BattleScreen (screen.Screen):
         self.scroll_boundaries = (-100, -100, 0, 0)
         
         self.scroll_boundary = 100
+        
+        self.selected_actors = []
     
     def redraw(self):
         """Overrides the basic redraw as it's intended to be used with more animation"""
+        for a in self.actors: a.update(pygame.time.get_ticks())
         
-        self.sprites.update(pygame.time.get_ticks())
+        # Draw background taking into account scroll
+        surf = self.engine.display
+        surf.blit(self.background_image, pygame.Rect(
+            self.scroll_x, self.scroll_y,
+            self.engine.window_width, self.engine.window_height)
+        )
         
-        if self.have_scrolled:
-            self.background = pygame.Surface((self.engine.window_width, self.engine.window_height))
-            self.background.blit(self.background_image, pygame.Rect(
-                self.scroll_x, self.scroll_y,
-                self.engine.window_width, self.engine.window_height)
-            )
+        for a in self.actors:
+            surf.blit(a.image, a.rect)
             
-            self.display.blit(self.background, pygame.Rect(0, 0, self.engine.window_width, self.engine.window_height))
+            if a.selected:
+                surf.blit(a.selector_image, a.selector_rect)
         
-        rectlist = self.sprites.draw(self.display)
-        self.sprites.update(pygame.time.get_ticks())
-        rectlist = self.sprites.draw(self.display)
-        
-        pygame.display.update(rectlist)
-        self.sprites.clear(self.display, self.background)
-        
-        if self.have_scrolled:
-            self.have_scrolled = False
-            pygame.display.flip()
+        pygame.display.flip()
     
     def handle_keyhold(self):
         # Up/Down
@@ -72,6 +68,41 @@ class BattleScreen (screen.Screen):
             self.scroll_left()
         
         super(BattleScreen, self).handle_keyhold()
+    
+    def handle_mouseup(self, event, drag=False):
+        keys = self.get_control_keys()
+        
+        if event.button == 1:
+            if "shift" not in keys:
+                self.unselect_all_actors()
+            
+            for a in self.actors:
+                if a.contains_point(event.pos):
+                    self.left_click_actor(a)
+                
+    def left_click_actor(self, a):
+        # keys = self.get_control_keys()
+        
+        if a.selected:
+            self.unselect_actor(a)
+        else:
+            self.select_actor(a)
+    
+    def handle_mousedragup(self, event, drag_rect):
+        pass
+    
+    def unselect_all_actors(self):
+        for a in self.selected_actors[:]:
+            del(self.selected_actors[self.selected_actors.index(a)])
+            a.selected = False
+    
+    def unselect_actor(self, a):
+        del(self.selected_actors[self.selected_actors.index(a)])
+        a.selected = False
+    
+    def select_actor(self, a):
+        self.selected_actors.append(a)
+        a.selected = True
     
     def update(self):
         # It might be that the mouse is scrolling
@@ -112,8 +143,8 @@ class BattleScreen (screen.Screen):
         amount = self.scroll_x - last_pos
         if amount != 0:
             self.have_scrolled = True
-            for s in self.sprites:
-                s.rect.left += amount
+            for a in self.actors:
+                a.rect.left += amount
                 
 
     def scroll_left(self, rate = 1):
@@ -125,8 +156,8 @@ class BattleScreen (screen.Screen):
         amount = self.scroll_x - last_pos
         if amount != 0:
             self.have_scrolled = True
-            for s in self.sprites:
-                s.rect.left += amount
+            for a in self.actors:
+                a.rect.left += amount
         
     def scroll_down(self, rate = 1):
         last_pos = self.scroll_y
@@ -137,8 +168,8 @@ class BattleScreen (screen.Screen):
         amount = self.scroll_y - last_pos
         if amount != 0:
             self.have_scrolled = True
-            for s in self.sprites:
-                s.rect.top += amount
+            for a in self.actors:
+                a.rect.top += amount
         
     def scroll_up(self, rate = 1):
         last_pos = self.scroll_y
@@ -149,10 +180,9 @@ class BattleScreen (screen.Screen):
         amount = self.scroll_y - last_pos
         if amount != 0:
             self.have_scrolled = True
-            for s in self.sprites:
+            for s in self.actors:
                 s.rect.top += amount
     
     def add_actor(self, a):
-        self.sprites.add(a)
-        pass
+        self.actors.append(a)
 

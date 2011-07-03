@@ -10,7 +10,7 @@ class Dummy (actors.Actor):
 
 class Battle (battle_screen.BattleScreen):
     def __init__(self, seq_game):
-        super(Battle, self).__init__()
+        super(Battle, self).__init__((seq_game.window_width, seq_game.window_height))
         self.engine = seq_game
         
         self.scroll_boundaries = (seq_game.window_width-2000, seq_game.window_height-2000, 0, 0)
@@ -24,7 +24,7 @@ class Battle (battle_screen.BattleScreen):
     def update(self):
         super(Battle, self).update()
         
-        for i, s in enumerate(self.sprites):
+        for i, s in enumerate(self.actors):
             if i == 0:
                 s.rect.top += 1
     
@@ -34,10 +34,17 @@ class Battle (battle_screen.BattleScreen):
     def activate(self):
         dummy = actors.Actor(self)
         dummy.new_image(pygame.image.load('media/red_rune.png').copy())
+        dummy.selector_image = pygame.image.load('media/selector.png').copy()
+        dummy.selector_size = 50, 50
+        dummy.selector_offset = 5, 5
         dummy.rect.topleft = 450, 450
         self.add_actor(dummy)
         
         dummy = actors.Actor(self)
         dummy.new_image(pygame.image.load('media/blue_rune.png').copy())
+        dummy.selector_image = pygame.image.load('media/selector.png').copy()
+        dummy.selector_size = 50, 50
+        dummy.selector_offset = 5, 5
         dummy.rect.topleft = 500, 500
+        
         self.add_actor(dummy)

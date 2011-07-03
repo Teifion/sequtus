@@ -28,7 +28,7 @@ def make_bg_image(buttons):
 
 class MainMenu (screen.Screen):
     def __init__(self, seq_game):
-        super(MainMenu, self).__init__()
+        super(MainMenu, self).__init__((seq_game.window_width, seq_game.window_height))
         self.engine = seq_game
         
         buttons = (
