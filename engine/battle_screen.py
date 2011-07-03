@@ -15,6 +15,8 @@ class BattleScreen (screen.Screen):
     def __init__(self, dimensions):
         super(BattleScreen, self).__init__(dimensions)
         
+        self.player_team = 1
+        
         self.background = None
         self.scroll_x, self.scroll_y = 0, 0
         self.have_scrolled = False
@@ -84,7 +86,7 @@ class BattleScreen (screen.Screen):
     def handle_mouseup(self, event, drag=False):
         keys = self.get_control_keys()
         
-        if event.button == 1:
+        if event.button == 1:# Left click
             if not drag:
                 if "shift" not in keys:
                     self.unselect_all_actors()
@@ -93,6 +95,36 @@ class BattleScreen (screen.Screen):
                     if a.contains_point(event.pos):
                         self.left_click_actor(a)
         
+        elif event.button == 3:# Right click
+            actor_target = None
+            for a in self.actors:
+                if a.contains_point(event.pos):
+                    actor_target = a
+                    break
+            
+            if not actor_target:
+                for a in self.selected_actors:
+                    if "shift" not in keys:
+                        a.issue_command("move", event.pos)
+                    else:
+                        a.append_command("move", event.pos)
+            else:
+                if actor_target.team != self.player_team:
+                    for a in self.selected_actors:
+                        if "shift" not in keys:
+                            a.issue_command("attack", event.pos)
+                        else:
+                            a.append_command("attack", event.pos)
+                else:
+                    for a in self.selected_actors:
+                        if "shift" not in keys:
+                            a.issue_command("defend", event.pos)
+                        else:
+                            a.append_command("defend", event.pos)
+            
+        else:
+            print("battle_screen.handle_mouseup: event.button = %s" % event.button)
+    
     def left_click_actor(self, a):
         # keys = self.get_control_keys()
         
@@ -102,7 +134,8 @@ class BattleScreen (screen.Screen):
             self.select_actor(a)
     
     def handle_mousedrag(self, event, drag_rect):
-        self.drag_rect = drag_rect
+        if event.buttons[0] == 1:
+            self.drag_rect = drag_rect
     
     def handle_mousedragup(self, event, drag_rect):
         self.drag_rect = None
@@ -165,11 +198,11 @@ class BattleScreen (screen.Screen):
         self.scroll_x -= rate * self.scroll_speed
         self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)
         
-        amount = self.scroll_x - last_pos
-        if amount != 0:
-            self.have_scrolled = True
-            for a in self.actors:
-                a.rect.left += amount
+        # amount = self.scroll_x - last_pos
+        # if amount != 0:
+        #     self.have_scrolled = True
+        #     for a in self.actors:
+        #         a.rect.left += amount
                 
 
     def scroll_left(self, rate = 1):
