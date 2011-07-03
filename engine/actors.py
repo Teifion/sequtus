@@ -33,7 +33,11 @@ class Actor (object):
         if self.rect.left <= point[0] <= self.rect.right:
             if self.rect.top <= point[1] <= self.rect.bottom:
                 return True
-        
+    
+    def inside(self, drag_rect):
+        if drag_rect[0] <= (self.rect.left+self.rect.right)/2 <= drag_rect[2]:
+            if drag_rect[1] <= (self.rect.top+self.rect.bottom)/2 <= drag_rect[3]:
+                return True
     
     def new_image(self, img):
         self.image = img
@@ -44,6 +48,7 @@ class Actor (object):
             self.rect.topleft = vectors.add_vectors(self.rect.topleft, self.velocity)
             self.next_game_update = current_time + self.game_update_time
             
+            # Selector rect
             self.selector_rect = pygame.Rect(
                 self.rect.left - self.selector_offset[0], self.rect.top - self.selector_offset[1],
                 self.selector_size[0], self.selector_size[1]

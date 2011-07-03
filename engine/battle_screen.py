@@ -34,6 +34,7 @@ class BattleScreen (screen.Screen):
         self.scroll_boundary = 100
         
         self.selected_actors = []
+        self.drag_rect = None
     
     def redraw(self):
         """Overrides the basic redraw as it's intended to be used with more animation"""
@@ -46,11 +47,22 @@ class BattleScreen (screen.Screen):
             self.engine.window_width, self.engine.window_height)
         )
         
+        # Actors
         for a in self.actors:
             surf.blit(a.image, a.rect)
             
             if a.selected:
                 surf.blit(a.selector_image, a.selector_rect)
+        
+        # Dragrect
+        if self.drag_rect != None:
+            # draw.rect uses a origin and size arguments, not topleft and bottomright
+            line_rect = (
+                self.drag_rect[0], self.drag_rect[1],
+                self.drag_rect[2] - self.drag_rect[0],
+                self.drag_rect[3] - self.drag_rect[1],
+            )
+            pygame.draw.rect(surf, (255, 255, 255), line_rect, 1)
         
         pygame.display.flip()
     
@@ -73,13 +85,14 @@ class BattleScreen (screen.Screen):
         keys = self.get_control_keys()
         
         if event.button == 1:
-            if "shift" not in keys:
-                self.unselect_all_actors()
-            
-            for a in self.actors:
-                if a.contains_point(event.pos):
-                    self.left_click_actor(a)
+            if not drag:
+                if "shift" not in keys:
+                    self.unselect_all_actors()
                 
+                for a in self.actors:
+                    if a.contains_point(event.pos):
+                        self.left_click_actor(a)
+        
     def left_click_actor(self, a):
         # keys = self.get_control_keys()
         
@@ -88,8 +101,20 @@ class BattleScreen (screen.Screen):
         else:
             self.select_actor(a)
     
+    def handle_mousedrag(self, event, drag_rect):
+        self.drag_rect = drag_rect
+    
     def handle_mousedragup(self, event, drag_rect):
-        pass
+        self.drag_rect = None
+        keys = self.get_control_keys()
+        
+        if event.button == 1:
+            if "shift" not in keys:
+                self.unselect_all_actors()
+            
+            for a in self.actors:
+                if a.inside(drag_rect):
+                    self.select_actor(a)
     
     def unselect_all_actors(self):
         for a in self.selected_actors[:]:
