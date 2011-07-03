@@ -38,7 +38,7 @@ class Battle (battle_screen.BattleScreen):
         dummy.selector_size = 50, 50
         dummy.selector_offset = 5, 5
         dummy.pos = 450, 450
-        dummy.current_order = ("move", (1000, 1000))
+        # dummy.current_order = ("move", (1000, 1000))
         self.add_actor(dummy)
         
         dummy = actors.Actor(self)
@@ -47,6 +47,6 @@ class Battle (battle_screen.BattleScreen):
         dummy.selector_size = 50, 50
         dummy.selector_offset = 5, 5
         dummy.pos = 500, 500
-        dummy.current_order = ("move", (50, 1000))
+        # dummy.current_order = ("move", (50, 1000))
         
         self.add_actor(dummy)

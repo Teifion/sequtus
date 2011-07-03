@@ -102,25 +102,28 @@ class BattleScreen (screen.Screen):
                     actor_target = a
                     break
             
+            # Take into account scrolling
+            true_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+            
             if not actor_target:
                 for a in self.selected_actors:
                     if "shift" not in keys:
-                        a.issue_command("move", event.pos)
+                        a.issue_command("move", true_pos)
                     else:
-                        a.append_command("move", event.pos)
+                        a.append_command("move", true_pos)
             else:
                 if actor_target.team != self.player_team:
                     for a in self.selected_actors:
                         if "shift" not in keys:
-                            a.issue_command("attack", event.pos)
+                            a.issue_command("attack", actor_target)
                         else:
-                            a.append_command("attack", event.pos)
+                            a.append_command("attack", actor_target)
                 else:
                     for a in self.selected_actors:
                         if "shift" not in keys:
-                            a.issue_command("defend", event.pos)
+                            a.issue_command("defend", actor_target)
                         else:
-                            a.append_command("defend", event.pos)
+                            a.append_command("defend", actor_target)
             
         else:
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)
@@ -196,26 +199,13 @@ class BattleScreen (screen.Screen):
         last_pos = self.scroll_x
         
         self.scroll_x -= rate * self.scroll_speed
-        self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)
-        
-        # amount = self.scroll_x - last_pos
-        # if amount != 0:
-        #     self.have_scrolled = True
-        #     for a in self.actors:
-        #         a.rect.left += amount
-                
-
+        self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)                
+    
     def scroll_left(self, rate = 1):
         last_pos = self.scroll_x
         
         self.scroll_x += rate * self.scroll_speed
         self.scroll_x = min(self.scroll_boundaries[2], self.scroll_x)
-        
-        amount = self.scroll_x - last_pos
-        if amount != 0:
-            self.have_scrolled = True
-            for a in self.actors:
-                a.rect.left += amount
         
     def scroll_down(self, rate = 1):
         last_pos = self.scroll_y
@@ -223,23 +213,11 @@ class BattleScreen (screen.Screen):
         self.scroll_y -= rate * self.scroll_speed
         self.scroll_y = max(self.scroll_boundaries[1], self.scroll_y)
         
-        amount = self.scroll_y - last_pos
-        if amount != 0:
-            self.have_scrolled = True
-            for a in self.actors:
-                a.rect.top += amount
-        
     def scroll_up(self, rate = 1):
         last_pos = self.scroll_y
         
         self.scroll_y += rate * self.scroll_speed
         self.scroll_y = min(self.scroll_boundaries[3], self.scroll_y)
-        
-        amount = self.scroll_y - last_pos
-        if amount != 0:
-            self.have_scrolled = True
-            for s in self.actors:
-                s.rect.top += amount
     
     def add_actor(self, a):
         self.actors.append(a)

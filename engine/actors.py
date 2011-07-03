@@ -13,7 +13,7 @@ class Actor (object):
     selector_offset = (-0, -0)
     selector_size = 0, 0
     
-    speed = 1
+    speed = 5
     
     def __init__(self, screen):
         super(Actor, self).__init__()
@@ -105,7 +105,8 @@ class Actor (object):
         elif cmd == "move":
             dist = vectors.distance(self.pos, target)
             
-            if dist < 3:
+            if dist <= self.speed * 1.25:
+                self.pos = target
                 self.next_order()
             else:
                 self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.speed)
