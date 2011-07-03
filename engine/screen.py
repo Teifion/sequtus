@@ -109,6 +109,8 @@ class Screen (object):
         pass
     
     def _handle_mouseup(self, event):
+        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        
         for b in self.buttons:
             if b.button_up != None:
                 if b.contains(event.pos):
@@ -121,7 +123,7 @@ class Screen (object):
                         raise
         
         self.mouse_is_down = False
-        if event.pos == self.mouse_down_at:
+        if real_mouse_pos == self.mouse_down_at:
             self.handle_mouseup(event, drag=False)
         else:
             self._handle_mousedragup(event)

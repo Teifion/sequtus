@@ -46,10 +46,10 @@ class Battle (battle_screen.BattleScreen):
         dummy.selector_image = pygame.image.load('media/selector.png').copy()
         dummy.selector_size = 50, 50
         dummy.selector_offset = 5, 5
-        dummy.pos = 500, 500
+        # dummy.pos = 500, 500
         # dummy.current_order = ("move", (50, 1000))
         
         self.add_actor(dummy)
         
-        self.scroll_right(rate=30)
-        self.scroll_down(rate=30)
+        self.scroll_right(rate=10)
+        self.scroll_down(rate=10)

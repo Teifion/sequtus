@@ -85,6 +85,7 @@ class BattleScreen (screen.Screen):
         super(BattleScreen, self).handle_keyhold()
     
     def handle_mouseup(self, event, drag=False):
+        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
         keys = self.get_control_keys()
         
         if event.button == 1:# Left click
@@ -93,25 +94,23 @@ class BattleScreen (screen.Screen):
                     self.unselect_all_actors()
                 
                 for a in self.actors:
-                    if a.contains_point(event.pos):
+                    if a.contains_point(real_mouse_pos):
                         self.left_click_actor(a)
         
         elif event.button == 3:# Right click
             actor_target = None
             for a in self.actors:
-                if a.contains_point(event.pos):
+                if a.contains_point(real_mouse_pos):
                     actor_target = a
                     break
             
             # Take into account scrolling
-            true_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
-            
             if not actor_target:
                 for a in self.selected_actors:
                     if "shift" not in keys:
-                        a.issue_command("move", true_pos)
+                        a.issue_command("move", real_mouse_pos)
                     else:
-                        a.append_command("move", true_pos)
+                        a.append_command("move", real_mouse_pos)
             else:
                 if actor_target.team != self.player_team:
                     for a in self.selected_actors:
