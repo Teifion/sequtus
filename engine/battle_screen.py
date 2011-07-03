@@ -18,7 +18,6 @@ class BattleScreen (screen.Screen):
         self.player_team = 1
         
         self.background = None
-        self.scroll_x, self.scroll_y = 0, 0
         self.have_scrolled = False
         
         self.scroll_speed = 15
@@ -60,10 +59,12 @@ class BattleScreen (screen.Screen):
         if self.drag_rect != None:
             # draw.rect uses a origin and size arguments, not topleft and bottomright
             line_rect = (
-                self.drag_rect[0], self.drag_rect[1],
+                self.drag_rect[0] + self.scroll_x,
+                self.drag_rect[1] + self.scroll_y,
                 self.drag_rect[2] - self.drag_rect[0],
                 self.drag_rect[3] - self.drag_rect[1],
             )
+            
             pygame.draw.rect(surf, (255, 255, 255), line_rect, 1)
         
         pygame.display.flip()

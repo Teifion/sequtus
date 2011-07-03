@@ -15,6 +15,7 @@ class Screen (object):
         
         self.mouse_is_down = False
         self.keys_down = {}
+        self.scroll_x, self.scroll_y = 0, 0
         self.mouse = [0,0]
         self.mouse_down_at = [0,0]
         
@@ -94,7 +95,7 @@ class Screen (object):
         pass
     
     def _handle_mousedown(self, event):
-        self.mouse_down_at = event.pos
+        self.mouse_down_at = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
         
         for b in self.buttons:
             if b.button_down != None:
@@ -140,11 +141,13 @@ class Screen (object):
         pass
     
     def _handle_mousedrag(self, event):
+        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        
         drag_rect = (
-            min(self.mouse_down_at[0], event.pos[0]),
-            min(self.mouse_down_at[1], event.pos[1]),
-            max(self.mouse_down_at[0], event.pos[0]),
-            max(self.mouse_down_at[1], event.pos[1]),
+            min(self.mouse_down_at[0], real_mouse_pos[0]),
+            min(self.mouse_down_at[1], real_mouse_pos[1]),
+            max(self.mouse_down_at[0], real_mouse_pos[0]),
+            max(self.mouse_down_at[1], real_mouse_pos[1]),
         )
         self.handle_mousedrag(event, drag_rect)
     
@@ -152,11 +155,13 @@ class Screen (object):
         pass
     
     def _handle_mousedragup(self, event):
+        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        
         drag_rect = (
-            min(self.mouse_down_at[0], event.pos[0]),
-            min(self.mouse_down_at[1], event.pos[1]),
-            max(self.mouse_down_at[0], event.pos[0]),
-            max(self.mouse_down_at[1], event.pos[1]),
+            min(self.mouse_down_at[0], real_mouse_pos[0]),
+            min(self.mouse_down_at[1], real_mouse_pos[1]),
+            max(self.mouse_down_at[0], real_mouse_pos[0]),
+            max(self.mouse_down_at[1], real_mouse_pos[1]),
         )
         self.handle_mousedragup(event, drag_rect)
     

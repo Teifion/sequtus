@@ -39,13 +39,19 @@ class Actor (object):
     
     def contains_point(self, point):
         """Point is a length 2 sequence X, Y"""
-        if self.rect.left <= point[0] <= self.rect.right:
-            if self.rect.top <= point[1] <= self.rect.bottom:
+        left = self.pos[0] - self.rect.width/2
+        right = self.pos[0] + self.rect.width/2
+        
+        top = self.pos[1] - self.rect.height/2
+        bottom = self.pos[1] + self.rect.height/2
+        
+        if left <= point[0] <= right:
+            if top <= point[1] <= bottom:
                 return True
     
-    def inside(self, drag_rect):
-        if drag_rect[0] <= self.rect.centerx <= drag_rect[2]:
-            if drag_rect[1] <= self.rect.centery <= drag_rect[3]:
+    def inside(self, rect):
+        if rect[0] <= self.pos[0] <= rect[2]:
+            if rect[1] <= self.pos[1] <= rect[3]:
                 return True
     
     def new_image(self, img):

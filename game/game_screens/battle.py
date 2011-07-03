@@ -50,3 +50,6 @@ class Battle (battle_screen.BattleScreen):
         # dummy.current_order = ("move", (50, 1000))
         
         self.add_actor(dummy)
+        
+        self.scroll_right(rate=30)
+        self.scroll_down(rate=30)
