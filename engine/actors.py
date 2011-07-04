@@ -60,6 +60,7 @@ class Actor (object):
     
     def update(self, current_time):
         if self.next_game_update < current_time:
+            self.check_ai()
             self.pos = vectors.add_vectors(self.pos, self.velocity)
             self.next_game_update = current_time + self.game_update_time
             
@@ -102,6 +103,23 @@ class Actor (object):
         
         self.current_order = self.order_queue.pop(0)
     
+    def check_ai(self):
+        cmd, target = self.current_order
+        
+        if cmd == "stop":
+            pass
+        
+        elif cmd == "move":
+            dist = vectors.distance(self.pos, target)
+            
+            if dist <= vectors.total_velocity(self.velocity):
+                self.pos = target
+                self.velocity = [0,0]
+                self.next_order()
+            
+        else:
+            raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
+    
     def run_ai(self):
         cmd, target = self.current_order
         
@@ -110,12 +128,12 @@ class Actor (object):
         
         elif cmd == "move":
             dist = vectors.distance(self.pos, target)
+            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.speed)
             
-            if dist <= self.speed * 1.25:
+            if dist <= vectors.total_velocity(self.velocity):
                 self.pos = target
+                self.velocity = [0,0]
                 self.next_order()
-            else:
-                self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.speed)
             
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))

@@ -39,23 +39,22 @@ def move_to_vector(angle, distance):
     angle = bound_angle(angle)
     
     # Needed or we get some bounding errors
-    if angle == 0:      return [0, -distance, 0]
-    if angle == 90:     return [distance, 0, 0]
-    if angle == 180:    return [0, distance, 0]
-    if angle == 270:    return [-distance, 0, 0]
+    if angle == 0:      return [0, -distance]
+    if angle == 90:     return [distance, 0]
+    if angle == 180:    return [0, distance]
+    if angle == 270:    return [-distance, 0]
     
     # SOH CAH TOA
     # x = opposite
     # y = adjacent
     x = math.sin(math.radians(angle)) * distance
     y = math.cos(math.radians(angle)) * distance
-    z = 0
     
-    return [x, -y, z]
+    return [x, -y]
 
 def vector_to_move(vector):
     """Takes a vector and returns an angle and distance"""
-    return angle([0,0,0], vector), total_velocity(vector)
+    return angle([0,0], vector), total_velocity(vector)
 
 def angle(pos1, pos2):
     """Gets the angle to go from pos1 to pos2"""
