@@ -89,7 +89,7 @@ class Actor (object):
         self.order_queue.append((cmd, target))
         
         # No current command? Lets get to work on this one
-        if len(self.order_queue) == 1:
+        if self.current_order[0] == "stop":
             self.next_order()
     
     def next_order(self):
