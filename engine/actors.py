@@ -1,3 +1,4 @@
+from __future__ import division
 import pygame
 from pygame.locals import *
 
@@ -14,6 +15,8 @@ class Actor (object):
     selector_size = 0, 0
     
     speed = 5
+    
+    max_hp = 10
     
     def __init__(self, screen):
         super(Actor, self).__init__()
@@ -36,6 +39,38 @@ class Actor (object):
         # An order is a tuple of (command_type, target)
         self.order_queue = []
         self.current_order = ("stop", None)
+        
+        self.hp = 10
+        self._health_bar = (None, None)
+    
+    def health_bar(self):
+        if self._health_bar[1] != self.hp:
+            s = pygame.Surface((self.rect.width, 3))
+            
+            hp_percent = self.hp/self.max_hp
+            fill_width = self.rect.width * hp_percent
+            
+            s.fill((0,0,0), pygame.Rect(0,0, self.rect.width, 3))
+            s.fill((0,255,0), pygame.Rect(0,0, fill_width, 3))
+            
+            self._health_bar = (s, self.hp)
+        
+        hp_rect = pygame.Rect(
+            self.rect.left,
+            self.rect.top - 4,
+            self.rect.width,
+            3
+        )
+        
+        return self._health_bar[0], hp_rect
+    
+    def selection_rect(self):
+        return pygame.Rect(
+                self.rect.left - 3,
+                self.rect.top - 3,
+                self.rect.width + 6,
+                self.rect.height + 6,
+        )
     
     def contains_point(self, point):
         """Point is a length 2 sequence X, Y"""

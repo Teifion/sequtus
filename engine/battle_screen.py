@@ -53,7 +53,8 @@ class BattleScreen (screen.Screen):
             surf.blit(a.image, a.rect)
             
             if a.selected:
-                surf.blit(a.selector_image, a.selector_rect)
+                pygame.draw.rect(surf, (255, 255, 255), a.selection_rect(), 1)
+                surf.blit(*a.health_bar())
         
         # Dragrect
         if self.drag_rect != None:

@@ -41,6 +41,9 @@ class Battle (battle_screen.BattleScreen):
         # dummy.current_order = ("move", (1000, 1000))
         self.add_actor(dummy)
         
+        dummy.hp = 7
+        self.select_actor(dummy)
+        
         dummy = actors.Actor(self)
         dummy.new_image(pygame.image.load('media/blue_rune.png').copy())
         dummy.selector_image = pygame.image.load('media/selector.png').copy()
