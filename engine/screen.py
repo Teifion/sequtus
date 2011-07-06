@@ -62,15 +62,6 @@ class Screen (object):
     def handle_active(self, event):
         pass
     
-    def get_control_keys(self):
-        """Gets a list of keys such as Shift and Ctrl that may be held down"""
-        keys = []
-        # Right and Left shift
-        if 303 in self.keys_down or 304 in self.keys_down:
-            keys.append("shift")
-        
-        return keys
-    
     def _handle_keydown(self, event):
         self.keys_down[event.key] = time.time()
         self.test_for_keyboard_commands()
