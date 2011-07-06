@@ -38,7 +38,6 @@ class Battle (battle_screen.BattleScreen):
         dummy.selector_size = 50, 50
         dummy.selector_offset = 5, 5
         dummy.pos = 450, 450
-        # dummy.current_order = ("move", (1000, 1000))
         self.add_actor(dummy)
         
         dummy.hp = 7
@@ -49,8 +48,9 @@ class Battle (battle_screen.BattleScreen):
         dummy.selector_image = pygame.image.load('media/selector.png').copy()
         dummy.selector_size = 50, 50
         dummy.selector_offset = 5, 5
-        # dummy.pos = 500, 500
-        # dummy.current_order = ("move", (50, 1000))
+        dummy.pos = 500, 500
+        
+        dummy.hp = 9
         
         self.add_actor(dummy)
         
