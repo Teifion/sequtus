@@ -11,6 +11,19 @@ DOWN_ARROW = 274
 RIGHT_ARROW = 275
 LEFT_ARROW = 276
 
+NUM0 = 48
+NUM1 = 49
+NUM2 = 50
+NUM3 = 51
+NUM4 = 52
+NUM5 = 53
+NUM6 = 54
+NUM7 = 55
+NUM8 = 56
+NUM9 = 57
+
+NUMBERS = range(NUM0, NUM9+1)
+
 class BattleScreen (screen.Screen):
     def __init__(self, dimensions):
         super(BattleScreen, self).__init__(dimensions)
@@ -31,6 +44,11 @@ class BattleScreen (screen.Screen):
         
         # Defines how far we can scroll in any direction
         self.scroll_boundaries = (-100, -100, 0, 0)
+        
+        # Ctrl + N to assign, N to select
+        self.control_groups = {}
+        for i in NUMBERS:
+            self.control_groups[i] = []
         
         self.scroll_boundary = 100
         
@@ -70,6 +88,20 @@ class BattleScreen (screen.Screen):
         
         pygame.display.flip()
     
+    def handle_keydown(self, event):
+        # 'KMOD_ALT', 'KMOD_CAPS', 'KMOD_CTRL', 'KMOD_LALT', 'KMOD_LCTRL', 'KMOD_LMETA', 'KMOD_LSHIFT', 'KMOD_META', 'KMOD_MODE', 'KMOD_NONE', 'KMOD_NUM', 'KMOD_RALT', 'KMOD_RCTRL', 'KMOD_RMETA', 'KMOD_RSHIFT', 'KMOD_SHIFT'
+        mods = pygame.key.get_mods()
+        
+        # Number key? Select or assign a control group
+        if event.key in NUMBERS:
+            if KMOD_CTRL & mods:
+                self.assign_control_group(event.key)
+            else:
+                self.select_control_group(event.key)
+            
+        # print(event)
+        pass
+    
     def handle_keyhold(self):
         # Up/Down
         if self.scroll_up_key in self.keys_down:
@@ -86,12 +118,12 @@ class BattleScreen (screen.Screen):
         super(BattleScreen, self).handle_keyhold()
     
     def handle_mouseup(self, event, drag=False):
+        mods = pygame.key.get_mods()
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
-        keys = self.get_control_keys()
         
         if event.button == 1:# Left click
             if not drag:
-                if "shift" not in keys:
+                if KMOD_SHIFT ^ mods:
                     self.unselect_all_actors()
                 
                 for a in self.actors:
@@ -108,20 +140,20 @@ class BattleScreen (screen.Screen):
             # Take into account scrolling
             if not actor_target:
                 for a in self.selected_actors:
-                    if "shift" not in keys:
+                    if KMOD_SHIFT ^ mods:
                         a.issue_command("move", real_mouse_pos)
                     else:
                         a.append_command("move", real_mouse_pos)
             else:
                 if actor_target.team != self.player_team:
                     for a in self.selected_actors:
-                        if "shift" not in keys:
+                        if KMOD_SHIFT ^ mods:
                             a.issue_command("attack", actor_target)
                         else:
                             a.append_command("attack", actor_target)
                 else:
                     for a in self.selected_actors:
-                        if "shift" not in keys:
+                        if KMOD_SHIFT ^ mods:
                             a.issue_command("defend", actor_target)
                         else:
                             a.append_command("defend", actor_target)
@@ -130,8 +162,6 @@ class BattleScreen (screen.Screen):
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)
     
     def left_click_actor(self, a):
-        # keys = self.get_control_keys()
-        
         if a.selected:
             self.unselect_actor(a)
         else:
@@ -142,11 +172,11 @@ class BattleScreen (screen.Screen):
             self.drag_rect = drag_rect
     
     def handle_mousedragup(self, event, drag_rect):
+        mods = pygame.key.get_mods()
         self.drag_rect = None
-        keys = self.get_control_keys()
         
         if event.button == 1:
-            if "shift" not in keys:
+            if KMOD_SHIFT ^ mods:
                 self.unselect_all_actors()
             
             for a in self.actors:
@@ -194,7 +224,15 @@ class BattleScreen (screen.Screen):
             self.scroll_left(left_val/self.scroll_boundary)
         elif right_val > 0:
             self.scroll_right(right_val/self.scroll_boundary)
-        
+    
+    def assign_control_group(self, key):
+        self.control_groups[key] = self.selected_actors[:]
+    
+    def select_control_group(self, key):
+        if len(self.control_groups[key]) > 0:
+            self.unselect_all_actors()
+            for a in self.control_groups[key][:]:
+                self.select_actor(a)
     
     def scroll_right(self, rate = 1):
         last_pos = self.scroll_x
