@@ -129,6 +129,7 @@ class BattleScreen (screen.Screen):
                 for a in self.actors:
                     if a.contains_point(real_mouse_pos):
                         self.left_click_actor(a)
+                        break
         
         elif event.button == 3:# Right click
             actor_target = None
