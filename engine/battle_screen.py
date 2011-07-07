@@ -68,7 +68,10 @@ class BattleScreen (screen.Screen):
         
         # Actors
         for a in self.actors:
-            surf.blit(a.image, a.rect)
+            # Only draw actors within the screen
+            if a.rect.left > -a.rect.width and a.rect.right < self.engine.window_width + a.rect.width:
+                if a.rect.top > -a.rect.height and a.rect.bottom < self.engine.window_height + a.rect.height:
+                    surf.blit(a.image, a.rect)
             
             if a.selected:
                 pygame.draw.rect(surf, (255, 255, 255), a.selection_rect(), 1)
@@ -138,7 +141,7 @@ class BattleScreen (screen.Screen):
                     actor_target = a
                     break
             
-            # Take into account scrolling
+            # Now issue the command
             if not actor_target:
                 for a in self.selected_actors:
                     if KMOD_SHIFT ^ mods:
