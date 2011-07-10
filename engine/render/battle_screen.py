@@ -70,6 +70,8 @@ class BattleScreen (screen.Screen):
         self._redraw_delay = 0
         self.set_fps(30)
         
+        self.panels = {}
+        
     def set_fps(self, fps):
         self._redraw_delay = 1/fps
     
@@ -89,22 +91,24 @@ class BattleScreen (screen.Screen):
         
         # Actors
         for a in self.actors:
-            # Only draw actors within the screen
-            if a.rect.left > -a.rect.width and a.rect.right < self.engine.window_width + a.rect.width:
-                if a.rect.top > -a.rect.height and a.rect.bottom < self.engine.window_height + a.rect.height:
-                    r = pygame.Rect(a.rect)
-                    r.left += self.scroll_x
-                    r.top += self.scroll_y
-                    
-                    surf.blit(self.engine.images[a.image], r)
+            actor_img = self.engine.images[a.image]
+            r = pygame.Rect(actor_img.get_rect())
+            r.left = a.pos[0] + self.scroll_x - r.width/2
+            r.top = a.pos[1] + self.scroll_y - r.height/2
             
-            if a.selected:
-                r = a.selection_rect()
-                r.left += self.scroll_x
-                r.top += self.scroll_y
-                pygame.draw.rect(surf, (255, 255, 255), r, 1)
-                
-                surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
+            # Only draw actors within the screen
+            if r.right > 0 and r.left < self.engine.window_width:
+                if r.bottom > 0 and r.top < self.engine.window_height:
+                    
+                    surf.blit(actor_img, r)
+                    
+                    if a.selected:
+                        r = a.selection_rect()
+                        r.left += self.scroll_x
+                        r.top += self.scroll_y
+                        pygame.draw.rect(surf, (255, 255, 255), r, 1)
+                        
+                        surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
         
         # Dragrect
         if self.drag_rect != None:
@@ -219,14 +223,17 @@ class BattleScreen (screen.Screen):
         for a in self.selected_actors[:]:
             del(self.selected_actors[self.selected_actors.index(a)])
             a.selected = False
+            self.selection_changed()
     
     def unselect_actor(self, a):
         del(self.selected_actors[self.selected_actors.index(a)])
         a.selected = False
+        self.selection_changed()
     
     def select_actor(self, a):
         self.selected_actors.append(a)
         a.selected = True
+        self.selection_changed()
     
     def update(self):
         # It might be that the mouse is scrolling
@@ -265,6 +272,11 @@ class BattleScreen (screen.Screen):
             self.unselect_all_actors()
             for a in self.control_groups[key][:]:
                 self.select_actor(a)
+            
+            self.selection_changed()
+    
+    def selection_changed(self):
+        pass
     
     def scroll_right(self, rate = 1):
         last_pos = self.scroll_x
