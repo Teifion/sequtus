@@ -17,8 +17,7 @@ class Actor (object):
     def __init__(self):
         super(Actor, self).__init__()
         
-        self.rect = pygame.Rect(-100, -100, 0, 0)# Start well offscreen
-        self.pos = (-100, -100)# Assume we're offscreen too
+        self.pos = (-100, -100)# Assume we're offscreen
         
         self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
