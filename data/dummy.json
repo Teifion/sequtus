@@ -1,0 +1,17 @@
+{
+    "types":    {
+        "Red circle": {
+            "max_hp":   10,
+            "image":    "red_rune",
+            "type":     "walker"
+        }
+    },
+    "actors":   [
+        {
+            "type": "Red circle",
+            "pos":  [400, 400],
+            "team": 1,
+            "hp":   10
+        }
+    ]
+}
