@@ -92,11 +92,19 @@ class BattleScreen (screen.Screen):
             # Only draw actors within the screen
             if a.rect.left > -a.rect.width and a.rect.right < self.engine.window_width + a.rect.width:
                 if a.rect.top > -a.rect.height and a.rect.bottom < self.engine.window_height + a.rect.height:
-                    surf.blit(self.engine.images[a.image], a.rect)
+                    r = pygame.Rect(a.rect)
+                    r.left += self.scroll_x
+                    r.top += self.scroll_y
+                    
+                    surf.blit(self.engine.images[a.image], r)
             
             if a.selected:
-                pygame.draw.rect(surf, (255, 255, 255), a.selection_rect(), 1)
-                surf.blit(*a.health_bar())
+                r = a.selection_rect()
+                r.left += self.scroll_x
+                r.top += self.scroll_y
+                pygame.draw.rect(surf, (255, 255, 255), r, 1)
+                
+                surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
         
         # Dragrect
         if self.drag_rect != None:
