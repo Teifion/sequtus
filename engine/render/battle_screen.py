@@ -1,4 +1,14 @@
-from __future__ import division
+"""
+BattleScreen is a screen with added functionality for handling things such as
+scrolling all of it's information comes from the sim that it connects to
+none of the game logic is implemented in the battle_screen at all.
+
+The screen is also used to read in commands such as mouse-clicks.
+BattleScreen itself is subclassed by BattleSim so as to keep the logic
+code separate from the display/interface code.
+"""
+
+import multiprocessing
 import time
 
 import pygame
@@ -25,12 +35,13 @@ NUM9 = 57
 NUMBERS = range(NUM0, NUM9+1)
 
 class BattleScreen (screen.Screen):
-    def __init__(self, dimensions):
-        super(BattleScreen, self).__init__(dimensions)
+    self_regulate = True
+    
+    def __init__(self, engine):
+        super(BattleScreen, self).__init__((engine.window_width, engine.window_height))
         
-        self.player_team = 1
-        
-        self.background = None
+        self.background_image = pygame.Surface((1,1))
+        self.background = pygame.Surface((1,1))
         self.have_scrolled = False
         
         self.scroll_speed = 15
@@ -54,11 +65,19 @@ class BattleScreen (screen.Screen):
         
         self.selected_actors = []
         self.drag_rect = None
+        
+        self._next_redraw = time.time()
+        self._redraw_delay = 0
+        self.set_fps(30)
+        
+    def set_fps(self, fps):
+        self._redraw_delay = 1/fps
     
     def redraw(self):
-        """Overrides the basic redraw as it's intended to be used with more animation"""
-        for a in self.actors: a.update(pygame.time.get_ticks())
+        if time.time() < self._next_redraw:
+            return
         
+        """Overrides the basic redraw as it's intended to be used with more animation"""
         # Draw background taking into account scroll
         surf = self.engine.display
         surf.blit(self.background_image, pygame.Rect(
@@ -66,12 +85,14 @@ class BattleScreen (screen.Screen):
             self.engine.window_width, self.engine.window_height)
         )
         
+        # Menus
+        
         # Actors
         for a in self.actors:
             # Only draw actors within the screen
             if a.rect.left > -a.rect.width and a.rect.right < self.engine.window_width + a.rect.width:
                 if a.rect.top > -a.rect.height and a.rect.bottom < self.engine.window_height + a.rect.height:
-                    surf.blit(a.image, a.rect)
+                    surf.blit(self.engine.images[a.image], a.rect)
             
             if a.selected:
                 pygame.draw.rect(surf, (255, 255, 255), a.selection_rect(), 1)
@@ -90,6 +111,7 @@ class BattleScreen (screen.Screen):
             pygame.draw.rect(surf, (255, 255, 255), line_rect, 1)
         
         pygame.display.flip()
+        self._next_redraw = time.time() + self._redraw_delay
     
     def handle_keydown(self, event):
         # 'KMOD_ALT', 'KMOD_CAPS', 'KMOD_CTRL', 'KMOD_LALT', 'KMOD_LCTRL', 'KMOD_LMETA', 'KMOD_LSHIFT', 'KMOD_META', 'KMOD_MODE', 'KMOD_NONE', 'KMOD_NUM', 'KMOD_RALT', 'KMOD_RCTRL', 'KMOD_RMETA', 'KMOD_RSHIFT', 'KMOD_SHIFT'
@@ -101,9 +123,7 @@ class BattleScreen (screen.Screen):
                 self.assign_control_group(event.key)
             else:
                 self.select_control_group(event.key)
-            
-        # print(event)
-        pass
+        
     
     def handle_keyhold(self):
         # Up/Down
@@ -263,5 +283,6 @@ class BattleScreen (screen.Screen):
         self.scroll_y = min(self.scroll_boundaries[3], self.scroll_y)
     
     def add_actor(self, a):
+        a.rect = self.engine.images[a.image].get_rect()
         self.actors.append(a)
 

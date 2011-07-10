@@ -5,11 +5,12 @@ import time
 
 import pygame
 
-from engine import engine
-from game import image_composition
+from engine.render import core
+from engine.logic import battle_sim
+from game import image_composition, seq_sim
 from game_screens import main_menu, game_setup, battle
 
-class Sequtus (engine.EngineV3):
+class Sequtus (core.EngineV3):
     name = "Sequtus"
     
     fps = 30
@@ -26,6 +27,7 @@ class Sequtus (engine.EngineV3):
             "background":       image_composition.starfield(),
             
             "battlefield":      pygame.image.load('media/battlefield.png'),
+            "red_rune":         pygame.image.load('media/red_rune.png'),
         }
     
     def startup(self):
@@ -33,8 +35,35 @@ class Sequtus (engine.EngineV3):
         
         self.screens['Main menu'] = main_menu.MainMenu(self)
         self.screens['Game setup'] = game_setup.build(self)
-        self.screens['Battle screen'] = battle.Battle
+        self.screens['Battle screen'] = battle_sim.BattleSim
         
-        # self.set_screen('Main menu')
-        self.set_screen('Battle screen')
+        self.set_screen('Main menu')
+        self.new_game()
     
+    def new_game(self):
+        sim_data = {
+            "types":    {
+                "Red circle": {
+                    "max_hp":   10,
+                    "image":    "red_rune",
+                    "type":     "walker",
+                },
+            },
+            "actors":   [
+                {
+                    "type": "Red circle",
+                    "pos":  [400, 400],
+                    "team": 1,
+                    "hp":   10,
+                },
+            ],
+        }
+        self.set_screen('Battle screen')
+        
+        self.current_screen.name = "Sequtus"
+        self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
+        self.current_screen.background_image = self.images['battlefield'].copy()
+        
+        self.current_screen.load(sim_data)
+        self.current_screen.select_actor(self.current_screen.actors[0])
+        

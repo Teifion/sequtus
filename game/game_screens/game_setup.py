@@ -1,6 +1,6 @@
 import pygame
 
-from engine import screen, controls
+from engine.render import screen, controls
 
 from game import image_composition
 

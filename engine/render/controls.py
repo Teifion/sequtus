@@ -115,4 +115,15 @@ class InvisibleButton (object):
                 return True
         
         return False
-    
+
+# Used to define a section of the screen used for build options
+# unit commands etc
+class Menu (object):
+    def __init__(self):
+        super(Menu, self).__init__()
+        
+        # When set to true the menu will scroll with the screen
+        # much like an actor will
+        self.scrolls = False
+
+

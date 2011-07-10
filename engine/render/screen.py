@@ -4,6 +4,9 @@ import pygame
 from pygame.locals import *
 
 class Screen (object):
+    # When set to true the screen has to regulate the FPS itself
+    self_regulate = False
+    
     def __init__(self, dimensions):
         super(Screen, self).__init__()
         
@@ -36,13 +39,16 @@ class Screen (object):
     # Drawing
     def redraw(self):
         """Called every main loop cycle"""
-        self.actors.update(pygame.time.get_ticks())
-        rectlist = self.actors.draw(self.display)
-        self.actors.update(pygame.time.get_ticks())
-        rectlist = self.actors.draw(self.display)
+        # Actors
+        for a in self.actors:
+            # Only draw actors within the screen
+            if a.rect.left > -a.rect.width and a.rect.right < self.engine.window_width + a.rect.width:
+                if a.rect.top > -a.rect.height and a.rect.bottom < self.engine.window_height + a.rect.height:
+                    surf.blit(a.image, a.rect)
         
-        pygame.display.update()
-        self.actors.clear(self.display, self.background)
+        pygame.display.flip()
+                    
+        
     
     def update_window(self):
         """Used when we've changed screen or want to simply redraw everything"""

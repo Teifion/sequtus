@@ -9,23 +9,16 @@ class Actor (object):
     game_update_time = 10
     ai_update_time = 100
     
-    image           = pygame.Surface((0,0))
-    selector_image  = pygame.Surface((0,0))
-    selector_offset = (-0, -0)
-    selector_size = 0, 0
+    image   = ""
+    speed   = 5
     
-    speed = 5
+    max_hp  = 10
     
-    max_hp = 10
-    
-    def __init__(self, screen):
+    def __init__(self):
         super(Actor, self).__init__()
         
-        self.screen = screen
-        
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (-100, -100)# Start offscreen
-        self.pos = (-100, -100)
+        self.rect = pygame.Rect(-100, -100, 0, 0)# Start well offscreen
+        self.pos = (-100, -100)# Assume we're offscreen too
         
         self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
@@ -64,6 +57,15 @@ class Actor (object):
         
         return self._health_bar[0], hp_rect
     
+    def apply_data(self, data):
+        """Applies transitory data such as position and hp"""
+        self.hp = data.get("hp", self.hp)
+        self.pos = data.get("pos", self.pos)
+    
+    def apply_template(self, data):
+        """Applies more permanent data such as max hp and move speed"""
+        self.image = data.get("image", self.image)
+    
     def selection_rect(self):
         return pygame.Rect(
                 self.rect.left - 3,
@@ -101,14 +103,8 @@ class Actor (object):
             
             # Set rect
             self.rect.topleft = (
-                self.pos[0] + self.screen.scroll_x - self.rect.width/2,
-                self.pos[1] + self.screen.scroll_y - self.rect.height/2
-            )
-            
-            # Selector rect
-            self.selector_rect = pygame.Rect(
-                self.rect.left - self.selector_offset[0], self.rect.top - self.selector_offset[1],
-                self.selector_size[0], self.selector_size[1]
+                self.pos[0] - self.rect.width/2,
+                self.pos[1] - self.rect.height/2
             )
         
         if self.next_ai_update < current_time:
