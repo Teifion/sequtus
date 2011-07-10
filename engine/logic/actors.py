@@ -36,7 +36,7 @@ class Actor (object):
         self.hp = 10
         self._health_bar = (None, None)
     
-    def health_bar(self):
+    def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
             s = pygame.Surface((self.rect.width, 3))
             
@@ -49,8 +49,8 @@ class Actor (object):
             self._health_bar = (s, self.hp)
         
         hp_rect = pygame.Rect(
-            self.rect.left,
-            self.rect.top - 4,
+            self.rect.left + scroll_x,
+            self.rect.top + scroll_y - 4,
             self.rect.width,
             3
         )
