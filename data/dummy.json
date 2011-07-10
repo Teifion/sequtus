@@ -4,6 +4,11 @@
             "max_hp":   10,
             "image":    "red_rune",
             "type":     "walker"
+        },
+        "Blue circle": {
+            "max_hp":   15,
+            "image":    "blue_rune",
+            "type":     "walker"
         }
     },
     "actors":   [
@@ -11,6 +16,12 @@
             "type": "Red circle",
             "pos":  [400, 400],
             "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Blue circle",
+            "pos":  [450, 450],
+            "team": 2,
             "hp":   10
         }
     ]
