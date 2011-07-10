@@ -3,12 +3,15 @@ import math
 import random
 import time
 
+import sys
 import pygame
 
 from engine.render import core
 from engine.logic import battle_sim
 from game import image_composition, seq_sim
 from game_screens import main_menu, game_setup, battle
+
+import json
 
 class Sequtus (core.EngineV3):
     name = "Sequtus"
@@ -28,6 +31,7 @@ class Sequtus (core.EngineV3):
             
             "battlefield":      pygame.image.load('media/battlefield.png'),
             "red_rune":         pygame.image.load('media/red_rune.png'),
+            "blue_rune":        pygame.image.load('media/blue_rune.png'),
         }
     
     def startup(self):
@@ -40,24 +44,13 @@ class Sequtus (core.EngineV3):
         self.set_screen('Main menu')
         self.new_game()
     
-    def new_game(self):
-        sim_data = {
-            "types":    {
-                "Red circle": {
-                    "max_hp":   10,
-                    "image":    "red_rune",
-                    "type":     "walker",
-                },
-            },
-            "actors":   [
-                {
-                    "type": "Red circle",
-                    "pos":  [400, 400],
-                    "team": 1,
-                    "hp":   10,
-                },
-            ],
-        }
+    def new_game(self, file_path=""):
+        if file_path == "":
+            file_path = "%s/data/dummy.json" % sys.path[0]
+        
+        with open(file_path) as f:
+            sim_data = json.loads(f.read())
+        
         self.set_screen('Battle screen')
         
         self.current_screen.name = "Sequtus"
