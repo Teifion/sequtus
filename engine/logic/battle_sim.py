@@ -17,7 +17,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.next_cycle = time.time()
         
-        self.set_speed(1000)
+        self.set_speed(50)
         
         self.running = True
         self.loaded = False
