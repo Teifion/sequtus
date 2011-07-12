@@ -33,7 +33,7 @@ class BattleSim (battle_screen.BattleScreen):
             a.issue_command(cmd, target)
         
         for a, cmd, target in self.q_orders[self.tick]:
-            a.issue_command(cmd, target)
+            a.append_command(cmd, target)
         
         del(self.orders[self.tick])
         del(self.q_orders[self.tick])
