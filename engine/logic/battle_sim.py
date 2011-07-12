@@ -28,6 +28,17 @@ class BattleSim (battle_screen.BattleScreen):
         self.cycles_per_second = cycles_per_second
         self._cycle_delay = 1/self.cycles_per_second
     
+    def issue_orders(self):
+        for a, cmd, target in self.orders[self.tick]:
+            print(a, cmd, target)
+            a.issue_command(cmd, target)
+        
+        for a, cmd, target in self.q_orders[self.tick]:
+            a.issue_command(cmd, target)
+        
+        del(self.orders[self.tick])
+        del(self.q_orders[self.tick])
+    
     def redraw(self):
         # If we've not loaded anything yet then we won't need to cycle
         if not self.loaded:
@@ -36,6 +47,10 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Main logic execution loop
         if time.time() > self.next_cycle:
+            self.tick += 1
+            self.orders[self.tick + self.tick_jump] = []
+            self.q_orders[self.tick + self.tick_jump] = []
+            self.issue_orders()
             
             # This will warn us if the sim is lagging behind how fast it's meant to be
             time_over = time.time() - self.next_cycle

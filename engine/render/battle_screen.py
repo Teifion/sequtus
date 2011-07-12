@@ -70,10 +70,27 @@ class BattleScreen (screen.Screen):
         self._redraw_delay = 0
         self.set_fps(30)
         
+        # Used to store orders for X steps later
+        # http://www.gamasutra.com/view/feature/3094/1500_archers_on_a_288_network_.php
+        self.orders = {}
+        self.q_orders = {}# Orders that get added to the actor's order queue
+        self.tick = 0
+        self.tick_jump = 3
+        
+        for i in range(self.tick_jump+1):
+            self.orders[i] = []
+            self.q_orders[i] = []
+        
         self.panels = {}
         
     def set_fps(self, fps):
         self._redraw_delay = 1/fps
+    
+    def add_order(self, the_actor, command, target):
+        self.orders[self.tick + self.tick_jump].append((the_actor, command, target))
+    
+    def queue_order(self, the_actor, command, target):
+        self.q_orders[self.tick + self.tick_jump].append((the_actor, command, target))
     
     def redraw(self):
         if time.time() < self._next_redraw:
@@ -177,22 +194,22 @@ class BattleScreen (screen.Screen):
             if not actor_target:
                 for a in self.selected_actors:
                     if KMOD_SHIFT ^ mods:
-                        a.issue_command("move", real_mouse_pos)
+                        self.add_order(a, "move", real_mouse_pos)
                     else:
-                        a.append_command("move", real_mouse_pos)
+                        self.queue_order(a, "move", real_mouse_pos)
             else:
                 if actor_target.team != self.player_team:
                     for a in self.selected_actors:
                         if KMOD_SHIFT ^ mods:
-                            a.issue_command("attack", actor_target)
+                            self.add_order(a, "attack", actor_target)
                         else:
-                            a.append_command("attack", actor_target)
+                            self.queue_order(a, "attack", actor_target)
                 else:
                     for a in self.selected_actors:
                         if KMOD_SHIFT ^ mods:
-                            a.issue_command("defend", actor_target)
+                            self.add_order(a, "defend", actor_target)
                         else:
-                            a.append_command("defend", actor_target)
+                            self.queue_order(a, "defend", actor_target)
             
         else:
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)
