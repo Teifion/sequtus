@@ -199,7 +199,7 @@ class BattleScreen (screen.Screen):
                         self.add_order(a, "move", real_mouse_pos)
                         
             else:
-                if actor_target.team != self.player_team:
+                if actor_target.team != self.selected_actors[0].team:
                     for a in self.selected_actors:
                         if KMOD_SHIFT & mods:
                             self.queue_order(a, "attack", actor_target)
