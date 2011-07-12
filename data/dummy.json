@@ -1,14 +1,40 @@
 {
     "types":    {
         "Red circle": {
-            "max_hp":   10,
-            "image":    "red_rune",
-            "type":     "walker"
+            "image":            "red_rune",
+            "type":             "walker",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1,
+            "deceleration":     1,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    ["constructor"]
         },
         "Blue circle": {
-            "max_hp":   15,
-            "image":    "blue_rune",
-            "type":     "walker"
+            "image":            "blue_rune",
+            "type":             "walker",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1,
+            "deceleration":     1,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    ["constructor"]
         }
     },
     "actors":   [
