@@ -9,10 +9,21 @@ class Actor (object):
     game_update_time = 10
     ai_update_time = 100
     
-    image   = ""
-    speed   = 5
+    image               = ""
+    max_hp              = 1
+    max_shields         = 0
     
-    max_hp  = 10
+    acceleration        = 0
+    deceleration        = 0
+    turn_speed          = 0
+    drifts              = True
+    max_velocity        = 0
+    
+    max_armour          = 0
+    max_shield_armour   = 0
+    
+    weapons             = []
+    flags               = []
     
     def __init__(self):
         super(Actor, self).__init__()
@@ -32,7 +43,7 @@ class Actor (object):
         self.order_queue = []
         self.current_order = ("stop", None)
         
-        self.hp = 10
+        self.hp = 0
         self._health_bar = (None, None)
     
     def health_bar(self, scroll_x, scroll_y):
@@ -58,12 +69,27 @@ class Actor (object):
     
     def apply_data(self, data):
         """Applies transitory data such as position and hp"""
-        self.hp = data.get("hp", self.hp)
+        self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""
-        self.image = data.get("image", self.image)
+        self.image              = data.get("image", self.image)
+        
+        self.max_hp             = data.get("max_hp", self.max_hp)
+        self.max_shields        = data.get("max_shields", self.max_shields)
+        
+        self.acceleration       = data.get("acceleration", self.acceleration)
+        self.deceleration       = data.get("deceleration", self.deceleration)
+        self.turn_speed         = data.get("turn_speed", self.turn_speed)
+        self.drifts             = data.get("drifts", self.drifts)
+        self.max_velocity       = data.get("max_velocity", self.max_velocity)
+        
+        self.max_armour         = data.get("max_armour", self.max_armour)
+        self.max_shield_armour  = data.get("max_shield_armour", self.max_shield_armour)
+        
+        self.weapons            = data.get("weapons", self.weapons)
+        self.flags              = data.get("flags", self.flags)
     
     def selection_rect(self):
         return pygame.Rect(
