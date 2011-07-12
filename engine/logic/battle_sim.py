@@ -30,7 +30,6 @@ class BattleSim (battle_screen.BattleScreen):
     
     def issue_orders(self):
         for a, cmd, target in self.orders[self.tick]:
-            print(a, cmd, target)
             a.issue_command(cmd, target)
         
         for a, cmd, target in self.q_orders[self.tick]:
