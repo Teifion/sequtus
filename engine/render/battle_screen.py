@@ -104,7 +104,9 @@ class BattleScreen (screen.Screen):
             self.engine.window_width, self.engine.window_height)
         )
         
-        # Menus
+        # Panels
+        for i, p in self.panels.items():
+            surf.blit(*p.image())
         
         # Actors
         for a in self.actors:
@@ -152,7 +154,6 @@ class BattleScreen (screen.Screen):
                 self.assign_control_group(event.key)
             else:
                 self.select_control_group(event.key)
-        
     
     def handle_keyhold(self):
         # Up/Down
