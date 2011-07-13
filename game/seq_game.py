@@ -30,8 +30,12 @@ class Sequtus (core.EngineV3):
             "background":       image_composition.starfield(),
             
             "battlefield":      pygame.image.load('media/battlefield.png'),
+            
             "red_rune":         pygame.image.load('media/red_rune.png'),
             "blue_rune":        pygame.image.load('media/blue_rune.png'),
+            
+            "red_square":         pygame.image.load('media/red_square.png'),
+            "blue_square":        pygame.image.load('media/blue_square.png'),
         }
     
     def startup(self):

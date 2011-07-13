@@ -145,7 +145,6 @@ class BattleScreen (screen.Screen):
         self._next_redraw = time.time() + self._redraw_delay
     
     def handle_keydown(self, event):
-        # 'KMOD_ALT', 'KMOD_CAPS', 'KMOD_CTRL', 'KMOD_LALT', 'KMOD_LCTRL', 'KMOD_LMETA', 'KMOD_LSHIFT', 'KMOD_META', 'KMOD_MODE', 'KMOD_NONE', 'KMOD_NUM', 'KMOD_RALT', 'KMOD_RCTRL', 'KMOD_RMETA', 'KMOD_RSHIFT', 'KMOD_SHIFT'
         mods = pygame.key.get_mods()
         
         # Number key? Select or assign a control group
@@ -176,7 +175,7 @@ class BattleScreen (screen.Screen):
         
         if event.button == 1:# Left click
             if not drag:
-                if KMOD_SHIFT ^ mods:
+                if not KMOD_SHIFT & mods:
                     self.unselect_all_actors()
                 
                 for a in self.actors:
@@ -231,9 +230,9 @@ class BattleScreen (screen.Screen):
         self.drag_rect = None
         
         if event.button == 1:
-            if KMOD_SHIFT ^ mods:
+            if not KMOD_SHIFT & mods:
                 self.unselect_all_actors()
-            
+                
             for a in self.actors:
                 if a.inside(drag_rect):
                     self.select_actor(a)

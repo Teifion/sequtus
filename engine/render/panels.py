@@ -54,14 +54,15 @@ class TabularMenu (Panel):
     
     def draw(self):
         self._image = pygame.Surface(self.size)
+        self._image.fill((100, 100, 100), pygame.Rect(0, 0, self.size[0], self.size[1]))
         
         col_count = math.floor(self.size[0]/self.grid_size[0])
         
         col, row = 0, 0
         for image_name, callback, args in self.buttons:
-            img = engine.images[image_name]
+            img = self.engine.images[image_name]
             
-            surf.blit(img, pygame.Rect(
+            self._image.blit(img, pygame.Rect(
                 col * self.grid_size[0], row * self.grid_size[1],
                 self.grid_size[0], self.grid_size[1],
             ))
@@ -71,8 +72,8 @@ class TabularMenu (Panel):
                 col = 0
                 row += 1
         
-        self._image.fill((100, 100, 100), pygame.Rect(0, 0, self.size[0], self.size[1]))
         self.position.size = self.size
+        self.changed = False
     
 
 # Used to draw the map
