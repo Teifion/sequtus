@@ -33,7 +33,6 @@ class Actor (object):
         self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
         
-        self.velocity = [0,0]
         self.selected = False
         self.selector_rect = pygame.Rect(-10, -10, 1, 1)
         
@@ -44,6 +43,7 @@ class Actor (object):
         self.current_order = ("stop", None)
         
         self.hp = 0
+        self.velocity = [0,0]
         self._health_bar = (None, None)
     
     def health_bar(self, scroll_x, scroll_y):
@@ -71,6 +71,7 @@ class Actor (object):
         """Applies transitory data such as position and hp"""
         self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
+        self.team = data.get("team", self.team)
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""
@@ -120,21 +121,17 @@ class Actor (object):
         self.image = img
         self.rect = self.image.get_rect()
     
-    def update(self, current_time):
-        if self.next_game_update < current_time:
-            self.check_ai()
-            self.pos = vectors.add_vectors(self.pos, self.velocity)
-            self.next_game_update = current_time + self.game_update_time
-            
-            # Set rect
-            self.rect.topleft = (
-                self.pos[0] - self.rect.width/2,
-                self.pos[1] - self.rect.height/2
-            )
+    def update(self):
+        self.check_ai()
+        self.pos = vectors.add_vectors(self.pos, self.velocity)
         
-        if self.next_ai_update < current_time:
-            self.next_ai_update = current_time + self.ai_update_time
-            self.run_ai()
+        # Set rect
+        self.rect.topleft = (
+            self.pos[0] - self.rect.width/2,
+            self.pos[1] - self.rect.height/2
+        )
+        
+        self.run_ai()
     
     def issue_command(self, cmd, target):
         "This is used to override any current orders"
@@ -160,6 +157,8 @@ class Actor (object):
         self.current_order = self.order_queue.pop(0)
     
     def check_ai(self):
+        # TODO Check with sim AI holder for new orders
+        
         cmd, target = self.current_order
         
         if cmd == "stop":
@@ -184,7 +183,7 @@ class Actor (object):
         
         elif cmd == "move":
             dist = vectors.distance(self.pos, target)
-            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.speed)
+            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
             
             if dist <= vectors.total_velocity(self.velocity):
                 self.pos = target

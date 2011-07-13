@@ -58,7 +58,7 @@ class BattleSim (battle_screen.BattleScreen):
             
             # Update the actors themselves
             for a in self.actors:
-                a.update(pygame.time.get_ticks())
+                a.update()
             
             # Set next cycle time
             self.next_cycle = time.time() + self._cycle_delay
