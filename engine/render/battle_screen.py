@@ -40,6 +40,11 @@ class BattleScreen (screen.Screen):
     def __init__(self, engine):
         super(BattleScreen, self).__init__((engine.window_width, engine.window_height))
         
+        # Defaults to drawing to the screen sizes
+        # we can override this if we want to
+        self.draw_top, self.draw_left = 0, 0
+        self.draw_width, self.draw_height = engine.window_width, engine.window_height
+        
         self.background_image = pygame.Surface((1,1))
         self.background = pygame.Surface((1,1))
         self.have_scrolled = False
@@ -81,6 +86,9 @@ class BattleScreen (screen.Screen):
             self.orders[i] = []
             self.q_orders[i] = []
         
+        self.place_image = None
+        self.mouseup_callback = None
+        self.mouseup_callback_args = []
         self.panels = {}
         
     def set_fps(self, fps):
@@ -104,10 +112,6 @@ class BattleScreen (screen.Screen):
             self.engine.window_width, self.engine.window_height)
         )
         
-        # Panels
-        for i, p in self.panels.items():
-            surf.blit(*p.image())
-        
         # Actors
         for a in self.actors:
             actor_img = self.engine.images[a.image]
@@ -116,8 +120,8 @@ class BattleScreen (screen.Screen):
             r.top = a.pos[1] + self.scroll_y - r.height/2
             
             # Only draw actors within the screen
-            if r.right > 0 and r.left < self.engine.window_width:
-                if r.bottom > 0 and r.top < self.engine.window_height:
+            if r.right > self.draw_left and r.left < self.draw_width:
+                if r.bottom > self.draw_top and r.top < self.draw_height:
                     
                     surf.blit(actor_img, r)
                     
@@ -128,6 +132,19 @@ class BattleScreen (screen.Screen):
                         pygame.draw.rect(surf, (255, 255, 255), r, 1)
                         
                         surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
+        
+        # Placement (such as placing a building)
+        if self.place_image:
+            img = self.engine.images[self.place_image]
+            r = img.get_rect()
+            surf.blit(img, pygame.Rect(
+                self.mouse[0] - r.width/2, self.mouse[1] - r.height/2,
+                r.width, r.height,
+            ))
+        
+        # Panels
+        for i, p in self.panels.items():
+            surf.blit(*p.image())
         
         # Dragrect
         if self.drag_rect != None:
@@ -170,8 +187,26 @@ class BattleScreen (screen.Screen):
         super(BattleScreen, self).handle_keyhold()
     
     def handle_mouseup(self, event, drag=False):
+        if self.mouseup_callback:
+            callback_func, args = self.mouseup_callback, self.mouseup_callback_args
+            
+            # Set these to nothing now incase we want to make a new callback
+            # in the current callback
+            self.mouseup_callback = None
+            self.mouseup_callback_args = []
+            
+            return callback_func(event, drag, *args)
+        
         mods = pygame.key.get_mods()
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        
+        # First check panels
+        for i, p in self.panels.items():
+            if p.contains(real_mouse_pos):
+                if p.handle_mouseup(event, drag):
+                    return
+                else:
+                    break
         
         if event.button == 1:# Left click
             if not drag:
@@ -319,6 +354,15 @@ class BattleScreen (screen.Screen):
         
         self.scroll_y += rate * self.scroll_speed
         self.scroll_y = min(self.scroll_boundaries[3], self.scroll_y)
+    
+    def place_actor_mode(self, actor_type):
+        """Used to enter placement mode where an icon hovers beneath the
+        cursor and when clicked is built or suchlike"""
+        
+        self.place_image = actor_type['placement_image']
+        
+        self.mouseup_callback = self.place_actor
+        self.mouseup_callback_args = [actor_type]
     
     def add_actor(self, a):
         a.rect = self.engine.images[a.image].get_rect()

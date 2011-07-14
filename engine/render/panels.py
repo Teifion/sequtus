@@ -23,6 +23,11 @@ class Panel (object):
         
         self.position = pygame.Rect(0,0,0,0)
     
+    def contains(self, point):
+        if self.position.left <= point[0] <= self.position.right:
+            if self.position.top <= point[1] <= self.position.bottom:
+                return True
+    
     def image(self):
         # Try to use the cached version
         if self._image != None and not self.changed:
@@ -35,6 +40,10 @@ class Panel (object):
     
     def draw(self):
         raise Exception("{0}.draw() is not implemented".format(self.__class__))
+    
+    def handle_mouseup(self, event, drag=False):
+        # Return True to signal that the click was handled
+        raise Exception("{0}.handle_mouseup() is not implemented".format(self.__class__))
 
 # Used to draw a grid of information much like the build
 # menus from TA or C&C
@@ -74,6 +83,28 @@ class TabularMenu (Panel):
         
         self.position.size = self.size
         self.changed = False
+    
+    def handle_mouseup(self, event, drag=False):
+        relative_pos = (event.pos[0] - self.position.left, event.pos[1] - self.position.top)
+        
+        col = relative_pos[0]/self.grid_size[0]
+        row = relative_pos[1]/self.grid_size[1]
+        col_count = int(math.floor(self.size[0]/self.grid_size[0]))
+        
+        index = (col_count * row) + col
+        
+        # No button there? Ignore the click but they clicked the menu
+        # so we don't want to pass this back to the screen
+        if index >= len(self.buttons):
+            return True
+        
+        # Get the information for the button
+        image_name, callback, args = self.buttons[index]
+        
+        # Perform callback
+        callback(*args)
+        
+        return True
     
 
 # Used to draw the map

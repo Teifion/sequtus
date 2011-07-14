@@ -34,8 +34,14 @@ class Sequtus (core.EngineV3):
             "red_rune":         pygame.image.load('media/red_rune.png'),
             "blue_rune":        pygame.image.load('media/blue_rune.png'),
             
-            "red_square":         pygame.image.load('media/red_square.png'),
-            "blue_square":        pygame.image.load('media/blue_square.png'),
+            "red_building_menu":      pygame.image.load('media/red_building_menu.png'),
+            "blue_building_menu":     pygame.image.load('media/blue_building_menu.png'),
+            
+            "red_building":         pygame.image.load('media/red_building.png'),
+            "blue_building":        pygame.image.load('media/blue_building.png'),
+            
+            "red_building_placement":       pygame.image.load('media/red_building_placement.png'),
+            "blue_building_placement":      pygame.image.load('media/blue_building_placement.png'),
         }
     
     def startup(self):
@@ -63,4 +69,6 @@ class Sequtus (core.EngineV3):
         
         self.current_screen.load(sim_data)
         self.current_screen.select_actor(self.current_screen.actors[0])
+        
+        # self.current_screen.place_image = "red_building_placement"
         

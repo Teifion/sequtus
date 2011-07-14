@@ -66,6 +66,19 @@ class BattleSim (battle_screen.BattleScreen):
         # Now to potentially draw the screen
         super(BattleSim, self).redraw()
     
+    def place_actor(self, event, drag, actor_type):
+        """Called when there's a click while in placement mode"""
+        self.place_image = None
+        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        
+        aclass = actor_subtypes.types[actor_type['type']]
+        
+        a = aclass()
+        a.apply_template(actor_type)
+        a.apply_data({})
+        a.pos = real_mouse_pos
+        self.add_actor(a)
+    
     def load(self, data):
         # Load types
         for type_name, type_data in data['types'].items():

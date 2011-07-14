@@ -3,8 +3,8 @@ import actors
 class Building (actors.Actor):
     speed = 0
     
-    def update(self, current_time):
-        super(Building, self).update(current_time)
+    def update(self):
+        super(Building, self).update()
         self.velocity = [0,0]
 
 class Walker (actors.Actor):
