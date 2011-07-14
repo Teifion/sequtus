@@ -9,6 +9,7 @@ import pygame
 import time
 import actor_subtypes
 
+from engine.libs import actor_lib
 from engine.render import battle_screen
 
 class BattleSim (battle_screen.BattleScreen):
@@ -66,7 +67,7 @@ class BattleSim (battle_screen.BattleScreen):
         # Now to potentially draw the screen
         super(BattleSim, self).redraw()
     
-    def place_actor(self, event, drag, actor_type):
+    def place_actor(self, event, drag, actor_type, actor_data = {}):
         """Called when there's a click while in placement mode"""
         self.place_image = None
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
@@ -75,13 +76,16 @@ class BattleSim (battle_screen.BattleScreen):
         
         a = aclass()
         a.apply_template(actor_type)
-        a.apply_data({})
-        a.pos = real_mouse_pos
+        a.apply_data(actor_data)
+        
+        if "pos" not in actor_data:
+            a.pos = real_mouse_pos
         self.add_actor(a)
     
     def load(self, data):
         # Load types
         for type_name, type_data in data['types'].items():
+            actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
         
         # Load actors

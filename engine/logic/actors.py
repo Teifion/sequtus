@@ -2,7 +2,7 @@ from __future__ import division
 import pygame
 from pygame.locals import *
 
-import vectors
+from engine.libs import vectors
 
 class Actor (object):
     """It's intended that you sub-class this"""
