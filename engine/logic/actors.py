@@ -28,7 +28,7 @@ class Actor (object):
     def __init__(self):
         super(Actor, self).__init__()
         
-        self.pos = (-100, -100)# Assume we're offscreen
+        self.pos = (-100, -100, 0)# Assume we're offscreen
         
         self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
@@ -43,7 +43,7 @@ class Actor (object):
         self.current_order = ("stop", None)
         
         self.hp = 0
-        self.velocity = [0,0]
+        self.velocity = [0,0,0]
         self._health_bar = (None, None)
     
     def health_bar(self, scroll_x, scroll_y):
@@ -155,6 +155,12 @@ class Actor (object):
             return
         
         self.current_order = self.order_queue.pop(0)
+        
+        # Check the target
+        target = self.current_order[1]
+        if type(target) == list or type(target) == tuple:
+            if len(target) == 2:
+                self.current_order = (self.current_order[0], [target[0], target[1], 0])
     
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
@@ -169,7 +175,7 @@ class Actor (object):
             
             if dist <= vectors.total_velocity(self.velocity):
                 self.pos = target
-                self.velocity = [0,0]
+                self.velocity = [0,0,0]
                 self.next_order()
             
         else:
@@ -179,7 +185,7 @@ class Actor (object):
         cmd, target = self.current_order
         
         if cmd == "stop":
-            self.velocity = [0,0]
+            self.velocity = [0,0,0]
         
         elif cmd == "move":
             dist = vectors.distance(self.pos, target)
@@ -187,7 +193,7 @@ class Actor (object):
             
             if dist <= vectors.total_velocity(self.velocity):
                 self.pos = target
-                self.velocity = [0,0]
+                self.velocity = [0,0,0]
                 self.next_order()
             
         else:
