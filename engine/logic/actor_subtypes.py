@@ -5,7 +5,7 @@ class Building (actors.Actor):
     
     def update(self):
         super(Building, self).update()
-        self.velocity = [0,0]
+        self.velocity = [0,0,0]
 
 class Walker (actors.Actor):
     pass
