@@ -92,7 +92,7 @@ def move_to_vector(angle, distance):
     # Now horrizontal
     x, y = _move_to_vector_2d(angle[0], h)
     
-    return x, y, z
+    return [x, y, z]
 
 def _move_to_vector_2d(angle, distance):
     """Returns an opposite and adjacent from the triangle"""
@@ -105,10 +105,10 @@ def _move_to_vector_2d(angle, distance):
     opp = math.sin(math.radians(angle)) * distance
     adj = math.cos(math.radians(angle)) * distance
     
-    return opp, -adj
+    return [opp, -adj]
 
 def vector_to_move(vector):
-    return angle([0,0,0], vector), total_velocity(vector)
+    return [angle([0,0,0], vector), total_velocity(vector)]
 
 # Gets the angle to go from 1 to 2, first item is 2D angle, 2nd return is the Z angle
 def angle(pos1, pos2):
@@ -149,7 +149,7 @@ def angle(pos1, pos2):
     else:
         za = 0
     
-    return xy, math.degrees(za)
+    return [xy, math.degrees(za)]
 
 def distance(pos1, pos2):
     x = abs(pos1[0] - pos2[0])
@@ -182,5 +182,5 @@ def get_midpoint(pos1, pos2, distance):
     y = pos1[1] - (math.cos(math.radians(a)) * distance)
     z = pos1[2] + (math.sin(math.radians(za)) * distance)
     
-    return x,y,z
+    return [x,y,z]
     
