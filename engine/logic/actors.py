@@ -28,7 +28,7 @@ class Actor (object):
     def __init__(self):
         super(Actor, self).__init__()
         
-        self.pos = (-100, -100, 0)# Assume we're offscreen
+        self.pos = [-100, -100, 0]# Assume we're offscreen
         
         self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
@@ -43,8 +43,11 @@ class Actor (object):
         self.current_order = ("stop", None)
         
         self.hp = 0
+        self.completion = 100
         self.velocity = [0,0,0]
+        
         self._health_bar = (None, None)
+        self._completion_bar = (None, None)
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -67,11 +70,34 @@ class Actor (object):
         
         return self._health_bar[0], hp_rect
     
+    def completion_bar(self):
+        if self._completion_bar[1] != self.completion:
+            s = pygame.Surface((self.rect.width, 3))
+            
+            comp_percent = self.completion/100
+            fill_width = self.rect.width * comp_percent
+            
+            s.fill((0,0,0), pygame.Rect(0,0, self.rect.width, 3))
+            s.fill((200,0,200), pygame.Rect(0,0, fill_width, 3))
+            
+            self._completion_bar = (s, self.completion)
+        
+        hp_rect = pygame.Rect(
+            self.rect.left + scroll_x,
+            self.rect.top + scroll_y - 12,
+            self.rect.width,
+            3
+        )
+        
+        return self._health_bar[0], hp_rect
+    
     def apply_data(self, data):
         """Applies transitory data such as position and hp"""
         self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
         self.team = data.get("team", self.team)
+        
+        self.completion = data.get("completion", self.completion)
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""
