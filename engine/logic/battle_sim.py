@@ -80,6 +80,9 @@ class BattleSim (battle_screen.BattleScreen):
         a.apply_template(actor_type)
         a.apply_data(actor_data)
         
+        # It's a new unit so it's 0% complete so far
+        a.completion = 0
+        
         if "pos" not in actor_data:
             a.pos[0], a.pos[1] = real_mouse_pos
         self.add_actor(a)

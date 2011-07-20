@@ -70,7 +70,7 @@ class Actor (object):
         
         return self._health_bar[0], hp_rect
     
-    def completion_bar(self):
+    def completion_bar(self, scroll_x, scroll_y):
         if self._completion_bar[1] != self.completion:
             s = pygame.Surface((self.rect.width, 3))
             
@@ -78,18 +78,18 @@ class Actor (object):
             fill_width = self.rect.width * comp_percent
             
             s.fill((0,0,0), pygame.Rect(0,0, self.rect.width, 3))
-            s.fill((200,0,200), pygame.Rect(0,0, fill_width, 3))
+            s.fill((200,200,255), pygame.Rect(0,0, fill_width, 3))
             
             self._completion_bar = (s, self.completion)
         
-        hp_rect = pygame.Rect(
+        comp_rect = pygame.Rect(
             self.rect.left + scroll_x,
-            self.rect.top + scroll_y - 12,
+            self.rect.top + scroll_y - 8,
             self.rect.width,
             3
         )
         
-        return self._health_bar[0], hp_rect
+        return self._completion_bar[0], comp_rect
     
     def apply_data(self, data):
         """Applies transitory data such as position and hp"""
