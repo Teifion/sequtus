@@ -124,6 +124,7 @@ class VectorTests(unittest.TestCase):
             
             # Specific XY tests
             ([1,1,0], [4,100,0], [178.26, 0]),# Down and a little bit right
+            ([400, 400, 0], [100, 900, 0], [210.963,0]),# Down and left
             
             # Z Tests
             # ([0,0,0], [4,-4,0], [0, 45]),# Aim up
