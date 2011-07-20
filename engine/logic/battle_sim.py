@@ -7,6 +7,8 @@ The sim is expected to be subclassed so as to program in the game rules.
 
 import pygame
 import time
+import sys
+import json
 import actor_subtypes
 
 from engine.libs import actor_lib
@@ -79,15 +81,35 @@ class BattleSim (battle_screen.BattleScreen):
         a.apply_data(actor_data)
         
         if "pos" not in actor_data:
-            a.pos = real_mouse_pos
+            a.pos[0], a.pos[1] = real_mouse_pos
         self.add_actor(a)
     
-    def load(self, data):
+    def load_all(self, config_path, setup_path, game_path):
+        """Uses a local path for each of the 3 load types"""
+        
+        with open("{0}/{1}".format(sys.path[0], config_path)) as f:
+            data = json.loads(f.read())
+            self.load_config(data)
+        
+        with open("{0}/{1}".format(sys.path[0], setup_path)) as f:
+            data = json.loads(f.read())
+            self.load_setup(data)
+        
+        
+        with open("{0}/{1}".format(sys.path[0], game_path)) as f:
+            data = json.loads(f.read())
+            self.load_game(data)
+    
+    def load_config(self, data):
+        pass
+    
+    def load_setup(self, data):
         # Load types
         for type_name, type_data in data['types'].items():
             actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
-        
+    
+    def load_game(self, data):
         # Load actors
         for actor_data in data['actors']:
             atemplate   = self.actor_types[actor_data['type']]
