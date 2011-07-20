@@ -49,25 +49,28 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Main logic execution loop
         if time.time() > self.next_cycle:
-            self.tick += 1
-            self.orders[self.tick + self.tick_jump] = []
-            self.q_orders[self.tick + self.tick_jump] = []
-            self.issue_orders()
-            
-            # This will warn us if the sim is lagging behind how fast it's meant to be
-            time_over = time.time() - self.next_cycle
-            if time_over > 0.25:
-                print("Logic lag of %ss" % time_over)
-            
-            # Update the actors themselves
-            for a in self.actors:
-                a.update()
-            
-            # Set next cycle time
-            self.next_cycle = time.time() + self._cycle_delay
+            self.logic_cycle()
         
         # Now to potentially draw the screen
         super(BattleSim, self).redraw()
+    
+    def logic_cycle(self):
+        self.tick += 1
+        self.orders[self.tick + self.tick_jump] = []
+        self.q_orders[self.tick + self.tick_jump] = []
+        self.issue_orders()
+        
+        # This will warn us if the sim is lagging behind how fast it's meant to be
+        time_over = time.time() - self.next_cycle
+        if time_over > 0.25:
+            print("Logic lag of %ss" % time_over)
+        
+        # Update the actors themselves
+        for a in self.actors:
+            a.update()
+        
+        # Set next cycle time
+        self.next_cycle = time.time() + self._cycle_delay
     
     def place_actor(self, event, drag, actor_type, actor_data = {}):
         """Called when there's a click while in placement mode"""
