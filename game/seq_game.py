@@ -55,20 +55,12 @@ class Sequtus (core.EngineV3):
         self.new_game()
     
     def new_game(self, file_path=""):
-        if file_path == "":
-            file_path = "%s/data/dummy.json" % sys.path[0]
-        
-        with open(file_path) as f:
-            sim_data = json.loads(f.read())
-        
         self.set_screen('Battle screen')
         
         self.current_screen.name = "Sequtus"
         self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
         self.current_screen.background_image = self.images['battlefield'].copy()
         
-        self.current_screen.load(sim_data)
+        self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         self.current_screen.select_actor(self.current_screen.actors[0])
-        
-        # self.current_screen.place_image = "red_building_placement"
         
