@@ -1,79 +1,14 @@
 {
-    "types":    {
-        "Red building": {
-            "image":            "red_building",
-            "placement_image":  "red_building_placement",
-            "type":             "building",
-            "max_hp":           100,
-            "max_shields":      0,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "weapons":  [],
-            "flags":    []
-        },
-        "Blue building": {
-            "image":            "blue_building",
-            "placement_image":  "blue_building_placement",
-            "type":             "building",
-            "max_hp":           100,
-            "max_shields":      0,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "weapons":  [],
-            "flags":    []
-        },
-        
-        "Red circle": {
-            "image":            "red_rune",
-            "type":             "walker",
-            "max_hp":           10,
-            "max_shields":      0,
-            
-            "acceleration":     1,
-            "deceleration":     1,
-            "turn_speed":       90,
-            "drifts":           false,
-            "max_velocity":     5,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "weapons":  [],
-            "flags":    ["constructor"]
-        },
-        "Blue circle": {
-            "image":            "blue_rune",
-            "type":             "walker",
-            "max_hp":           10,
-            "max_shields":      0,
-            
-            "acceleration":     1,
-            "deceleration":     1,
-            "turn_speed":       90,
-            "drifts":           false,
-            "max_velocity":     5,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "weapons":  [],
-            "flags":    ["constructor"]
-        }
-    },
     "actors":   [
         {
             "type": "Red circle",
-            "pos":  [400, 400],
+            "pos":  [400, 400, 0],
             "team": 1,
             "hp":   10
         },
         {
             "type": "Blue circle",
-            "pos":  [450, 450],
+            "pos":  [450, 450, 0],
             "team": 2,
             "hp":   10
         }
