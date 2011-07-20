@@ -132,6 +132,9 @@ class BattleScreen (screen.Screen):
                         pygame.draw.rect(surf, (255, 255, 255), r, 1)
                         
                         surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
+                        
+                        if a.completion < 100:
+                            surf.blit(*a.completion_bar(self.scroll_x, self.scroll_y))
         
         # Placement (such as placing a building)
         if self.place_image:
