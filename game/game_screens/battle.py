@@ -10,15 +10,37 @@ class Battle (battle_sim.BattleSim):
         self.panels["build"] = panels.TabularMenu(engine,
             size = (200, engine.window_height-200),
             grid_size = (100, 100),
-            position = (engine.window_width - 200, 200)
+            position = (0, 200),
         )
         
         self.panels["minimap"] = panels.MiniMap(engine,
             size = (200, 200),
-            position = (engine.window_width - 200, 0)
+            position = (0, 0)
         )
         
+        self.panels["resources"] = panels.InfoBox(engine,
+            size = (engine.window_width - 200, 50),
+            position = (200, 0),
+            fill_colour = (0,0,50),
+        )
+        
+        # May not be needed
+        # self.panels["unit_info"] = panels.InfoBox(engine,
+        #     size = (engine.window_width - 200, 75),
+        #     position = (0, engine.window_height - 75),
+        #     fill_colour = (0,0,0),
+        # )
+        
         self.rebuild_build_menu()
+        
+        self.draw_area = (200, 50, engine.window_width, engine.window_height)
+        
+        self.post_init()
+    
+    def logic_cycle(self):
+        self.actors[0].completion += 1
+        
+        super(Battle, self).logic_cycle()
     
     def rebuild_build_menu(self):
         buttons = []

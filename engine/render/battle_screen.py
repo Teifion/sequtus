@@ -44,6 +44,7 @@ class BattleScreen (screen.Screen):
         # we can override this if we want to
         self.draw_top, self.draw_left = 0, 0
         self.draw_area = (0, 0, engine.window_width, engine.window_height)
+        self.draw_margin = [0, 0]
         
         self.background_image = pygame.Surface((1,1))
         self.background = pygame.Surface((1,1))
@@ -90,7 +91,10 @@ class BattleScreen (screen.Screen):
         self.mouseup_callback = None
         self.mouseup_callback_args = []
         self.panels = {}
-        
+    
+    def post_init(self):
+        self.draw_margin = [self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1]]
+    
     def set_fps(self, fps):
         self._redraw_delay = 1/fps
     
@@ -108,19 +112,16 @@ class BattleScreen (screen.Screen):
         # Draw background taking into account scroll
         surf = self.engine.display
         surf.blit(self.background_image, pygame.Rect(
-            self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1],
-            self.draw_area[2], self.draw_area[3])
-        )
-        
-        left_margin = self.scroll_x + self.draw_area[0]
-        top_margin = self.scroll_x + self.draw_area[0]
+            self.draw_margin[0], self.draw_margin[1],
+            self.draw_area[2], self.draw_area[3],
+        ))
         
         # Actors
         for a in self.actors:
             actor_img = self.engine.images[a.image]
             r = pygame.Rect(actor_img.get_rect())
-            r.left = a.pos[0] + left_margin - r.width/2
-            r.top = a.pos[1] + top_margin - r.height/2
+            r.left = a.pos[0] + self.draw_margin[0] - r.width/2
+            r.top = a.pos[1] + self.draw_margin[1] - r.height/2
             
             # Only draw actors within the screen
             if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
@@ -130,14 +131,14 @@ class BattleScreen (screen.Screen):
                     
                     if a.selected:
                         r = a.selection_rect()
-                        r.left += left_margin
-                        r.top += top_margin
+                        r.left += self.draw_margin[0]
+                        r.top += self.draw_margin[1]
                         pygame.draw.rect(surf, (255, 255, 255), r, 1)
                         
-                        surf.blit(*a.health_bar(left_margin, top_margin))
+                        surf.blit(*a.health_bar(self.draw_margin[0], self.draw_margin[1]))
                         
                         if a.completion < 100:
-                            surf.blit(*a.completion_bar(left_margin, top_margin))
+                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
         
         # Placement (such as placing a building)
         if self.place_image:
@@ -156,8 +157,8 @@ class BattleScreen (screen.Screen):
         if self.drag_rect != None:
             # draw.rect uses a origin and size arguments, not topleft and bottomright
             line_rect = (
-                self.drag_rect[0] + self.scroll_x,
-                self.drag_rect[1] + self.scroll_y,
+                self.drag_rect[0] + self.draw_margin[0],
+                self.drag_rect[1] + self.draw_margin[1],
                 self.drag_rect[2] - self.drag_rect[0],
                 self.drag_rect[3] - self.drag_rect[1],
             )
@@ -204,11 +205,11 @@ class BattleScreen (screen.Screen):
             return callback_func(event, drag, *args)
         
         mods = pygame.key.get_mods()
-        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        real_mouse_pos = (event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1])
         
         # First check panels
         for i, p in self.panels.items():
-            if p.contains(real_mouse_pos):
+            if p.contains(event.pos):
                 if p.handle_mouseup(event, drag):
                     return
                 else:
@@ -265,10 +266,25 @@ class BattleScreen (screen.Screen):
     def handle_mousedrag(self, event, drag_rect):
         if event.buttons[0] == 1:
             self.drag_rect = drag_rect
+            
+            self.drag_rect = (
+                drag_rect[0] - self.draw_margin[0],
+                drag_rect[1] - self.draw_margin[1],
+                drag_rect[2] - self.draw_margin[0],
+                drag_rect[3] - self.draw_margin[1],
+            )
     
     def handle_mousedragup(self, event, drag_rect):
         mods = pygame.key.get_mods()
         self.drag_rect = None
+        
+        # Correct for margins
+        drag_rect = (
+            drag_rect[0] - self.draw_margin[0],
+            drag_rect[1] - self.draw_margin[1],
+            drag_rect[2] - self.draw_margin[0],
+            drag_rect[3] - self.draw_margin[1],
+        )
         
         if event.button == 1:
             if not KMOD_SHIFT & mods:
@@ -341,7 +357,9 @@ class BattleScreen (screen.Screen):
         last_pos = self.scroll_x
         
         self.scroll_x -= rate * self.scroll_speed
-        self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)                
+        self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)
+        
+        self.draw_margin[0] = self.scroll_x + self.draw_area[0]
     
     def scroll_left(self, rate = 1):
         last_pos = self.scroll_x
@@ -349,17 +367,23 @@ class BattleScreen (screen.Screen):
         self.scroll_x += rate * self.scroll_speed
         self.scroll_x = min(self.scroll_boundaries[2], self.scroll_x)
         
+        self.draw_margin[0] = self.scroll_x + self.draw_area[0]
+        
     def scroll_down(self, rate = 1):
         last_pos = self.scroll_y
         
         self.scroll_y -= rate * self.scroll_speed
         self.scroll_y = max(self.scroll_boundaries[1], self.scroll_y)
         
+        self.draw_margin[1] = self.scroll_y + self.draw_area[1]
+        
     def scroll_up(self, rate = 1):
         last_pos = self.scroll_y
         
         self.scroll_y += rate * self.scroll_speed
         self.scroll_y = min(self.scroll_boundaries[3], self.scroll_y)
+        
+        self.draw_margin[1] = self.scroll_y + self.draw_area[1]
     
     def place_actor_mode(self, actor_type):
         """Used to enter placement mode where an icon hovers beneath the
