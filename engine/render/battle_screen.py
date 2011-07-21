@@ -1,3 +1,5 @@
+from __future__ import division
+
 """
 BattleScreen is a screen with added functionality for handling things such as
 scrolling all of it's information comes from the sim that it connects to
@@ -74,7 +76,7 @@ class BattleScreen (screen.Screen):
         
         self._next_redraw = time.time()
         self._redraw_delay = 0
-        self.set_fps(30)
+        self.set_fps(40)
         
         # Used to store orders for X steps later
         # http://www.gamasutra.com/view/feature/3094/1500_archers_on_a_288_network_.php
@@ -91,6 +93,8 @@ class BattleScreen (screen.Screen):
         self.mouseup_callback = None
         self.mouseup_callback_args = []
         self.panels = {}
+        
+        self.redraw_count = [0, 0]
     
     def post_init(self):
         self.draw_margin = [self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1]]
@@ -107,6 +111,10 @@ class BattleScreen (screen.Screen):
     def redraw(self):
         if time.time() < self._next_redraw:
             return
+        
+        if int(time.time()) != self.redraw_count[1]:
+            print("FPS: %s" % self.redraw_count[0])
+            self.redraw_count = [0, int(time.time())]
         
         """Overrides the basic redraw as it's intended to be used with more animation"""
         # Draw background taking into account scroll
@@ -167,6 +175,7 @@ class BattleScreen (screen.Screen):
         
         pygame.display.flip()
         self._next_redraw = time.time() + self._redraw_delay
+        self.redraw_count[0] += 1
     
     def handle_keydown(self, event):
         mods = pygame.key.get_mods()

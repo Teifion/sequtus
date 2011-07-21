@@ -20,12 +20,13 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.next_cycle = time.time()
         
-        self.set_speed(50)
+        self.set_speed(100)
         
         self.running = True
         self.loaded = False
         
         self.actor_types = {}
+        self.cycle_count = [0, 0]
     
     def set_speed(self, cycles_per_second):
         self.cycles_per_second = cycles_per_second
@@ -55,6 +56,10 @@ class BattleSim (battle_screen.BattleScreen):
         super(BattleSim, self).redraw()
     
     def logic_cycle(self):
+        if int(time.time()) != self.cycle_count[1]:
+            print("CPS: %s" % self.cycle_count[0])
+            self.cycle_count = [0, int(time.time())]
+        
         self.tick += 1
         self.orders[self.tick + self.tick_jump] = []
         self.q_orders[self.tick + self.tick_jump] = []
@@ -71,6 +76,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
+        self.cycle_count[0] += 1
     
     def place_actor(self, event, drag, actor_type, actor_data = {}):
         """Called when there's a click while in placement mode"""
