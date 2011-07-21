@@ -130,5 +130,26 @@ class MiniMap (Panel):
                 self._image.fill(team_colour, pygame.Rect(x,y, size, size))
         
         self.position.size = self.size
-    
 
+
+# Used to display text upon a blank background
+class InfoBox (Panel):
+    def __init__(self, engine, size, position, fill_colour = (0, 0, 0), text_colour = (255, 255, 255)):
+        super(InfoBox, self).__init__(engine)
+        
+        self.size               = size
+        self.position.topleft   = position
+        self.fill_colour        = fill_colour
+        self.text_colour        = text_colour
+        
+        self.texts = {}
+    
+    def draw(self):
+        self._image = pygame.Surface(self.size)
+        self._image.fill(self.fill_colour, pygame.Rect(0, 0, self.size[0], self.size[1]))
+        
+        for k, t in self.texts.items():
+            pass
+        
+        self.position.size = self.size
+    
