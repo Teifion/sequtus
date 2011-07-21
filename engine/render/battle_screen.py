@@ -43,7 +43,7 @@ class BattleScreen (screen.Screen):
         # Defaults to drawing to the screen sizes
         # we can override this if we want to
         self.draw_top, self.draw_left = 0, 0
-        self.draw_width, self.draw_height = engine.window_width, engine.window_height
+        self.draw_area = (0, 0, engine.window_width, engine.window_height)
         
         self.background_image = pygame.Surface((1,1))
         self.background = pygame.Surface((1,1))
@@ -108,33 +108,36 @@ class BattleScreen (screen.Screen):
         # Draw background taking into account scroll
         surf = self.engine.display
         surf.blit(self.background_image, pygame.Rect(
-            self.scroll_x, self.scroll_y,
-            self.engine.window_width, self.engine.window_height)
+            self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1],
+            self.draw_area[2], self.draw_area[3])
         )
+        
+        left_margin = self.scroll_x + self.draw_area[0]
+        top_margin = self.scroll_x + self.draw_area[0]
         
         # Actors
         for a in self.actors:
             actor_img = self.engine.images[a.image]
             r = pygame.Rect(actor_img.get_rect())
-            r.left = a.pos[0] + self.scroll_x - r.width/2
-            r.top = a.pos[1] + self.scroll_y - r.height/2
+            r.left = a.pos[0] + left_margin - r.width/2
+            r.top = a.pos[1] + top_margin - r.height/2
             
             # Only draw actors within the screen
-            if r.right > self.draw_left and r.left < self.draw_width:
-                if r.bottom > self.draw_top and r.top < self.draw_height:
+            if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
+                if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     
                     surf.blit(actor_img, r)
                     
                     if a.selected:
                         r = a.selection_rect()
-                        r.left += self.scroll_x
-                        r.top += self.scroll_y
+                        r.left += left_margin
+                        r.top += top_margin
                         pygame.draw.rect(surf, (255, 255, 255), r, 1)
                         
-                        surf.blit(*a.health_bar(self.scroll_x, self.scroll_y))
+                        surf.blit(*a.health_bar(left_margin, top_margin))
                         
                         if a.completion < 100:
-                            surf.blit(*a.completion_bar(self.scroll_x, self.scroll_y))
+                            surf.blit(*a.completion_bar(left_margin, top_margin))
         
         # Placement (such as placing a building)
         if self.place_image:
