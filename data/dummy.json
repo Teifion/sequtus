@@ -7,6 +7,72 @@
             "hp":   10
         },
         {
+            "type": "Red circle",
+            "pos":  [400, 440, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 480, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 520, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 560, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 600, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 360, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 320, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 280, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 240, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 200, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [400, 160, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
             "type": "Blue circle",
             "pos":  [450, 450, 0],
             "team": 2,
