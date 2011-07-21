@@ -32,7 +32,7 @@ class MainMenu (screen.Screen):
         self.engine = seq_game
         
         buttons = (
-            ("Quick start", seq_game.set_screen,    ["Battle screen"]),
+            ("Quick start", seq_game.new_game,    []),
             # ("Campaign",    None,   []),
             ("Quit",        seq_game.quit, []),
         )
