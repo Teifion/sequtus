@@ -57,7 +57,7 @@ class BattleSim (battle_screen.BattleScreen):
     
     def logic_cycle(self):
         if int(time.time()) != self.cycle_count[1]:
-            print("CPS: %s" % self.cycle_count[0])
+            # print("CPS: %s" % self.cycle_count[0])
             self.cycle_count = [0, int(time.time())]
         
         self.tick += 1
@@ -81,7 +81,7 @@ class BattleSim (battle_screen.BattleScreen):
     def place_actor(self, event, drag, actor_type, actor_data = {}):
         """Called when there's a click while in placement mode"""
         self.place_image = None
-        real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
+        real_mouse_pos = (event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1])
         
         aclass = actor_subtypes.types[actor_type['type']]
         

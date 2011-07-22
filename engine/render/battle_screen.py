@@ -113,7 +113,7 @@ class BattleScreen (screen.Screen):
             return
         
         if int(time.time()) != self.redraw_count[1]:
-            print("FPS: %s" % self.redraw_count[0])
+            # print("FPS: %s" % self.redraw_count[0])
             self.redraw_count = [0, int(time.time())]
         
         """Overrides the basic redraw as it's intended to be used with more animation"""
