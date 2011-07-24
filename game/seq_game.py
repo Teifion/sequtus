@@ -62,5 +62,9 @@ class Sequtus (core.EngineV3):
         self.current_screen.background_image = self.images['battlefield'].copy()
         
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
-        self.current_screen.select_actor(self.current_screen.actors[0])
         
+        self.current_screen.select_actor(self.current_screen.actors[0])
+        self.current_screen.select_actor(self.current_screen.actors[1])
+        
+        # self.current_screen.actors[0].issue_command("move", [400, 100])
+        # self.current_screen.actors[1].issue_command("move", [410, 110])

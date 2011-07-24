@@ -24,6 +24,7 @@ class Actor (object):
     
     weapons             = []
     flags               = []
+    size                = (0,0)
     
     def __init__(self):
         super(Actor, self).__init__()
@@ -117,6 +118,7 @@ class Actor (object):
         
         self.weapons            = data.get("weapons", self.weapons)
         self.flags              = data.get("flags", self.flags)
+        self.size               = data.get("size", self.size)
     
     def selection_rect(self):
         return pygame.Rect(

@@ -11,7 +11,7 @@ import sys
 import json
 import actor_subtypes
 
-from engine.libs import actor_lib
+from engine.libs import actor_lib, vectors, geometry
 from engine.render import battle_screen
 
 class BattleSim (battle_screen.BattleScreen):
@@ -73,6 +73,25 @@ class BattleSim (battle_screen.BattleScreen):
         # Update the actors themselves
         for a in self.actors:
             a.update()
+        
+        # Check for collisions
+        collisions = []
+        collided = set()
+        for i, a in enumerate(self.actors):
+            # If it's moving it might collide
+            if a.velocity != [0,0,0] and a.velocity != (0,0,0) or True:
+                for j, b in enumerate(self.actors):
+                    if i == j: continue
+                    if j in collided: continue
+                    if geometry.rect_collision(a.rect, b.rect):
+                        collisions.append((a,b))
+                        
+                        collided.add(i)
+                        collided.add(j)
+        
+        # We now have a list of all the collisions
+        print(collisions)
+        
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
