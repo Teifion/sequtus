@@ -11,8 +11,8 @@ def rect_collision(r1, r2, convert=False):
     position and size and converts them to position and position pairs.
     """
     
-    if type(r1) == pygame.Rect: r1 = (r1.left, r1.top, r1.right, r1.bottom)
-    if type(r2) == pygame.Rect: r2 = (r2.left, r2.top, r2.right, r2.bottom)
+    if convert: r1 = (r1.left, r1.top, r1.right, r1.bottom)
+    if convert: r2 = (r2.left, r2.top, r2.right, r2.bottom)
     
     left1, top1, right1, bottom1 = r1
     left2, top2, right2, bottom2 = r2
