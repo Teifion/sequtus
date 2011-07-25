@@ -55,5 +55,15 @@ class GeometryTests(unittest.TestCase):
             except Exception as e:
                 print("Failed on second pass of %s, %s" % (str(r1), str(r2)))
                 raise
+    
+    def test_collision_angle(self):
+        vals = (
+        
+        )
+        
+        for a1, a2, expected in vals:
+            self.assertEqual(expected, geometry.rect_collision_angle(a1, a2))
+
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(GeometryTests)

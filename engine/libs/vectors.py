@@ -49,7 +49,7 @@ def bound_angle(angle):
     while angle < 0: angle += 360
     return angle
 
-def angle_diff(angle1, angle2):
+def angle_diff(angle1, angle2=0):
     """Gives the amount you need to turn by to get from angle1 to angle2
     
     will provide a minus number if you turn counter-clockwise"""

@@ -83,15 +83,26 @@ class BattleSim (battle_screen.BattleScreen):
                 for j, b in enumerate(self.actors):
                     if i == j: continue
                     if j in collided: continue
-                    if geometry.rect_collision(a.rect, b.rect):
+                    if geometry.rect_collision(a.rect, b.rect, True):
                         collisions.append((a,b))
                         
                         collided.add(i)
                         collided.add(j)
         
         # We now have a list of all the collisions
-        print(collisions)
+        for a1, a2 in collisions:
+            a1.velocity = [1,0,0]
+            a2.velocity = [1,0.5,0]
+            
+            # Determine angle of collision
+            geometry.rect_collision_angle(a1, a2, True)
+            
+            # Determine amount of collision
+            # Bounce as appropriate and kill velocity
+            pass
         
+        a1.velocity = [0,0,0]
+        a2.velocity = [0,0,0]
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
