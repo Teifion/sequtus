@@ -1,5 +1,5 @@
 import unittest
-from engine.libs import geometry
+from engine.libs import vectors, geometry
 
 class GeometryTests(unittest.TestCase):
     def test_rectangle_collision(self):
@@ -56,9 +56,28 @@ class GeometryTests(unittest.TestCase):
                 print("Failed on second pass of %s, %s" % (str(r1), str(r2)))
                 raise
     
-    def test_collision_angle(self):
+    def ttest_inside_angle(self):
         vals = (
+            # A is top left, B is bottom middle and C is middle right
+            # (([10,5,0], vectors.angle([3,1,0])), ([13,10,0], vectors.angle([2,-1,0])), (40.60, 0)),
+            
+            # A is bottom left, B is top middle and C is middle right
+            (([10,10,0], vectors.angle([3,-1,0])), ([13,3,0], vectors.angle([2,1,0])), (0, 0)),
+        )
         
+        for A, B, expected in vals:
+            answer = geometry.inside_angles(A, B)
+            
+            try:
+                self.assertAlmostEqual(expected[0], answer[0], places=2)
+                # self.assertAlmostEqual(expected[1], answer[1], places=2)
+            except Exception as e:
+                print("Failure with inputs of A=%s, B=%s" % (A, B))
+                raise
+    
+    def ttest_collision_angle(self):
+        vals = (
+            (([10,5,0], [3,1,0]), ([13,10,0], [2,-1,0]), 0),
         )
         
         for a1, a2, expected in vals:

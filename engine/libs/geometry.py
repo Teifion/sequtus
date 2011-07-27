@@ -3,6 +3,7 @@ import pygame
 import math
 import vectors
 
+# 2D Function
 def rect_collision(r1, r2, convert=False):
     """
     r1 and r2 are 4 length sequences of (left, top, right, bottom)
@@ -29,22 +30,52 @@ def rect_collision(r1, r2, convert=False):
     
     return True
 
+# 2D Function
+def inside_angles(a1, a2):
+    """Takes two pairs and calculates the inside angles of A and B.
+    Each pair is the position and angle towards C.
+    """
+    
+    posA, angA = a1
+    posB, angB = a2
+    
+    angA = angA[0]
+    angB = angB[0]
+    
+    # Get angles from point to point
+    AB = vectors.angle(posA, posB)[0]
+    BA = vectors.angle(posB, posA)[0]
+    
+    # A, B = AB, BA
+    
+    print(AB, angA)
+    
+    A = AB - angA
+    A = angA - AB
+    B = 0
+    
+    return A, B
+
+# 2D Function
 def rect_collision_angle(a1, a2, convert=False):
     """
     each argument is assumed to be the angle of position and movement
     for each actor, if convert is called as true then it is assumed that
     the arguments are velocities and need to be converted into angles.
+    
+    We have a triangle of A, B and C where A and B are the two actors
+    and C is the point of collision. a, b and c are the edges opposite
+    their respective angle.
+    
+    Our first problem is to find A and B. We have Angle to C and Angle to A/B
+    to start with and can work out the inside angle from those.
     """
     
     if convert:
-        a1 = a1.pos, vectors.angle([0,0,0], a1.velocity)
-        a2 = a2.pos, vectors.angle([0,0,0], a2.velocity)
+        a1 = a1.pos, vectors.angle([0,0,0], a1.velocity)[0]
+        a2 = a2.pos, vectors.angle([0,0,0], a2.velocity)[0]
     
-    pos1, angle1 = a1
-    pos2, angle2 = a2
+    # Calcuate A
+    A, B = inside_angles(a1, a2)
     
-    angle_1_to_2 = vectors.angle(pos1, pos2)
-    angle_2_to_1 = vectors.angle(pos2, pos1)
-    
-    # This is not the correct answer
-    return 180 - angle_1_to_2 - angle_2_to_1
+    return A, B
