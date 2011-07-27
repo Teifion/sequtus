@@ -112,7 +112,11 @@ def vector_to_move(vector):
     return [angle([0,0,0], vector), total_velocity(vector)]
 
 # Gets the angle to go from 1 to 2, first item is 2D angle, 2nd return is the Z angle
-def angle(pos1, pos2):
+def angle(pos1, pos2=None):
+    if pos2 == None:
+        pos2 = list(pos1)
+        pos1 = [0,0,0]
+    
     # SOH CAH TOA
     # We have the opposite and adjacent
     x = abs(pos1[0] - pos2[0])
