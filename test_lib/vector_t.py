@@ -140,6 +140,33 @@ class VectorTests(unittest.TestCase):
             ))
             self.assertAlmostEqual(r2, expected[1], places=2)
     
+    def test_angle_single(self):
+        vals = (
+            # XY Tests
+            ([4,-4,0], [45, 0]),# Up and right
+            ([4,4,0], [135, 0]),# Down and right
+            ([-4,4,0], [225, 0]),# Down and left
+            ([-4,-4,0], [315, 0]),# Up and left
+            
+            # Same as before but scaled up in size
+            ([400,-400,0], [45, 0]),# Up and right
+            ([1000,1000,0], [135, 0]),# Down and right
+            ([-0.5,0.5,0], [225, 0]),# Down and left
+            ([-50000,-50000,0], [315, 0]),# Up and left
+            
+            ([0,-4,0], [0, 0]),# Dead Up
+            ([4,0,0], [90, 0]),# Dead Right
+            ([0,4,0], [180, 0]),# Dead Down
+            ([-4,0,0], [270, 0]),# Dead Left
+        )
+        
+        for a, expected in vals:
+            r, r2 = vectors.angle(a)
+            self.assertAlmostEqual(r, expected[0], places=2, msg="vectors.angle(%s) should equal %s, instead got %s" % (
+                a, expected[0], r
+            ))
+            self.assertAlmostEqual(r2, expected[1], places=2)
+    
     def test_midpoint(self):
         vals = (
             ([10,10,0], [15,5,0], 1, [10.707, 9.292, 0]),
