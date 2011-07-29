@@ -36,25 +36,41 @@ def inside_angles(a1, a2):
     Each pair is the position and angle towards C.
     """
     
-    posA, angA = a1
-    posB, angB = a2
+    # Get the angles for point to point, using these we can
+    # calculate the inside angles
+    AC = a1[1][0]
+    BC = a2[1][0]
     
-    angA = angA[0]
-    angB = angB[0]
+    # Convert positions into angles
+    AB = vectors.angle(a1[0], a2[0])[0]
+    BA = vectors.angle(a2[0], a1[0])[0]
     
-    # Get angles from point to point
-    AB = vectors.angle(posA, posB)[0]
-    BA = vectors.angle(posB, posA)[0]
+    # A
+    if AC + AB > 360:
+        if AC > AB:
+            A = (360 - AC) + AB
+        else:
+            A = (360 - AB) + AC
+    elif AB > AC:
+        A = AB - AC
+    else:
+        A = AC - AB
     
-    # A, B = AB, BA
+    # B
+    if BC + BA > 360:
+        if BC > BA:
+            B = (360 - BC) + BA
+        else:
+            B = (360 - BA) + BC
+    elif BA > BC:
+        B = BA - BC
+    else:
+        B = BC - BA
     
-    print(AB, angA)
+    # C
+    C = 180 - A - B
     
-    A = AB - angA
-    A = angA - AB
-    B = 0
-    
-    return A, B
+    return A, B, C
 
 # 2D Function
 def rect_collision_angle(a1, a2, convert=False):
