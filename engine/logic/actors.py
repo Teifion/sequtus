@@ -49,6 +49,12 @@ class Actor (object):
         
         self._health_bar = (None, None)
         self._completion_bar = (None, None)
+        
+        self.aid = 0
+    
+    # These allow us to order actors based on their aid
+    def __lt__(self, other): return self.aid < other.aid
+    def __gt__(self, other): return self.aid > other.aid
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -96,6 +102,7 @@ class Actor (object):
         """Applies transitory data such as position and hp"""
         self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
+        self.velocity = data.get("velocity", self.velocity)
         self.team = data.get("team", self.team)
         
         self.completion = data.get("completion", self.completion)
@@ -167,7 +174,7 @@ class Actor (object):
         self.next_order()
     
     def append_command(self, cmd, target):
-        self.order_queue.append((cmd, target))
+        self.order_queue.append([cmd, target])
         
         # No current command? Lets get to work on this one
         if self.current_order[0] == "stop":
@@ -179,7 +186,7 @@ class Actor (object):
         
         "When an order is completed this is called"
         if len(self.order_queue) == 0:
-            self.current_order = ("stop", None)
+            self.current_order = ["stop", -1]
             return
         
         self.current_order = self.order_queue.pop(0)
@@ -190,15 +197,32 @@ class Actor (object):
             if len(target) == 2:
                 self.current_order = (self.current_order[0], [target[0], target[1], 0])
     
+    def insert_order(self, cmd, target):
+        """Pushes in a micro order from the engine itself usually something
+        small so as to avoid a collision"""
+        
+        self.order_queue.insert(0, self.current_order)
+        self.current_order = [cmd, target]
+    
+    def pause(self, delay):
+        self.insert_order("stop", delay)
+    
+    def reverse(self, distance):
+        if self.current_order[0] == "reverse": return
+        direction = [vectors.bound_angle(vectors.angle(self.velocity)[0] + 180), 0]
+        
+        target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
+        self.insert_order("reverse", target)
+    
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
-        
         cmd, target = self.current_order
         
         if cmd == "stop":
-            pass
+            if target > 0:
+                self.current_order[1] -= 1
         
-        elif cmd == "move":
+        elif cmd == "move" or cmd == "reverse":
             dist = vectors.distance(self.pos, target)
             
             if dist <= vectors.total_velocity(self.velocity):
@@ -214,8 +238,11 @@ class Actor (object):
         
         if cmd == "stop":
             self.velocity = [0,0,0]
+            
+            if target == 0:
+                self.next_order()
         
-        elif cmd == "move":
+        elif cmd == "move" or cmd == "reverse":
             dist = vectors.distance(self.pos, target)
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
             
