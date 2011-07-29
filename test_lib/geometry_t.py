@@ -56,25 +56,36 @@ class GeometryTests(unittest.TestCase):
                 print("Failed on second pass of %s, %s" % (str(r1), str(r2)))
                 raise
     
+    # To generated these values I created a lot of triangles with different
+    # positions for A, B and C to ensure a range of angles. I then used
+    # https://github.com/Teifion/Mini-tools/blob/master/vectors.html
+    # to calcuate the various raw angles and with pen+paper calcuated the
+    # approximate angles and sizes. If the code was close then I knew
+    # it was right as my workings had a lot of rounding errors, if it was
+    # not close then something was wrong with either my paper workings
+    # or the code.
     collision_vals = (
-        # A, B, C, a, b, c
+        # answers = A, B, C, a, b, c
         (([10,5,0], vectors.angle([3,1,0])), ([13,10,0], vectors.angle([2,-1,0])),
-            (40.601, 94.398, 45.0,       42.953, 62.885, 0)),
+            (40.601, 94.398, 45.0,      5.366, 8.22, 5.83)),
         (([5,10,0], vectors.angle([3,-1,0])), ([10,1,0], vectors.angle([1,1,0])),
-            (42.51, 74.05, 63.43,       0, 0, 0)),
+            (42.51, 74.05, 63.43,       7.778, 11.067, 10.295)),
         (([10,3,0], vectors.angle([1,0,0])), ([0,14,0], vectors.angle([1,-0.5,0])),
-            (132.27, 21.16, 26.565,       0, 0, 0)),
+            (132.27, 21.16, 26.565,     24.596, 12.0, 14.866)),
         (([5,10,0], vectors.angle([2,-1,0])), ([1,1,0], vectors.angle([1,1,0])),
-            (87.4, 21.037, 71.57,       0, 0, 0)),
+            (87.4, 21.037, 71.57,       10.370, 3.726, 9.848)),
         
-        # (([6,1,0], vectors.angle([-1,1,0])), ([15,10,0], vectors.angle([-3,-1,0])),
-        #     (90.0, 26.57, 63.43,       0, 0, 0)),
-        # (([10,10,0], vectors.angle([-1,-1,0])), ([17,2,0], vectors.angle([-2,0,0])),
-        #     (86.18, 48.82, 45.0,       0, 0, 0)),
-        # (([20,3,0], vectors.angle([-2,1,0])), ([5,15,0], vectors.angle([-1,-0.5,0])),
-        #     (12.09, 114.78, 53.13,       0, 0, 0)),
-        # (([12,10,0], vectors.angle([-7,-1,0])), ([3,3,0], vectors.angle([-1,0,0])),
-        #     (29.74, 142.13, 8.13,       0, 0, 0)),
+        (([6,1,0], vectors.angle([-1,1,0])), ([15,10,0], vectors.angle([-3,-1,0])),
+            (90.0, 26.57, 63.43,        14.230, 6.363, 12.727)),
+        (([10,10,0], vectors.angle([-1,-1,0])), ([17,2,0], vectors.angle([-2,0,0])),
+            (86.185, 48.814, 45.0,      15.0, 11.313, 10.63)),
+        (([20,3,0], vectors.angle([-2,1,0])), ([5,15,0], vectors.angle([-1,-0.5,0])),
+            (12.09, 114.78, 53.13,      5.031, 21.801, 19.209)),
+        (([12,10,0], vectors.angle([-7,-1,0])), ([3,3,0], vectors.angle([-1,0,0])),
+            (29.74, 142.13, 8.13,       40.0, 49.497, 11.401)),
+        
+        (([5,10,0], vectors.angle([-1,-1,0])), ([10,11,0], vectors.angle([-1.5,-1,0])),
+            (146.309, 22.381, 11.309,   14.422, 9.899, 5.099)),
     )
     
     def test_inside_angle(self):
@@ -87,17 +98,34 @@ class GeometryTests(unittest.TestCase):
                 self.assertAlmostEqual(B, ansB, places=2)
                 self.assertAlmostEqual(C, ansC, places=2)
             except Exception as e:
-                print("Failure with inputs of A=%s, B=%s" % (A, B))
+                print("Failure with inputs of A=%s, B=%s" % (act1, act2))
                 raise
     
-    def ttest_collision_angle(self):
-        vals = (
-            # act1, act2, Expected (A, B, C, a, b, c)
-            (([10,5,0], [3,1,0]), ([13,10,0], [2,-1,0]), 0),
-        )
+    # This will overlap with the test_inside_angle function but the above
+    # will remain incase the functionality is moved around
+    def test_collision_angle(self):
+        for act1, act2, expected in self.collision_vals:
+            A, B, C, a, b, c = expected
+            ansA, ansB, ansC, ansa, ansb, ansc = geometry.rect_collision_distance(act1, act2, testing=True)
+            
+            try:
+                self.assertAlmostEqual(A, ansA, places=2)
+                self.assertAlmostEqual(B, ansB, places=2)
+                self.assertAlmostEqual(C, ansC, places=2)
+            except Exception as e:
+                print("Failure on angles with inputs of A=%s, B=%s" % (act1, act2))
+                raise
+            
+            try:
+                self.assertAlmostEqual(a, ansa, places=2)
+                self.assertAlmostEqual(b, ansb, places=2)
+                self.assertAlmostEqual(c, ansc, places=2)
+            except Exception as e:
+                print("Failure on sides with inputs of A=%s, B=%s" % (act1, act2))
+                raise
+            
         
-        for a1, a2, expected in vals:
-            self.assertEqual(expected, geometry.rect_collision_angle(a1, a2))
+    
 
 
 

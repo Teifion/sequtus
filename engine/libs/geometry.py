@@ -46,7 +46,7 @@ def inside_angles(a1, a2):
     BA = vectors.angle(a2[0], a1[0])[0]
     
     # A
-    if AC + AB > 360:
+    if abs(AC - AB) > 180:
         if AC > AB:
             A = (360 - AC) + AB
         else:
@@ -57,7 +57,7 @@ def inside_angles(a1, a2):
         A = AC - AB
     
     # B
-    if BC + BA > 360:
+    if abs(BC - BA) > 180:
         if BC > BA:
             B = (360 - BC) + BA
         else:
@@ -73,11 +73,14 @@ def inside_angles(a1, a2):
     return A, B, C
 
 # 2D Function
-def rect_collision_angle(a1, a2, convert=False):
+def rect_collision_distance(a1, a2, testing=False):
     """
-    each argument is assumed to be the angle of position and movement
-    for each actor, if convert is called as true then it is assumed that
-    the arguments are velocities and need to be converted into angles.
+    Returns a pair of distances moving a1 and a2 to the point of collision
+    when testing is set to true it will return the internal variables used
+    to ensure that all parts of the function are working correctly.
+    
+    Each argument is assumed to be the angle of position and movement
+    for each actor.
     
     We have a triangle of A, B and C where A and B are the two actors
     and C is the point of collision. a, b and c are the edges opposite
@@ -87,11 +90,23 @@ def rect_collision_angle(a1, a2, convert=False):
     to start with and can work out the inside angle from those.
     """
     
-    if convert:
-        a1 = a1.pos, vectors.angle([0,0,0], a1.velocity)[0]
-        a2 = a2.pos, vectors.angle([0,0,0], a2.velocity)[0]
+    # Calcuate angles
+    A, B, C = inside_angles(a1, a2)
     
-    # Calcuate A
-    A, B = inside_angles(a1, a2)
+    # Now for the sides, we can start with c using just pythagoras
+    c = vectors.distance(a1[0], a2[0])
     
-    return A, B
+    try:
+        a = c/math.sin(math.radians(C)) * math.sin(math.radians(A))
+        b = c/math.sin(math.radians(C)) * math.sin(math.radians(B))
+    except Exception as e:
+        print("a1 = %s" % a1)
+        print("a2 = %s" % a2)
+        print("A: %s, B: %s, C: %s" % (A, B, C))
+        raise
+    
+    if testing:
+        return A, B, C, a, b, c
+    else:
+        return a, b
+    
