@@ -95,6 +95,11 @@ class BattleScreen (screen.Screen):
         self.panels = {}
         
         self.redraw_count = [0, 0]
+        
+        self.next_scroll = 0
+        self.scroll_delay = 0.01
+        
+        self._current_actor_id = 0
     
     def post_init(self):
         self.draw_margin = [self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1]]
@@ -134,7 +139,6 @@ class BattleScreen (screen.Screen):
             # Only draw actors within the screen
             if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
-                    
                     surf.blit(actor_img, r)
                     
                     if a.selected:
@@ -188,6 +192,11 @@ class BattleScreen (screen.Screen):
                 self.select_control_group(event.key)
     
     def handle_keyhold(self):
+        if time.time() < self.next_scroll:
+            return
+        
+        self.next_scroll = time.time() + self.scroll_delay
+        
         # Up/Down
         if self.scroll_up_key in self.keys_down:
             self.scroll_up()
@@ -405,5 +414,7 @@ class BattleScreen (screen.Screen):
     
     def add_actor(self, a):
         a.rect = self.engine.images[a.image].get_rect()
+        a.aid = self._current_actor_id
+        self._current_actor_id += 1
         self.actors.append(a)
 
