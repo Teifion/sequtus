@@ -31,6 +31,9 @@ def sub_vectors(vec1, vec2):
     
     return [vec1[i] - vec2[i] for i in range(len(vec1))]
 
+def abs_vector(v):
+    return [abs(x) for x in v]
+
 def total_velocity(velocity):
     if len(velocity) == 3:
         x, y, z = velocity
