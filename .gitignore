@@ -2,3 +2,4 @@
 *.pyc
 *.graffle
 print_stats
+.coverage
