@@ -89,12 +89,6 @@ class BattleSim (battle_screen.BattleScreen):
                         collided.add(i)
                         collided.add(j)
         
-        if collisions != []:
-            print("COLLISION")
-            print(collisions)
-            print([[a.pos, b.pos] for a, b in collisions])
-            # self.set_speed(10)
-        
         # We now have a list of all the collisions
         for obj1, obj2 in collisions:
             # We order them based on aid, this way we always deal with the same
@@ -103,25 +97,10 @@ class BattleSim (battle_screen.BattleScreen):
             a1 = min(obj1, obj2)
             a2 = max(obj1, obj2)
             
-            # act1 = [vectors.sub_vectors(a1.pos, a1.velocity), a1.velocity]
-            # act2 = [vectors.sub_vectors(a2.pos, a2.velocity), a2.velocity]
-            
-            # Determine angle of collision
-            # a1_dist, a2_dist = geometry.rect_collision_distance(act1, act2)
-            # 
-            # total_size = a1.size + a2.size
-            # total_velocity = vectors.total_velocity(a1.velocity) + vectors.total_velocity(a2.velocity)
-            
-            # We stop a1 from having moved this step
-            # a1.pos = vectors.sub_vectors(a1.pos, a1.velocity)
-            # a2.pos = vectors.sub_vectors(a2.pos, a2.velocity)
-            
-            # Now we tell a1 to reverse and a2 to reverse a bit too
-            a1.reverse(50)
+            # Now we tell a1 to reverse and a2 to pause a moment while a1 gets
+            # out of the way
+            a1.reverse(0, 15)
             a2.pause(2)
-            
-            # Bounce as appropriate and kill velocity
-            pass
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
