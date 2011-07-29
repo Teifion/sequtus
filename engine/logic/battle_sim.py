@@ -79,7 +79,7 @@ class BattleSim (battle_screen.BattleScreen):
         collided = set()
         for i, a in enumerate(self.actors):
             # If it's moving it might collide
-            if a.velocity != [0,0,0] and a.velocity != (0,0,0) or True:
+            if a.velocity != [0,0,0] and a.velocity != (0,0,0):
                 for j, b in enumerate(self.actors):
                     if i == j: continue
                     if j in collided: continue
@@ -89,20 +89,39 @@ class BattleSim (battle_screen.BattleScreen):
                         collided.add(i)
                         collided.add(j)
         
+        if collisions != []:
+            print("COLLISION")
+            print(collisions)
+            print([[a.pos, b.pos] for a, b in collisions])
+            # self.set_speed(10)
+        
         # We now have a list of all the collisions
-        for a1, a2 in collisions:
-            a1.velocity = [1,0,0]
-            a2.velocity = [1,0.5,0]
+        for obj1, obj2 in collisions:
+            # We order them based on aid, this way we always deal with the same
+            # actor in the same way and the order the collison was found is
+            # irrelevant
+            a1 = min(obj1, obj2)
+            a2 = max(obj1, obj2)
+            
+            # act1 = [vectors.sub_vectors(a1.pos, a1.velocity), a1.velocity]
+            # act2 = [vectors.sub_vectors(a2.pos, a2.velocity), a2.velocity]
             
             # Determine angle of collision
-            geometry.rect_collision_angle(a1, a2, True)
+            # a1_dist, a2_dist = geometry.rect_collision_distance(act1, act2)
+            # 
+            # total_size = a1.size + a2.size
+            # total_velocity = vectors.total_velocity(a1.velocity) + vectors.total_velocity(a2.velocity)
             
-            # Determine amount of collision
+            # We stop a1 from having moved this step
+            # a1.pos = vectors.sub_vectors(a1.pos, a1.velocity)
+            # a2.pos = vectors.sub_vectors(a2.pos, a2.velocity)
+            
+            # Now we tell a1 to reverse and a2 to reverse a bit too
+            a1.reverse(50)
+            a2.pause(2)
+            
             # Bounce as appropriate and kill velocity
             pass
-        
-        a1.velocity = [0,0,0]
-        a2.velocity = [0,0,0]
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
@@ -136,7 +155,6 @@ class BattleSim (battle_screen.BattleScreen):
         with open("{0}/{1}".format(sys.path[0], setup_path)) as f:
             data = json.loads(f.read())
             self.load_setup(data)
-        
         
         with open("{0}/{1}".format(sys.path[0], game_path)) as f:
             data = json.loads(f.read())
