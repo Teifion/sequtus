@@ -49,11 +49,17 @@ class BattleSim (battle_screen.BattleScreen):
             return
         
         # Main logic execution loop
-        if time.time() > self.next_cycle:
-            self.logic_cycle()
+        # if time.time() > self.next_cycle:
+        #     self.logic_cycle()
         
         # Now to potentially draw the screen
         super(BattleSim, self).redraw()
+    
+    def update(self):
+        super(BattleSim, self).update()
+        
+        if time.time() > self.next_cycle:
+            self.logic_cycle()
     
     def logic_cycle(self):
         if int(time.time()) != self.cycle_count[1]:
