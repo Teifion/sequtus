@@ -1,1 +1,1 @@
-import vector_t, geometry_t
+import vector_t, geometry_t, battle_t

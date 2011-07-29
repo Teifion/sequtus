@@ -18,8 +18,6 @@ class Sequtus (core.EngineV3):
     
     fps = 30
     
-    menu_width = 470
-    
     window_width = 1000
     window_height = 1000
     

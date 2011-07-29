@@ -1,0 +1,67 @@
+{
+    "types":    {
+        "Red building": {
+            "image":            "test_image",
+            "placement_image":  "test_image",
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    []
+        },
+        "Blue building": {
+            "image":            "test_image",
+            "placement_image":  "test_image",
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    []
+        },
+        
+        "Red circle": {
+            "image":            "test_image",
+            "type":             "walker",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1,
+            "deceleration":     1,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    ["constructor"]
+        },
+        "Blue circle": {
+            "image":            "test_image",
+            "type":             "walker",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1,
+            "deceleration":     1,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "weapons":  [],
+            "flags":    ["constructor"]
+        }
+    }
+}
