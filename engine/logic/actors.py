@@ -207,10 +207,14 @@ class Actor (object):
     def pause(self, delay):
         self.insert_order("stop", delay)
     
-    def reverse(self, distance):
+    def reverse(self, distance=0, steps=0):
         if self.current_order[0] == "reverse": return
+        
         direction = [vectors.bound_angle(vectors.angle(self.velocity)[0] + 180), 0]
         
+        if steps > 0:
+            distance = vectors.total_velocity(self.velocity) * steps
+            
         target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
         self.insert_order("reverse", target)
     
