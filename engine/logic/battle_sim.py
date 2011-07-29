@@ -81,19 +81,7 @@ class BattleSim (battle_screen.BattleScreen):
             a.update()
         
         # Check for collisions
-        collisions = []
-        collided = set()
-        for i, a in enumerate(self.actors):
-            # If it's moving it might collide
-            if a.velocity != [0,0,0] and a.velocity != (0,0,0):
-                for j, b in enumerate(self.actors):
-                    if i == j: continue
-                    if j in collided: continue
-                    if geometry.rect_collision(a.rect, b.rect, True):
-                        collisions.append((a,b))
-                        
-                        collided.add(i)
-                        collided.add(j)
+        collisions = self.get_collisions()
         
         # We now have a list of all the collisions
         for obj1, obj2 in collisions:
@@ -111,6 +99,21 @@ class BattleSim (battle_screen.BattleScreen):
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
         self.cycle_count[0] += 1
+    
+    def get_collisions(self):
+        collisions = []
+        collided = set()
+        for i, a in enumerate(self.actors):
+            for j, b in enumerate(self.actors):
+                if i == j: continue
+                if j in collided: continue
+                if geometry.rect_collision(a.rect, b.rect, True):
+                    collisions.append((a,b))
+                    
+                    collided.add(i)
+                    collided.add(j)
+        
+        return collisions
     
     def place_actor(self, event, drag, actor_type, actor_data = {}):
         """Called when there's a click while in placement mode"""
@@ -130,18 +133,23 @@ class BattleSim (battle_screen.BattleScreen):
             a.pos[0], a.pos[1] = real_mouse_pos
         self.add_actor(a)
     
-    def load_all(self, config_path, setup_path, game_path):
+    def load_all(self, config_path, setup_path, game_path, local=True):
         """Uses a local path for each of the 3 load types"""
         
-        with open("{0}/{1}".format(sys.path[0], config_path)) as f:
+        if local:
+            config_path = "{0}/{1}".format(sys.path[0], config_path)
+            setup_path = "{0}/{1}".format(sys.path[0], setup_path)
+            game_path = "{0}/{1}".format(sys.path[0], game_path)
+        
+        with open(config_path) as f:
             data = json.loads(f.read())
             self.load_config(data)
         
-        with open("{0}/{1}".format(sys.path[0], setup_path)) as f:
+        with open(setup_path) as f:
             data = json.loads(f.read())
             self.load_setup(data)
         
-        with open("{0}/{1}".format(sys.path[0], game_path)) as f:
+        with open(game_path) as f:
             data = json.loads(f.read())
             self.load_game(data)
     
