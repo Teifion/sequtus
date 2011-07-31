@@ -11,7 +11,7 @@ import sys
 import json
 import actor_subtypes
 
-from engine.libs import actor_lib, vectors, geometry
+from engine.libs import actor_lib, vectors, geometry, pathing
 from engine.render import battle_screen
 
 class BattleSim (battle_screen.BattleScreen):
@@ -88,13 +88,7 @@ class BattleSim (battle_screen.BattleScreen):
             # We order them based on aid, this way we always deal with the same
             # actor in the same way and the order the collison was found is
             # irrelevant
-            a1 = min(obj1, obj2)
-            a2 = max(obj1, obj2)
-            
-            # Now we tell a1 to reverse and a2 to pause a moment while a1 gets
-            # out of the way
-            a1.reverse(0, 15)
-            a2.pause(2)
+            actor_lib.handle_pathing_collision(min(obj1, obj2), max(obj1, obj2))
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
