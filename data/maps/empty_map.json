@@ -1,0 +1,13 @@
+{
+    "data":     {
+        "width":    2000,
+        "height":   2000,
+    },
+    "terrain":  {
+        "rect":     {
+            "pos":  [0,0],
+            "size": [2000, 2000],
+            "type": "grass"
+        }
+    }
+}
