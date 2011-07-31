@@ -41,7 +41,7 @@ class Actor (object):
         
         # An order is a tuple of (command_type, target)
         self.order_queue = []
-        self.current_order = ("stop", None)
+        self.current_order = ["stop", -1]
         
         self.hp = 0
         self.completion = 100
@@ -51,6 +51,7 @@ class Actor (object):
         self._completion_bar = (None, None)
         
         self.aid = 0
+        self.is_moving = False
     
     # These allow us to order actors based on their aid
     def __lt__(self, other): return self.aid < other.aid
@@ -195,7 +196,7 @@ class Actor (object):
         target = self.current_order[1]
         if type(target) == list or type(target) == tuple:
             if len(target) == 2:
-                self.current_order = (self.current_order[0], [target[0], target[1], 0])
+                self.current_order = [self.current_order[0], [target[0], target[1], 0]]
     
     def insert_order(self, cmd, target):
         """Pushes in a micro order from the engine itself usually something
@@ -203,6 +204,11 @@ class Actor (object):
         
         self.order_queue.insert(0, self.current_order)
         self.current_order = [cmd, target]
+    
+    def insert_order_queue(self, queue):
+        queue.reverse()
+        for cmd, target in queue:
+            self.insert_order(cmd, target)
     
     def pause(self, delay):
         self.insert_order("stop", delay)
@@ -222,7 +228,7 @@ class Actor (object):
         # TODO Check with sim AI holder for new orders
         cmd, target = self.current_order
         
-        if cmd == "stop":
+        if cmd == "stop" or cmd == "hold position":
             if target > 0:
                 self.current_order[1] -= 1
         
@@ -240,13 +246,15 @@ class Actor (object):
     def run_ai(self):
         cmd, target = self.current_order
         
-        if cmd == "stop":
+        if cmd == "stop" or cmd == "hold position":
+            self.is_moving = False
             self.velocity = [0,0,0]
             
             if target == 0:
                 self.next_order()
         
         elif cmd == "move" or cmd == "reverse":
+            self.is_moving = True
             dist = vectors.distance(self.pos, target)
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
             
