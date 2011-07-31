@@ -18,7 +18,7 @@ def handle_pathing_collision(a1, a2):
     a2_angle = vectors.angle(a2.velocity)
     
     # What sort of a collision is this?
-    a_diff = vectors.angle_diff(a1_angle, a2_angle)[0]
+    a_diff = abs(vectors.angle_diff(a1_angle, a2_angle)[0])
     
     if a1.is_moving and a2.is_moving:
         # Nearly the same direction
@@ -34,26 +34,37 @@ def handle_pathing_collision(a1, a2):
             
         # Opposite directions
         else:
-            pass
+            _sidestep_collision_resolution(a1, a2)
         
     else:
         if a1.is_moving:
             # If a2 is sitting around doing nothing then move it out the way
             if a2.max_velocity > 0 and a2.current_order == ["stop", -1]:
-                side_angle = vectors.bound_angle((a1_angle[0]+90, 0))
-                
-                target = vectors.add_vectors(
-                    a2.pos,
-                    vectors.move_to_vector(side_angle, 5 + max(a1.size)*1.1)
-                )
-                
-                a2.insert_order_queue([("reverse", target), ("stop", 5), ("move", a2.pos)])
-                a1.pause(3)
-                
-                
+                _sidestep_collision_resolution(a1, a2)
             else:
                 pass
-                # a1 move around a2
-            
+                # a2 can't move or is busy doing something else
+        
         elif a2.is_moving:
-            pass
+            if a1.max_velocity > 0 and a1.current_order == ["stop", -1]:
+                _sidestep_collision_resolution(a2, a1)
+            else:
+                pass
+
+def _sidestep_collision_resolution(a1, a2):
+    """
+    Used when one actor has to move to the side to avoid another
+    """
+    side_angle = vectors.bound_angle((vectors.angle(a1.velocity)[0]+90, 0))
+    
+    target = vectors.add_vectors(
+        a2.pos,
+        vectors.move_to_vector(side_angle, 5 + max(a1.size)*1.2)
+    )
+    
+    # Use reverse to show that it's moving in response to a collision
+    a2.insert_order_queue([("reverse", target), ("stop", 10), ("move", a2.pos)])
+    
+    # Pause a1 to let a2 get out the way
+    a1.pause(5)
+

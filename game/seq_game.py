@@ -62,3 +62,4 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         
         self.current_screen.actors[0].issue_command("move", [500, 500])
+        self.current_screen.actors[1].issue_command("move", [100, 100])
