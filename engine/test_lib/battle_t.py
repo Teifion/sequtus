@@ -31,6 +31,16 @@ class BattleTests (sim_t.SimTester):
         
         self.assertEqual(sim.actors[0].pos, [500, 500, 0], "Actor does not correctly append orders")
         self.assertEqual(sim.actors[1].pos, [1000, 500, 0], "Actor does not correctly issue orders")
+    
+    def test_flags(self):
+        sim = self.new_sim(1)
+        
+        sim.actors[0].issue_command("move", (500, 500))
+        
+        sim.run()
+        
+        self.assertEqual(sim.actors[0].is_moving, True, "Moving actor does not register .is_moving flag")
+        self.assertEqual(sim.actors[1].is_moving, False, "Stationary actor does not register .is_moving flag")
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)
