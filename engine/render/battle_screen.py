@@ -78,6 +78,9 @@ class BattleScreen (screen.Screen):
         self._redraw_delay = 0
         self.set_fps(40)
         
+        self.terrain = {}
+        self.bullets = []
+        
         # Used to store orders for X steps later
         # http://www.gamasutra.com/view/feature/3094/1500_archers_on_a_288_network_.php
         self.orders = {}
@@ -151,6 +154,18 @@ class BattleScreen (screen.Screen):
                         
                         if a.completion < 100:
                             surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
+        
+        # Bullets
+        for b in self.bullets:
+            bullet_img = self.engine.images[b.image]
+            r = pygame.Rect(bullet_img.get_rect())
+            r.left = b.pos[0] + self.draw_margin[0] - b.width/2
+            r.top = b.pos[1] + self.draw_margin[1] - b.height/2
+            
+            # Only draw bullets within the screen
+            if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
+                if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
+                    surf.blit(bullet_img, r)
         
         # Placement (such as placing a building)
         if self.place_image:
