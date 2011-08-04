@@ -1,4 +1,7 @@
+from __future__ import division
+import pygame
 import vectors
+import geometry
 
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""
@@ -39,17 +42,24 @@ def handle_pathing_collision(a1, a2):
     else:
         if a1.is_moving:
             # If a2 is sitting around doing nothing then move it out the way
-            if a2.max_velocity > 0 and a2.current_order == ["stop", -1]:
+            if a2.max_velocity > 0 and a2.current_action() == ["stop", -1]:
                 _sidestep_collision_resolution(a1, a2)
             else:
-                pass
-                # a2 can't move or is busy doing something else
+                # a2 is sitting on our target spot, so we stop
+                if _will_collide(a1, a2):
+                    a1.next_order()
+                else:
+                    pass
+                    # a2 can't move or is busy doing something else
         
         elif a2.is_moving:
-            if a1.max_velocity > 0 and a1.current_order == ["stop", -1]:
+            if a1.max_velocity > 0 and a1.current_action() == ["stop", -1]:
                 _sidestep_collision_resolution(a2, a1)
             else:
-                pass
+                if _will_collide(a2, a1):
+                    a2.next_order()
+                else:
+                    pass
 
 def _sidestep_collision_resolution(a1, a2):
     """
@@ -66,5 +76,15 @@ def _sidestep_collision_resolution(a1, a2):
     a2.insert_order_queue([("reverse", target), ("stop", 10), ("move", a2.pos)])
     
     # Pause a1 to let a2 get out the way
-    a1.pause(5)
+    a1.pause(10)
 
+def _will_collide(a1, a2):
+    """Answers if a2 will collide with a1's movement target"""
+    target = a1.current_action()[1]
+    target_rect = pygame.Rect((0, 0, a1.rect.width, a1.rect.height))
+    
+    target_rect.left = target[0] - a1.rect.width/2
+    target_rect.top = target[1] - a1.rect.height/2
+    
+    print(geometry.rect_collision(target_rect, a2.rect), target_rect, a2.rect)
+    return geometry.rect_collision(target_rect, a2.rect)

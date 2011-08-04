@@ -41,6 +41,7 @@ class Actor (object):
         
         # An order is a tuple of (command_type, target)
         self.order_queue = []
+        self.micro_orders = []
         self.current_order = ["stop", -1]
         
         self.hp = 0
@@ -186,11 +187,15 @@ class Actor (object):
         self.next_ai_update = 0
         
         "When an order is completed this is called"
-        if len(self.order_queue) == 0:
+        if self.micro_orders != []:
+            del(self.micro_orders[0])
+        
+        elif self.order_queue != []:
+            self.current_order = self.order_queue.pop(0)
+        
+        elif self.order_queue == []:
             self.current_order = ["stop", -1]
             return
-        
-        self.current_order = self.order_queue.pop(0)
         
         # Check the target
         target = self.current_order[1]
@@ -202,13 +207,13 @@ class Actor (object):
         """Pushes in a micro order from the engine itself usually something
         small so as to avoid a collision"""
         
-        self.order_queue.insert(0, self.current_order)
-        self.current_order = [cmd, target]
+        self.micro_orders.insert(0, [cmd, target])
     
     def insert_order_queue(self, queue):
         queue.reverse()
+        self.micro_orders = []
         for cmd, target in queue:
-            self.insert_order(cmd, target)
+            self.micro_orders.insert(0, [cmd, target])
     
     def pause(self, delay):
         self.insert_order("stop", delay)
@@ -224,13 +229,25 @@ class Actor (object):
         target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
         self.insert_order("reverse", target)
     
+    def current_action(self):
+        if self.micro_orders == []:
+            return self.current_order
+        else:
+            return self.micro_orders[0]
+    
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
-        cmd, target = self.current_order
+        if self.micro_orders == []:
+            cmd, target = self.current_order
+        else:
+            cmd, target = self.micro_orders[0]
         
         if cmd == "stop" or cmd == "hold position":
             if target > 0:
-                self.current_order[1] -= 1
+                if self.micro_orders == []:
+                    self.current_order[1] -= 1
+                else:
+                    self.micro_orders[0][1] -= 1
         
         elif cmd == "move" or cmd == "reverse":
             dist = vectors.distance(self.pos, target)
@@ -244,7 +261,10 @@ class Actor (object):
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
     
     def run_ai(self):
-        cmd, target = self.current_order
+        if self.micro_orders == []:
+            cmd, target = self.current_order
+        else:
+            cmd, target = self.micro_orders[0]
         
         if cmd == "stop" or cmd == "hold position":
             self.is_moving = False
