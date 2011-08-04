@@ -37,8 +37,10 @@ def handle_pathing_collision(a1, a2):
             
             if a1_dist < a2_dist:
                 a2.pause(10)
+                a2.dont_collide_with[a1.aid] = 10
             else:
                 a1.pause(10)
+                a1.dont_collide_with[a2.aid] = 10
             
         # Right angle
         elif a_diff < 150:

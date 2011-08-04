@@ -53,6 +53,8 @@ class Actor (object):
         
         self.__is_moving = False
         
+        self.dont_collide_with = {}
+        
         self.aid = 0
     
     # These allow us to order actors based on their aid
@@ -168,6 +170,15 @@ class Actor (object):
             self.pos[0] - self.rect.width/2,
             self.pos[1] - self.rect.height/2
         )
+        
+        remove = []
+        for k, v in self.dont_collide_with.items():
+            v -= 1
+            if v < 1:
+                remove.append(k)
+        
+        for r in remove: del(self.dont_collide_with[r])
+            
         
         self.run_ai()
     
