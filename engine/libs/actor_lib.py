@@ -73,7 +73,7 @@ def _sidestep_collision_resolution(a1, a2):
     )
     
     # Use reverse to show that it's moving in response to a collision
-    a2.insert_order_queue([("reverse", target), ("stop", 10), ("move", a2.pos)])
+    a2.insert_order_queue([("reverse", target), ("stop", 10)])
     
     # Pause a1 to let a2 get out the way
     a1.pause(10)
