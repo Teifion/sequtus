@@ -1,7 +1,7 @@
 {
     "actors":   [
         {
-            "type": "Red circle",
+            "type": "Blue circle",
             "pos":  [100, 100, 0],
             "team": 1,
             "hp":   10
@@ -27,6 +27,19 @@
         {
             "type": "Blue circle",
             "pos":  [200, 350, 0],
+            "team": 2,
+            "hp":   10
+        },
+        
+        {
+            "type": "Red circle",
+            "pos":  [200, 500, 0],
+            "team": 2,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [500, 550, 0],
             "team": 2,
             "hp":   10
         }

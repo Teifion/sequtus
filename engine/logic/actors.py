@@ -172,13 +172,12 @@ class Actor (object):
         )
         
         remove = []
-        for k, v in self.dont_collide_with.items():
-            v -= 1
-            if v < 1:
+        for k in self.dont_collide_with:
+            self.dont_collide_with[k] -= 1
+            if self.dont_collide_with[k] < 1:
                 remove.append(k)
         
         for r in remove: del(self.dont_collide_with[r])
-            
         
         self.run_ai()
     
