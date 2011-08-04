@@ -26,7 +26,19 @@ def handle_pathing_collision(a1, a2):
     if a1.is_moving and a2.is_moving:
         # Nearly the same direction
         if a_diff < 30:
-            pass
+            avg_angle = (a1_angle[0] + a2_angle[0])/2.0
+            avg_pos = [(a1.pos[i] + a2.pos[i])/2.0 for i in range(3)]
+            
+            avg_move = vectors.move_to_vector([avg_angle, 0], 1000)
+            avg_target = vectors.add_vectors(avg_pos, avg_move)
+            
+            a1_dist = vectors.distance(a1.pos, avg_target)
+            a2_dist = vectors.distance(a2.pos, avg_target)
+            
+            if a1_dist < a2_dist:
+                a2.pause(10)
+            else:
+                a1.pause(10)
             
         # Right angle
         elif a_diff < 150:
@@ -40,7 +52,7 @@ def handle_pathing_collision(a1, a2):
             _sidestep_collision_resolution(a1, a2)
         
     else:
-        if a1.is_moving:
+        if a1.is_moving():
             # If a2 is sitting around doing nothing then move it out the way
             if a2.max_velocity > 0 and a2.current_action() == ["stop", -1]:
                 _sidestep_collision_resolution(a1, a2)
@@ -49,17 +61,17 @@ def handle_pathing_collision(a1, a2):
                 if _will_collide(a1, a2):
                     a1.next_order()
                 else:
-                    pass
+                    print("busy")
                     # a2 can't move or is busy doing something else
         
-        elif a2.is_moving:
+        elif a2.is_moving():
             if a1.max_velocity > 0 and a1.current_action() == ["stop", -1]:
                 _sidestep_collision_resolution(a2, a1)
             else:
                 if _will_collide(a2, a1):
                     a2.next_order()
                 else:
-                    pass
+                    print("busy")
 
 def _sidestep_collision_resolution(a1, a2):
     """
@@ -86,5 +98,4 @@ def _will_collide(a1, a2):
     target_rect.left = target[0] - a1.rect.width/2
     target_rect.top = target[1] - a1.rect.height/2
     
-    print(geometry.rect_collision(target_rect, a2.rect), target_rect, a2.rect)
     return geometry.rect_collision(target_rect, a2.rect)

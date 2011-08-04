@@ -51,8 +51,9 @@ class Actor (object):
         self._health_bar = (None, None)
         self._completion_bar = (None, None)
         
+        self.__is_moving = False
+        
         self.aid = 0
-        self.is_moving = False
     
     # These allow us to order actors based on their aid
     def __lt__(self, other): return self.aid < other.aid
@@ -235,6 +236,12 @@ class Actor (object):
         else:
             return self.micro_orders[0]
     
+    def is_moving(self):
+        cmd, target = self.current_action()
+        
+        if cmd in ("stop", "hold position"):
+            return False
+    
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
         if self.micro_orders == []:
@@ -267,14 +274,14 @@ class Actor (object):
             cmd, target = self.micro_orders[0]
         
         if cmd == "stop" or cmd == "hold position":
-            self.is_moving = False
+            self.__is_moving = False
             self.velocity = [0,0,0]
             
             if target == 0:
                 self.next_order()
         
         elif cmd == "move" or cmd == "reverse":
-            self.is_moving = True
+            self.__is_moving = True
             dist = vectors.distance(self.pos, target)
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
             
