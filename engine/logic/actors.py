@@ -230,7 +230,7 @@ class Actor (object):
         self.insert_order("stop", delay)
     
     def reverse(self, distance=0, steps=0):
-        if self.current_order[0] == "reverse": return
+        if self.current_action()[0] == "move": return
         
         direction = [vectors.bound_angle(vectors.angle(self.velocity)[0] + 180), 0]
         
@@ -238,7 +238,7 @@ class Actor (object):
             distance = vectors.total_velocity(self.velocity) * steps
             
         target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
-        self.insert_order("reverse", target)
+        self.insert_order("move", target)
     
     def current_action(self):
         if self.micro_orders == []:
@@ -251,6 +251,19 @@ class Actor (object):
         
         if cmd in ("stop", "hold position"):
             return False
+        
+        
+        return True
+    
+    def get_move_target(self):
+        cmd, target = self.current_order
+        
+        if cmd == "move":
+            return target
+        elif cmd == "stop":
+            return None
+        else:
+            raise Exception("No handler for cmd type '%s'" % cmd)
     
     def check_ai(self):
         # TODO Check with sim AI holder for new orders

@@ -3,6 +3,8 @@ from game import seq_game
 import sys
 
 if __name__ == '__main__':
+    from engine.libs import geometry
+    
     if len(sys.argv) > 1 and sys.argv[1] == 'test':
         import unittest
         

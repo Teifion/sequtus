@@ -14,8 +14,15 @@ def rect_collision(r1, r2, convert=False):
     """
     
     if convert:
-        r1 = (r1.left, r1.top, r1.right, r1.bottom)
-        r2 = (r2.left, r2.top, r2.right, r2.bottom)
+        if type(r1) == tuple or type(r1) == list:
+            r1 = (r1[0], r1[1], r1[1] + r1[0], r1[3] + r1[1])
+        else:
+            r1 = (r1.left, r1.top, r1.right, r1.bottom)
+        
+        if type(r1) == tuple or type(r1) == list:
+            r2 = (r2[0], r2[1], r2[1] + r2[0], r2[3] + r2[1])
+        else:
+            r2 = (r2.left, r2.top, r2.right, r2.bottom)
     
     left1, top1, right1, bottom1 = r1
     left2, top2, right2, bottom2 = r2

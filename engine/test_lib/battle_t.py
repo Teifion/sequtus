@@ -39,8 +39,21 @@ class BattleTests (sim_t.SimTester):
         
         sim.run()
         
-        self.assertEqual(sim.actors[0].is_moving, True, "Moving actor does not register .is_moving flag")
-        self.assertEqual(sim.actors[1].is_moving, False, "Stationary actor does not register .is_moving flag")
+        self.assertEqual(sim.actors[0].is_moving(), True, "Moving actor does not register .is_moving flag")
+        self.assertEqual(sim.actors[1].is_moving(), False, "Stationary actor does not register .is_moving flag")
+    
+    def test_collision_resolution(self):
+        sim = self.new_sim(200, game_state="collisions.json")
+        
+        # a1 gets to the location before a2 and thus is moved out of the way
+        sim.actors[0].issue_command("move", (100, 200))
+        sim.actors[1].issue_command("move", (100, 200))
+        
+        sim.run()
+        
+        # testing what happens when one actor gets there first
+        self.assertEqual(sim.actors[0].pos, [100, 200, 0])
+        self.assertEqual(sim.actors[1].pos, [100, 211, 0])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)

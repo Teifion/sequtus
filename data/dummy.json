@@ -1,5 +1,5 @@
 {
-    "actors":   [
+    "aactors":   [
         {
             "type": "Blue circle",
             "pos":  [100, 100, 0],
@@ -29,8 +29,8 @@
             "pos":  [200, 350, 0],
             "team": 2,
             "hp":   10
-        },
-        
+        }],
+    "actors":[
         {
             "type": "Red circle",
             "pos":  [200, 500, 0],
