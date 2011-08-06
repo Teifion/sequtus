@@ -2,6 +2,7 @@ from __future__ import division
 import pygame
 import vectors
 import geometry
+import drawing
 
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""
@@ -124,8 +125,7 @@ def _handle_one_moving_collision(act1, act2):
             # Pause a1 a moment to left a2 move
             a1.pause(7)
             
-            # _sidestep_collision_resolution(a1, a2)
-            # print("Bump")
+            print("Bump")
         else:
             print(a1.pos, a2.pos, target)
             print("Step around (2)")

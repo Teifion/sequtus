@@ -117,15 +117,7 @@ class BattleSim (battle_screen.BattleScreen):
         # Check for collisions
         collisions = self.get_collisions()
         
-        # print("")
-        
         # We now have a list of all the collisions
-        if len(collisions) == 1:
-            a1, a2 = collisions[0]
-            
-            if a1.pos == [410, 100, 0] and a2.pos == [337.5, 100, 0]:
-                pdb.set_trace()
-        
         for obj1, obj2 in collisions:
             # We order them based on aid, this way we always deal with the same
             # actor in the same way and the order the collison was found is
