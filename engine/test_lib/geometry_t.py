@@ -39,6 +39,9 @@ class GeometryTests(unittest.TestCase):
             # Overlapping
             ((15, 15, 25, 25), (15, 15, 25, 25), True),# Exact same size
             ((279, 779, 279+41, 779+41), (279, 779, 279+41, 779+41), True),# Exact same size
+            
+            ((394, 79, 435, 435), (317, 79, 358, 120), False),
+            
             ((10, 10, 30, 30), (15, 15, 25, 25), True),# R1 is bigger
             ((15, 15, 25, 25), (10, 10, 30, 30), True),# R2 is bigger
         )

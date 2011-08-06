@@ -59,14 +59,12 @@ class Sequtus (core.EngineV3):
         self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
         self.current_screen.background_image = self.images['battlefield'].copy()
         
-        self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
+        # self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
+        self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        # self.current_screen.actors[0].issue_command("move", [500, 200])
-        # self.current_screen.actors[1].issue_command("move", [500, 200])
-        # self.current_screen.actors[2].issue_command("move", [500, 200])
-        # self.current_screen.actors[3].issue_command("move", [500, 200])
-        # self.current_screen.actors[4].issue_command("move", [500, 200])
+        self.current_screen.actors[0].issue_command("move", [200, 200])
+        self.current_screen.actors[1].issue_command("move", [200, 200])
         
-        self.current_screen.actors[0].issue_command("move", [300, 800])
-        self.current_screen.actors[1].issue_command("move", [300, 800])
+        self.current_screen.actors[2].issue_command("move", [400, 100])
+        self.current_screen.actors[3].issue_command("move", [400, 100])
         

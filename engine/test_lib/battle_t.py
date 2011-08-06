@@ -46,14 +46,14 @@ class BattleTests (sim_t.SimTester):
         sim = self.new_sim(200, game_state="collisions.json")
         
         # a1 gets to the location before a2 and thus is moved out of the way
-        sim.actors[0].issue_command("move", (100, 200))
-        sim.actors[1].issue_command("move", (100, 200))
+        sim.actors[0].issue_command("move", (200, 200))
+        sim.actors[1].issue_command("move", (200, 200))
         
         sim.run()
         
         # testing what happens when one actor gets there first
-        self.assertEqual(sim.actors[0].pos, [100, 200, 0])
-        self.assertEqual(sim.actors[1].pos, [100, 211, 0])
+        self.assertEqual([int(p) for p in sim.actors[0].pos], [211, 211, 0])
+        self.assertEqual([int(p) for p in sim.actors[1].pos], [200, 200, 0])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)

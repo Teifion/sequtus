@@ -10,6 +10,7 @@ import time
 import sys
 import json
 import actor_subtypes
+import pdb
 
 from engine.libs import actor_lib, vectors, geometry, pathing
 from engine.render import battle_screen
@@ -28,6 +29,35 @@ class BattleSim (battle_screen.BattleScreen):
         self.actor_types = {}
         self.cycle_count = [0, 0]
     
+    def data_dump(self, file_path=None):
+        """Dumps data for debugging purposes"""
+        
+        data = []
+        
+        data.append("Tick: %d" % self.tick)
+        
+        data.append("\n**** Actors ****")
+        for a in self.actors:
+            data.append("\nAID: %s" % a.aid)
+            data.append("pos: %s" % a.pos)
+            data.append("rect: %s" % a.rect)
+            data.append("velocity: %s" % a.velocity)
+            data.append("dont_collide: %s" % a.dont_collide_with)
+        
+        data.append("\n**** Collisions **** ")
+        data.append(str(self.get_collisions()))
+        
+        data = "\n".join(data)
+        
+        # Output
+        if file_path == None:
+            print(data)
+            print("")
+        else:
+            with open(file_path, "w") as f:
+                f.write(data)
+        
+        
     def set_speed(self, cycles_per_second):
         self.cycles_per_second = cycles_per_second
         self._cycle_delay = 1/self.cycles_per_second
@@ -59,7 +89,11 @@ class BattleSim (battle_screen.BattleScreen):
         super(BattleSim, self).update()
         
         if time.time() > self.next_cycle:
-            self.logic_cycle()
+            try:
+                self.logic_cycle()
+            except Exception as e:
+                self.data_dump()
+                raise
     
     def logic_cycle(self):
         if int(time.time()) != self.cycle_count[1]:
@@ -83,7 +117,15 @@ class BattleSim (battle_screen.BattleScreen):
         # Check for collisions
         collisions = self.get_collisions()
         
+        # print("")
+        
         # We now have a list of all the collisions
+        if len(collisions) == 1:
+            a1, a2 = collisions[0]
+            
+            if a1.pos == [410, 100, 0] and a2.pos == [337.5, 100, 0]:
+                pdb.set_trace()
+        
         for obj1, obj2 in collisions:
             # We order them based on aid, this way we always deal with the same
             # actor in the same way and the order the collison was found is

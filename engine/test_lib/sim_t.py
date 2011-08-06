@@ -39,10 +39,16 @@ class BattleTester (battle_sim.BattleSim):
     def redraw(self):
         pass
     
-    def run(self):
+    def run(self, print_debug_info=True):
         while self.cycles < self.max_cycles:
             self.cycles += 1
-            self.logic_cycle()
+            
+            try:
+                self.logic_cycle()
+            except Exception as e:
+                if print_debug_info:
+                    self.data_dump()
+                raise
 
 class SimTester (unittest.TestCase):
     data = ""
