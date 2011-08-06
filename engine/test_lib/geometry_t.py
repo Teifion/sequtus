@@ -1,3 +1,4 @@
+import pygame
 import unittest
 from engine.libs import vectors, geometry
 
@@ -44,6 +45,10 @@ class GeometryTests(unittest.TestCase):
             
             ((10, 10, 30, 30), (15, 15, 25, 25), True),# R1 is bigger
             ((15, 15, 25, 25), (10, 10, 30, 30), True),# R2 is bigger
+            
+            # Different types
+            ((5, 15, 15, 25), pygame.Rect(10, 10, 20, 20), True),
+            ((2, 15, 8, 25), pygame.Rect(10, 10, 20, 20), False),
         )
         
         for r1, r2, expected in vals:

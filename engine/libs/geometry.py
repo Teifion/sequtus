@@ -19,7 +19,7 @@ def rect_collision(r1, r2, convert=False):
         else:
             r1 = (r1.left, r1.top, r1.right, r1.bottom)
         
-        if type(r1) == tuple or type(r1) == list:
+        if type(r2) == tuple or type(r2) == list:
             r2 = (r2[0], r2[1], r2[1] + r2[0], r2[3] + r2[1])
         else:
             r2 = (r2.left, r2.top, r2.right, r2.bottom)
