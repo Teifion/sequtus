@@ -44,6 +44,10 @@ class BattleTests (sim_t.SimTester):
         self.assertEqual(sim.actors[1].is_moving(), False, "Stationary actor does not register .is_moving flag")
     
     def test_collision_resolution(self):
+        # Note: This does not correctly test the collision resolution
+        # in a perfect way, it simply makes sure that every type of
+        # collision happens and that the actors end up in the correct
+        # places, this is the best I could do for now.
         sim = self.new_sim(200, game_state="collisions.json")
         
         # a1 gets to the location before a2 and thus is moved out of the way
