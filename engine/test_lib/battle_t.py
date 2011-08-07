@@ -65,6 +65,10 @@ class BattleTests (sim_t.SimTester):
         sim.actors[10].issue_command("move", [300, 500])
         sim.actors[11].issue_command("move", [200, 600])
         
+        sim.actors[12].issue_command("move", [450, 700])
+        sim.actors[13].issue_command("move", [450, 700])
+        sim.actors[14].issue_command("move", [450, 700])
+        
         sim.run()
         
         # testing what happens when one actor gets there first
@@ -90,6 +94,10 @@ class BattleTests (sim_t.SimTester):
         # One actor trying to overtake the other
         self.assertEqual([int(p) for p in sim.actors[10].pos], [300, 500, 0])
         self.assertEqual([int(p) for p in sim.actors[11].pos], [200, 600, 0])
+        
+        self.assertEqual([int(p) for p in sim.actors[12].pos], [417, 647, 0])
+        self.assertEqual([int(p) for p in sim.actors[13].pos], [450, 700, 0])
+        self.assertEqual([int(p) for p in sim.actors[14].pos], [423, 755, 0])
         
     
 

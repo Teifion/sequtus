@@ -76,6 +76,25 @@
             "pos":  [200, 400, 0],
             "team": 1,
             "hp":   10
+        },
+        
+        {
+            "type": "Red circle",
+            "pos":  [400, 500, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Blue circle",
+            "pos":  [450, 500, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Blue circle",
+            "pos":  [500, 500, 0],
+            "team": 1,
+            "hp":   10
         }
     ]
 }
