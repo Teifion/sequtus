@@ -24,13 +24,16 @@ class TestEngine (core.EngineV3):
     
     def __init__(self):
         super(TestEngine, self).__init__()
-        self.images = {"test_image":pygame.Surface((10, 10))}
+        self.images = {
+            "test_image_41":pygame.Surface((41, 41)),
+            "test_image_100":pygame.Surface((100, 100))
+        }
 
 class BattleTester (battle_sim.BattleSim):
     def __init__(self, engine):
         super(BattleTester, self).__init__(engine)
         
-        self.set_speed(1000000)
+        self.set_speed(10000)
         self.cycles = 0
         self.max_cycles = 0
         self.testing = True

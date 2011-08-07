@@ -38,7 +38,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         data.append("\n**** Actors ****")
         for a in self.actors:
-            data.append("\nAID: %s" % a.aid)
+            data.append("\nAID: %s, ID: %s" % (a.aid, str(a)))
             data.append("pos: %s" % a.pos)
             data.append("rect: %s" % a.rect)
             data.append("velocity: %s" % a.velocity)

@@ -49,11 +49,19 @@ class BattleTests (sim_t.SimTester):
         sim.actors[0].issue_command("move", (200, 200))
         sim.actors[1].issue_command("move", (200, 200))
         
+        sim.actors[2].issue_command("move", [400, 100])
+        sim.actors[3].issue_command("move", [400, 100])
+        
+        sim.actors[4].issue_command("move", [700, 400])
+        
         sim.run()
         
         # testing what happens when one actor gets there first
-        self.assertEqual([int(p) for p in sim.actors[0].pos], [211, 211, 0])
+        self.assertEqual([int(p) for p in sim.actors[0].pos], [243, 243, 0])
         self.assertEqual([int(p) for p in sim.actors[1].pos], [200, 200, 0])
+        
+        # self.assertEqual([int(p) for p in sim.actors[2].pos], [211, 211, 0])
+        # self.assertEqual([int(p) for p in sim.actors[3].pos], [200, 200, 0])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)

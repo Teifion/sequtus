@@ -1,8 +1,8 @@
 {
     "types":    {
         "Red building": {
-            "image":            "test_image",
-            "placement_image":  "test_image",
+            "image":            "test_image_100",
+            "placement_image":  "test_image_100",
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -14,8 +14,8 @@
             "flags":    []
         },
         "Blue building": {
-            "image":            "test_image",
-            "placement_image":  "test_image",
+            "image":            "test_image_100",
+            "placement_image":  "test_image_100",
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -28,7 +28,7 @@
         },
         
         "Red circle": {
-            "image":            "test_image",
+            "image":            "test_image_41",
             "type":             "walker",
             "max_hp":           10,
             "max_shields":      0,
@@ -46,7 +46,7 @@
             "flags":    ["constructor"]
         },
         "Blue circle": {
-            "image":            "test_image",
+            "image":            "test_image_41",
             "type":             "walker",
             "max_hp":           10,
             "max_shields":      0,

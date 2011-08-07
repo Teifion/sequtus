@@ -77,8 +77,9 @@ def handle_pathing_collision(a1, a2):
             _sidestep_collision_resolution(a1, a2)
         
     elif not a1.is_moving() and not a2.is_moving():
+        print("a1 = %s, a2 = %s" % (a1.aid, a2.aid))
         raise Exception("Neither actor is moving yet they are colliding")
-        pass
+        
     else:
         _handle_one_moving_collision(a1, a2)
 
@@ -95,10 +96,8 @@ def _handle_one_moving_collision(act1, act2):
     
     # a2 cannot move
     if a2.max_velocity <= 0:
-        print("a2 cannot move")
         # a2 is sitting on the ultimate target for a1
         if _will_collide(a1, a2, target):
-            print("Next order")
             a1.next_order()
         else:
             print("Step around")
@@ -111,7 +110,7 @@ def _handle_one_moving_collision(act1, act2):
             angle = vectors.angle(a1.pos, a2.pos)
             
             # If it's a diagonal then they'll need to take that into account
-            dist = max(max(a1.size), max(a2.size)) * 1.5 + 1
+            dist = max(max(a1.size), max(a2.size)) * 1.5
             
             a2_target = vectors.add_vectors(
                 target,
@@ -125,7 +124,6 @@ def _handle_one_moving_collision(act1, act2):
             # Pause a1 a moment to left a2 move
             a1.pause(7)
             
-            print("Bump")
         else:
             print(a1.pos, a2.pos, target)
             print("Step around (2)")
@@ -210,26 +208,41 @@ def _handle_one_moving_collision(act1, act2):
 #     # Pause a1 to let a2 get out the way
 #     a1.pause(10)
 
-# def _step_around(a1, a2):
-#     """a1 is given order to step around a2"""
-#     angle = vectors.angle(a1.pos, a2.pos)[0]
-#     dist = a1.max_velocity
-#     size = a1.size + a2.size
-#     
-#     # First move directly away from a2
-#     orders = [["move", vectors.add_vectors(
-#         vectors.move_to_vector([360-angle, 0], dist),
-#         a1.pos
-#     )]]
-#     
-#     # Now move to a location that is 45 degrees around a2 from where a1 is
-#     orders.append(["move", vectors.add_vectors(
-#         vectors.move_to_vector([vectors.bound_angle(angle + 45), 0], dist),
-#         a2.pos
-#     )])
-#     
-#     a1.insert_order_queue(orders)
-#     a2.dont_collide_with[a1.aid] = 10
+def _step_around(a1, a2):
+    """a1 is given order to step around a2"""
+    angle = vectors.angle(a1.pos, a2.pos)[0]
+    size = max(max(a1.size), max(a2.size))
+    dist = max(a1.size) + max(a2.size)
+    
+    # First move directly away from a2
+    target1 = vectors.add_vectors(
+        vectors.move_to_vector([vectors.bound_angle(angle+180), 0], size),
+        a2.pos
+    )
+    
+    # Now move to a location that is 45 degrees around a2 from where a1 is
+    target2 = vectors.add_vectors(
+        vectors.move_to_vector([vectors.bound_angle(angle+180+45), 0], size*1.1),
+        a2.pos
+    )
+    
+    # Now to a location 45 + 90 degrees around a2 from a1
+    target3 = vectors.add_vectors(
+        vectors.move_to_vector([vectors.bound_angle(angle+180+90+45), 0], size*1.1),
+        a2.pos
+    )
+    
+    orders = [["move", target1], ["move", target2], ["move", target3]]
+    
+    # drawing.draw_and_view([a1.rect, a2.rect,
+    #     pygame.Rect(target1[0], target1[1], a1.size[0], a1.size[1]),
+    #     pygame.Rect(target2[0], target2[1], a1.size[0], a1.size[1]),
+    #     pygame.Rect(target3[0], target3[1], a1.size[0], a1.size[1]),
+    # ])
+    # exit()
+    
+    a1.insert_order_queue(orders)
+    a2.dont_collide_with[a1.aid] = 2
 
 def _will_collide(a1, a2, target=None):
     """Answers if a2 will collide with a1's movement target"""

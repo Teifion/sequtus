@@ -24,6 +24,19 @@
             "pos":  [600, 100, 0],
             "team": 1,
             "hp":   10
+        },
+        
+        {
+            "type": "Red circle",
+            "pos":  [700, 50, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Blue building",
+            "pos":  [700, 200, 0],
+            "team": 1,
+            "hp":   10
         }
     ]
 }
