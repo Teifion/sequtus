@@ -1,5 +1,6 @@
 import unittest
 import sim_t
+from engine.libs import drawing
 
 class BattleTests (sim_t.SimTester):
     def test_load(self):
@@ -54,14 +55,36 @@ class BattleTests (sim_t.SimTester):
         
         sim.actors[4].issue_command("move", [700, 400])
         
+        sim.actors[6].issue_command("move", [400, 300])
+        sim.actors[7].issue_command("move", [300, 300])
+        
+        sim.actors[8].issue_command("move", [600, 600])
+        sim.actors[9].issue_command("move", [600, 500])
+        sim.actors[9].max_velocity = 2
+        
         sim.run()
         
         # testing what happens when one actor gets there first
         self.assertEqual([int(p) for p in sim.actors[0].pos], [243, 243, 0])
         self.assertEqual([int(p) for p in sim.actors[1].pos], [200, 200, 0])
         
-        # self.assertEqual([int(p) for p in sim.actors[2].pos], [211, 211, 0])
-        # self.assertEqual([int(p) for p in sim.actors[3].pos], [200, 200, 0])
+        # one actor is stopped (having just moved) and nudged out the way
+        # by another actor
+        self.assertEqual([int(p) for p in sim.actors[2].pos], [338, 100, 0])
+        self.assertEqual([int(p) for p in sim.actors[3].pos], [400, 100, 0])
+        
+        # one actor is unable to be moved (building)
+        self.assertEqual([int(p) for p in sim.actors[4].pos], [700, 400, 0])
+        
+        # both actors are moving directly towards each other
+        self.assertEqual([int(p) for p in sim.actors[6].pos], [400, 300, 0])
+        self.assertEqual([int(p) for p in sim.actors[7].pos], [300, 300, 0])
+        
+        # One actor trying to overtake the other
+        self.assertEqual([int(p) for p in sim.actors[8].pos], [600, 600, 0])
+        self.assertEqual([int(p) for p in sim.actors[9].pos], [600, 500, 0])
+        
+        
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)

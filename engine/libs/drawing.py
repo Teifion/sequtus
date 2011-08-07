@@ -19,6 +19,15 @@ def _get_data(obj):
             width = obj.width,
             height = obj.height,
         )
+    elif str(type(obj)) in (
+        "<class 'engine.logic.actor_subtypes.Walker'>",
+        "<class 'engine.logic.actor_subtypes.Building'>"):
+        return DataObject(
+            x = obj.pos[0],
+            y = obj.pos[1],
+            width = obj.size[0],
+            height = obj.size[1],
+        )
     else:
         raise Exception("No handler for type(obj) == %s" % str(type(obj)))
 

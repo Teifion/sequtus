@@ -42,7 +42,10 @@ class BattleTester (battle_sim.BattleSim):
     def redraw(self):
         pass
     
-    def run(self, print_debug_info=True):
+    def run(self, max_cycles=-1, print_debug_info=True):
+        if max_cycles > 0:
+            self.max_cycles += max_cycles
+        
         while self.cycles < self.max_cycles:
             self.cycles += 1
             

@@ -17,23 +17,21 @@ def build_template_cache(template, engine):
     temp_img = engine.images[template['image']]
     template['size'] = temp_img.get_rect().size
 
-# def pass_around(act1, act2):
-#     """Issues micro orders to a1 and a2,
-#     the faster actor will pass around the other while the other pauses"""
-#     if act1.max_velocity >= act2.max_velocity:
-#         a1, a2 = act1, act2
-#     else:
-#         a1, a2 = act2, act1
-#     
-#     a1.pause(10)
-#     a1.dont_collide_with[a2.aid] = 10
+def _pass_around(act1, act2):
+    """Issues micro orders to a1 and a2,
+    the faster actor will pass around the other while the other pauses"""
+    if act1.max_velocity >= act2.max_velocity:
+        a1, a2 = act1, act2
+    else:
+        a1, a2 = act2, act1
+    
+    _step_around(a1, a2)
+    
+    a2.pause(30)
+    a1.dont_collide_with[a2.aid] = 15
 
 def handle_pathing_collision(a1, a2):
     if a1.is_moving() and a2.is_moving():
-        a1.pause(1)
-        a1.dont_collide_with[a2.aid] = 1
-        
-        return
         a1_angle = vectors.angle(a1.velocity)
         a2_angle = vectors.angle(a2.velocity)
         
@@ -42,25 +40,7 @@ def handle_pathing_collision(a1, a2):
         
         # Very similar direction
         if a_diff < 30:
-            print("Both moving: Same direction")
-            
-            avg_angle = (a1_angle[0] + a2_angle[0])/2.0
-            avg_pos = [(a1.pos[i] + a2.pos[i])/2.0 for i in range(3)]
-            
-            avg_move = vectors.move_to_vector([avg_angle, 0], 1000)
-            avg_target = vectors.add_vectors(avg_pos, avg_move)
-            
-            a1_dist = vectors.distance(a1.pos, avg_target)
-            a2_dist = vectors.distance(a2.pos, avg_target)
-            
-            # Whoever is further away (and thus behind the other)
-            # pauses so the other can go on
-            if a1_dist < a2_dist:
-                a2.pause(10)
-                a2.dont_collide_with[a1.aid] = 10
-            else:
-                a1.pause(10)
-                a1.dont_collide_with[a2.aid] = 10
+            _pass_around(a1, a2)
         
         # Right angle
         elif a_diff < 150:
@@ -73,8 +53,9 @@ def handle_pathing_collision(a1, a2):
             
         # Opposite directions
         else:
-            print("Both moving: Different directions")
-            _sidestep_collision_resolution(a1, a2)
+            _step_around(a1, a2)
+            _step_around(a2, a1)
+            a2.dont_collide_with[a1.aid] = 6
         
     elif not a1.is_moving() and not a2.is_moving():
         print("a1 = %s, a2 = %s" % (a1.aid, a2.aid))
@@ -100,7 +81,6 @@ def _handle_one_moving_collision(act1, act2):
         if _will_collide(a1, a2, target):
             a1.next_order()
         else:
-            print("Step around")
             _step_around(a1, a2)
         
     # a2 can move
@@ -125,88 +105,25 @@ def _handle_one_moving_collision(act1, act2):
             a1.pause(7)
             
         else:
-            print(a1.pos, a2.pos, target)
             print("Step around (2)")
-            # _step_around(a1, a2)
+            # _sidestep_collision_resolution(a1, a2)
 
-
-# def old_handle_pathing_collision(a1, a2):
-#     a1_angle = vectors.angle(a1.velocity)
-#     a2_angle = vectors.angle(a2.velocity)
-#     
-#     # What sort of a collision is this?
-#     a_diff = abs(vectors.angle_diff(a1_angle, a2_angle)[0])
-#     
-#     if a1.is_moving() and a2.is_moving():
-#         print(a_diff)
-#         
-#         # Nearly the same direction
-#         if a_diff < 30:
-#             avg_angle = (a1_angle[0] + a2_angle[0])/2.0
-#             avg_pos = [(a1.pos[i] + a2.pos[i])/2.0 for i in range(3)]
-#             
-#             avg_move = vectors.move_to_vector([avg_angle, 0], 1000)
-#             avg_target = vectors.add_vectors(avg_pos, avg_move)
-#             
-#             a1_dist = vectors.distance(a1.pos, avg_target)
-#             a2_dist = vectors.distance(a2.pos, avg_target)
-#             
-#             if a1_dist < a2_dist:
-#                 a2.pause(10)
-#                 a2.dont_collide_with[a1.aid] = 10
-#             else:
-#                 a1.pause(10)
-#                 a1.dont_collide_with[a2.aid] = 10
-#             
-#         # Right angle
-#         elif a_diff < 150:
-#             # Now we tell a1 to reverse and a2 to pause a moment while
-#             # a1 moves out of the way
-#             a1.reverse(0, 15)
-#             a2.pause(2)
-#             
-#         # Opposite directions
-#         else:
-#             _sidestep_collision_resolution(a1, a2)
-#         
-#     else:
-#         if a1.is_moving():
-#             # If a2 is sitting around doing nothing then move it out the way
-#             if a2.max_velocity > 0 and a2.current_action() == ["stop", -1]:
-#                 _sidestep_collision_resolution(a1, a2)
-#             else:
-#                 # a2 is sitting on our target spot, so we stop
-#                 if _will_collide(a1, a2):
-#                     a1.next_order()
-#                 else:
-#                     print("busy")
-#                     # a2 can't move or is busy doing something else
-#         
-#         elif a2.is_moving():
-#             if a1.max_velocity > 0 and a1.current_action() == ["stop", -1]:
-#                 _sidestep_collision_resolution(a2, a1)
-#             else:
-#                 if _will_collide(a2, a1):
-#                     a2.next_order()
-#                 else:
-#                     print("busy")
-
-# def _sidestep_collision_resolution(a1, a2):
-#     """
-#     Used when one actor has to move to the side to avoid another
-#     """
-#     side_angle = vectors.bound_angle((vectors.angle(a1.velocity)[0]+90, 0))
-#     
-#     target = vectors.add_vectors(
-#         a2.pos,
-#         vectors.move_to_vector(side_angle, 5 + max(a1.size)*1.2)
-#     )
-#     
-#     # Use reverse to show that it's moving in response to a collision
-#     a2.insert_order_queue([("move", target), ("stop", 10)])
-#     
-#     # Pause a1 to let a2 get out the way
-#     a1.pause(10)
+def _sidestep_collision_resolution(a1, a2):
+    """
+    Used when one actor has to move to the side to avoid another
+    """
+    side_angle = vectors.bound_angle((vectors.angle(a1.velocity)[0]+90, 0))
+    
+    target = vectors.add_vectors(
+        a2.pos,
+        vectors.move_to_vector(side_angle, 5 + max(a1.size)*1.2)
+    )
+    
+    # Use reverse to show that it's moving in response to a collision
+    a2.insert_order_queue([("move", target), ("stop", 10)])
+    
+    # Pause a1 to let a2 get out the way
+    a1.pause(10)
 
 def _step_around(a1, a2):
     """a1 is given order to step around a2"""
@@ -233,13 +150,6 @@ def _step_around(a1, a2):
     )
     
     orders = [["move", target1], ["move", target2], ["move", target3]]
-    
-    # drawing.draw_and_view([a1.rect, a2.rect,
-    #     pygame.Rect(target1[0], target1[1], a1.size[0], a1.size[1]),
-    #     pygame.Rect(target2[0], target2[1], a1.size[0], a1.size[1]),
-    #     pygame.Rect(target3[0], target3[1], a1.size[0], a1.size[1]),
-    # ])
-    # exit()
     
     a1.insert_order_queue(orders)
     a2.dont_collide_with[a1.aid] = 2

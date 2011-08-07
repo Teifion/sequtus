@@ -101,6 +101,7 @@ class BattleSim (battle_screen.BattleScreen):
             self.cycle_count = [0, int(time.time())]
         
         self.tick += 1
+        
         self.orders[self.tick + self.tick_jump] = []
         self.q_orders[self.tick + self.tick_jump] = []
         self.issue_orders()

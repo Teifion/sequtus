@@ -69,7 +69,13 @@ class Sequtus (core.EngineV3):
         self.current_screen.actors[3].issue_command("move", [400, 100])
         
         self.current_screen.actors[4].issue_command("move", [700, 400])
-        # self.current_screen.select_actor(self.current_screen.actors[4])
+        
+        self.current_screen.actors[6].issue_command("move", [400, 300])
+        self.current_screen.actors[7].issue_command("move", [300, 300])
+        
+        self.current_screen.actors[8].issue_command("move", [600, 600])
+        self.current_screen.actors[9].issue_command("move", [600, 500])
+        self.current_screen.actors[9].max_velocity = 2
         
         self.current_screen.set_speed(30)
-            
+        
