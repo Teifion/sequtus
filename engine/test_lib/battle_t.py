@@ -62,6 +62,9 @@ class BattleTests (sim_t.SimTester):
         sim.actors[9].issue_command("move", [600, 500])
         sim.actors[9].max_velocity = 2
         
+        sim.actors[10].issue_command("move", [300, 500])
+        sim.actors[11].issue_command("move", [200, 600])
+        
         sim.run()
         
         # testing what happens when one actor gets there first
@@ -84,7 +87,11 @@ class BattleTests (sim_t.SimTester):
         self.assertEqual([int(p) for p in sim.actors[8].pos], [600, 600, 0])
         self.assertEqual([int(p) for p in sim.actors[9].pos], [600, 500, 0])
         
+        # One actor trying to overtake the other
+        self.assertEqual([int(p) for p in sim.actors[10].pos], [300, 500, 0])
+        self.assertEqual([int(p) for p in sim.actors[11].pos], [200, 600, 0])
         
+    
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)

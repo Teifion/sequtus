@@ -44,8 +44,6 @@ def handle_pathing_collision(a1, a2):
         
         # Right angle
         elif a_diff < 150:
-            print("Both moving: Right angle")
-            
             # Now we tell a1 to reverse and a2 to pause a moment while
             # a1 moves out of the way
             a1.reverse(0, 15)
@@ -105,7 +103,8 @@ def _handle_one_moving_collision(act1, act2):
             a1.pause(7)
             
         else:
-            print("Step around (2)")
+            pass
+            # print("Step around (2)")
             # _sidestep_collision_resolution(a1, a2)
 
 def _sidestep_collision_resolution(a1, a2):

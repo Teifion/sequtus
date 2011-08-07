@@ -236,7 +236,7 @@ class Actor (object):
         
         if steps > 0:
             distance = vectors.total_velocity(self.velocity) * steps
-            
+        
         target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
         self.insert_order("move", target)
     
