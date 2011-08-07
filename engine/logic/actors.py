@@ -111,6 +111,8 @@ class Actor (object):
         self.team = data.get("team", self.team)
         
         self.completion = data.get("completion", self.completion)
+        
+        self.actor_type = data["type"]
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""

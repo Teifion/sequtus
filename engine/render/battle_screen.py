@@ -290,11 +290,65 @@ class BattleScreen (screen.Screen):
         else:
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)
     
-    def left_click_actor(self, a):
-        if a.selected:
-            self.unselect_actor(a)
+    def handle_doubleclick(self, first_click, second_click):
+        # First check panels
+        for i, p in self.panels.items():
+            if p.contains(first_click.pos) and p.contains(second_click.pos):
+                if p.handle_doubleclick(first_click, second_click):
+                    return
+                else:
+                    break
+        
+        first_real_mouse_pos = (
+            first_click.pos[0] - self.draw_margin[0],
+            first_click.pos[1] - self.draw_margin[1]
+        )
+        
+        second_real_mouse_pos = (
+            second_click.pos[0] - self.draw_margin[0],
+            second_click.pos[1] - self.draw_margin[1]
+        )
+        
+        # Now check actors
+        for a in self.actors:
+            if a.contains_point(first_real_mouse_pos) and a.contains_point(second_real_mouse_pos):
+                self.double_left_click_actor(a)
+                break
+    
+    def left_click_actor(self, act):
+        if act.selected:
+            self.unselect_actor(act)
         else:
-            self.select_actor(a)
+            self.select_actor(act)
+    
+    def double_left_click_actor(self, act):
+        mods = pygame.key.get_mods()
+        actors_to_select = []
+        
+        scr_rect = (
+            -self.scroll_x + self.draw_area[0],
+            -self.scroll_y + self.draw_area[1],
+            -self.scroll_x + self.draw_area[2],
+            -self.scroll_y + self.draw_area[3]
+        )
+        
+        for a in self.actors:
+            if a.actor_type == act.actor_type:
+                if a.inside(scr_rect):
+                    actors_to_select.append(a)
+        
+        if KMOD_SHIFT & mods:
+            # Add to current selection
+            for a in actors_to_select:
+                self.select_actor(a)
+        else:
+            self.selected_actors = []
+            
+            # Set as current selection
+            for a in actors_to_select:
+                self.select_actor(a)
+        
+        self.selection_changed()
     
     def handle_mousedrag(self, event, drag_rect):
         if event.buttons[0] == 1:

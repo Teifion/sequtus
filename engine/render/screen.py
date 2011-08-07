@@ -26,6 +26,9 @@ class Screen (object):
         self.background_image = None
         
         self.surf = pygame.Surface(dimensions)
+        
+        self._last_mouseup = [None, -1]
+        self._double_click_interval = 0.25
     
     def add_button(self, b):
         self.buttons.append(b)
@@ -106,6 +109,10 @@ class Screen (object):
         pass
     
     def _handle_mouseup(self, event):
+        if time.time() <= self._last_mouseup[1] + self._double_click_interval:
+            return self._handle_doubleclick(self._last_mouseup[0], event)
+        
+        self._last_mouseup = [event, time.time()]
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
         
         for b in self.buttons:
@@ -127,6 +134,12 @@ class Screen (object):
             self.handle_mouseup(event, drag=True)
     
     def handle_mouseup(self, event, drag=False):
+        pass
+    
+    def _handle_doubleclick(self, first_click, second_click):
+        self.handle_doubleclick(first_click, second_click)
+    
+    def handle_doubleclick(self, first_click, second_click):
         pass
     
     def _handle_mousemotion(self, event):
