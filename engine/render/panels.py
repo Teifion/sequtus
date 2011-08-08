@@ -1,3 +1,5 @@
+from __future__ import division
+
 import math
 
 import pygame
@@ -6,6 +8,8 @@ from pygame.locals import *
 # Used to define a section of the screen used for build options
 # unit commands, resources etc etc
 class Panel (object):
+    always_redraw = False
+    
     def __init__(self, engine):
         super(Panel, self).__init__()
         
@@ -30,7 +34,7 @@ class Panel (object):
     
     def image(self):
         # Try to use the cached version
-        if self._image != None and not self.changed:
+        if self._image != None and not self.changed and not self.always_redraw:
             return self._image, self.position
         
         # Draw the iamge
@@ -109,10 +113,13 @@ class TabularMenu (Panel):
 
 # Used to draw the map
 class MiniMap (Panel):
-    def __init__(self, engine, size, position):
+    always_redraw = True
+    
+    def __init__(self, engine, size, position, map_size):
         super(MiniMap, self).__init__(engine)
         
         self.size       = size
+        self.map_size   = map_size
         
         self.position.topleft = position
         
@@ -125,9 +132,18 @@ class MiniMap (Panel):
         self._image = pygame.Surface(self.size)
         self._image.fill((100, 255, 100), pygame.Rect(0, 0, self.size[0], self.size[1]))
         
-        for team_colour, actor_list in self.actors.items():
-            for x, y, size in actor_list:
-                self._image.fill(team_colour, pygame.Rect(x,y, size, size))
+        xratio = self.map_size[0] / self.size[0]
+        yratio = self.map_size[1] / self.size[1]
+        
+        for a in self.engine.current_screen.actors:
+            x,y = a.pos[0] / xratio, a.pos[1] / yratio
+            xsize, ysize = a.size[0] / xratio, a.size[1] / yratio, 
+            
+            self._image.fill((0,0,0), pygame.Rect(x, y, xsize, ysize))
+        
+        # for team_colour, actor_list in self.actors.items():
+        #     for x, y, size in actor_list:
+        #         self._image.fill(team_colour, pygame.Rect(x,y, size, size))
         
         self.position.size = self.size
 

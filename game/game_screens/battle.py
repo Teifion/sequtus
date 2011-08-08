@@ -15,6 +15,7 @@ class Battle (battle_sim.BattleSim):
         
         self.panels["minimap"] = panels.MiniMap(engine,
             size = (200, 200),
+            map_size = (2000, 2000),
             position = (0, 0)
         )
         
