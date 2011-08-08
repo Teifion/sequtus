@@ -104,6 +104,17 @@ class BattleTests (sim_t.SimTester):
         self.assertEqual([int(p) for p in sim.actors[14].pos], [423, 755, 0])
         
     
+    # Tests that still need to be written
+    def ttest_left_click(self): pass
+    def ttest_right_click(self): pass
+    def ttest_doubleclick(self): pass
+    def ttest_drag_select(self): pass
+    def ttest_keyboard_scroll(self): pass
+    
+    def ttest_group_assignment(self): pass# Ctrl + # to assign, # to select
+    
+    def ttest_issue_orders(self): pass
+    def ttest_get_collisions(self): pass
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(BattleTests)
