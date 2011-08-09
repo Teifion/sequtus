@@ -95,6 +95,25 @@
             "pos":  [500, 500, 0],
             "team": 1,
             "hp":   10
+        },
+        
+        {
+            "type": "Red circle",
+            "pos":  [100, 700, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [250, 700, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [150, 800, 0],
+            "team": 1,
+            "hp":   10
         }
     ]
 }
