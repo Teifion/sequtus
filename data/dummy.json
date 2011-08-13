@@ -1,33 +1,21 @@
 {
     "actors":   [
         {
-            "type": "Blue circle",
-            "pos":  [100, 100, 0],
+            "type": "Red circle",
+            "pos":  [100, 700, 0],
             "team": 1,
             "hp":   10
         },
         {
-            "type": "Blue circle",
-            "pos":  [200, 200, 0],
-            "team": 2,
+            "type": "Red circle",
+            "pos":  [250, 700, 0],
+            "team": 1,
             "hp":   10
         },
         {
-            "type": "Blue circle",
-            "pos":  [200, 250, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [200, 300, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [200, 350, 0],
-            "team": 2,
+            "type": "Red circle",
+            "pos":  [150, 800, 0],
+            "team": 1,
             "hp":   10
         }
     ]

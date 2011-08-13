@@ -56,22 +56,58 @@ def handle_pathing_collision(a1, a2):
             a2.dont_collide_with[a1.aid] = 6
         
     elif not a1.is_moving() and not a2.is_moving():
-        print("a1 = %s, a2 = %s" % (a1.aid, a2.aid))
-        raise Exception("Neither actor is moving yet they are colliding")
+        # Presumably they were both on dont_collide_with lists
+        _handle_no_moving_collision(a1, a2)
         
     else:
-        _handle_one_moving_collision(a1, a2)
+        # It's possible in some edge cases for an actor to be moving yet not
+        # have a move target, that's why we have a fallback
+        if not _handle_one_moving_collision(a1, a2):
+            _handle_no_moving_collision(a1, a2)
+
+def _handle_no_moving_collision(a1, a2):
+    """We will bounce both of them away from each other"""
+    # These are the angles directly away from each other
+    angle1 = vectors.angle(a2.pos, a1.pos)
+    angle2 = vectors.angle(a1.pos, a2.pos)
+    
+    overlapping = True
+    dist_multiplier = 0.1
+    while overlapping:
+        dist_multiplier += 0.1
+        
+        new_pos1 = vectors.add_vectors(a1.pos, vectors.move_to_vector(
+            angle1, max(a1.size) * dist_multiplier
+        ))
+        
+        new_pos2 = vectors.add_vectors(a2.pos, vectors.move_to_vector(
+            angle2, max(a2.size) * dist_multiplier
+        ))
+        
+        new_rect1 = (new_pos1[0], new_pos1[1], a1.size[0], a1.size[1])
+        new_rect2 = (new_pos2[0], new_pos2[1], a2.size[0], a2.size[1])
+        
+        if not geometry.rect_collision(new_rect1, new_rect2):
+            overlapping = False
+    
+    a1.pos = new_pos1
+    a2.pos = new_pos2
+        
 
 def _handle_one_moving_collision(act1, act2):
     """A collision where only one party is moving
     a1 is set as the moving party"""
     if act1.is_moving():
         a1, a2 = act1, act2
-    else:
+    elif act2.is_moving():
         a1, a2 = act2, act1
+    else:
+        return False
     
     # Where is a1 trying to get?
     target = a1.get_move_target()
+    if target == None:
+        return False
     
     # a2 cannot move
     if a2.max_velocity <= 0:
