@@ -18,8 +18,7 @@ def build_template_cache(template, engine):
     template['size'] = temp_img.get_rect().size
 
 def _pass_around(act1, act2):
-    """Issues micro orders to a1 and a2,
-    the faster actor will pass around the other while the other pauses"""
+    """The faster actor will pass around the other while the other pauses"""
     if act1.max_velocity >= act2.max_velocity:
         a1, a2 = act1, act2
     else:
@@ -31,6 +30,7 @@ def _pass_around(act1, act2):
     a1.dont_collide_with[a2.aid] = 15
 
 def handle_pathing_collision(a1, a2):
+    """a1 and a2 overlap, we must make it so they don't"""
     if a1.is_moving() and a2.is_moving():
         a1_angle = vectors.angle(a1.velocity)
         a2_angle = vectors.angle(a2.velocity)
@@ -66,11 +66,16 @@ def handle_pathing_collision(a1, a2):
             _handle_no_moving_collision(a1, a2)
 
 def _handle_no_moving_collision(a1, a2):
-    """We will bounce both of them away from each other"""
+    """Neither actor is moving yet they have collided, this is probably
+    because they were on a dont_collide_with list and have just fallen off it
+    We will bounce both of them away from each other"""
+    
     # These are the angles directly away from each other
     angle1 = vectors.angle(a2.pos, a1.pos)
     angle2 = vectors.angle(a1.pos, a2.pos)
     
+    # Keep trying distances further and further apart until they're
+    # not going to be overlapping any more
     overlapping = True
     dist_multiplier = 0.1
     while overlapping:
@@ -95,8 +100,8 @@ def _handle_no_moving_collision(a1, a2):
         
 
 def _handle_one_moving_collision(act1, act2):
-    """A collision where only one party is moving
-    a1 is set as the moving party"""
+    """A collision where only one actor is moving
+    a1 is set as the moving actor"""
     if act1.is_moving():
         a1, a2 = act1, act2
     elif act2.is_moving():
@@ -104,7 +109,7 @@ def _handle_one_moving_collision(act1, act2):
     else:
         return False
     
-    # Where is a1 trying to get?
+    # Where is a1 trying to get to?
     target = a1.get_move_target()
     if target == None:
         return False
