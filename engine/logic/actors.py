@@ -54,6 +54,7 @@ class Actor (object):
         self.__is_moving = False
         
         self.dont_collide_with = {}
+        self.recent_collisions = {}
         
         self.aid = 0
     

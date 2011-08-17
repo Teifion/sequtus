@@ -29,7 +29,92 @@ def _pass_around(act1, act2):
     a2.pause(30)
     a1.dont_collide_with[a2.aid] = 15
 
+# Trying out a new method
 def handle_pathing_collision(a1, a2):
+    if a1.max_velocity > 0 and a2.max_velocity > 0:
+        _bounce_both(a1, a2)
+    elif a1.max_velocity <= 0:
+        _bounce_one(a2, a1)
+    elif a2.max_velocity <= 0:
+        _bounce_one(a1, a2)
+    else:
+        raise Exception("Neither actor can move")
+
+def _bounce_one(a1, a2):
+    # Bounces a1
+    dir_angle = vectors.angle(a2.pos, a1.pos)
+    
+    vel_angle = vectors.angle(a1.velocity)
+    
+    # If they are head on then we want to swivel them a little
+    if vectors.bound_angle(dir_angle[0]+180) == vel_angle[0]:
+        dir_angle[0] = vectors.bound_angle(dir_angle[0] + 20)
+    
+    # Keep trying distances further and further apart until they're
+    # not going to be overlapping any more
+    overlapping = True
+    dist = max(a1.size)
+    
+    a2_rect = (a2.pos[0], a2.pos[1], a2.size[0], a2.size[1])
+    
+    while overlapping:
+        dist += 1
+        
+        new_pos = vectors.add_vectors(a1.pos, vectors.move_to_vector(
+            dir_angle, dist
+        ))
+        
+        new_rect = (new_pos[0], new_pos[1], a1.size[0], a1.size[1])
+        
+        if not geometry.rect_collision(new_rect, a2_rect, True):
+            overlapping = False
+    
+    # Add a bit to be safe
+    new_pos = vectors.add_vectors(a1.pos, vectors.move_to_vector(
+        dir_angle, dist + 10
+    ))
+    
+    a1.pos = new_pos
+
+def _bounce_both(a1, a2):
+    # These are the angles directly away from each other
+    angle1 = vectors.angle(a2.pos, a1.pos)
+    angle2 = vectors.angle(a1.pos, a2.pos)
+    
+    vel_angle1 = vectors.angle(a1.velocity)
+    vel_angle2 = vectors.angle(a2.velocity)
+    
+    # If they are head on then we want to swivel them a little
+    if vel_angle1[0] == angle2[0] and vel_angle2[0] == angle1[0]:
+        angle1[0] = vectors.bound_angle(angle1[0] + 20)
+        angle2[0] = vectors.bound_angle(angle2[0] + 20)
+    
+    # Keep trying distances further and further apart until they're
+    # not going to be overlapping any more
+    overlapping = True
+    dist_multiplier = 0.1
+    
+    while overlapping:
+        dist_multiplier += 0.1
+        
+        new_pos1 = vectors.add_vectors(a1.pos, vectors.move_to_vector(
+            angle1, max(a1.size) * dist_multiplier
+        ))
+        
+        new_pos2 = vectors.add_vectors(a2.pos, vectors.move_to_vector(
+            angle2, max(a2.size) * dist_multiplier
+        ))
+        
+        new_rect1 = (new_pos1[0], new_pos1[1], a1.size[0], a1.size[1])
+        new_rect2 = (new_pos2[0], new_pos2[1], a2.size[0], a2.size[1])
+        
+        if not geometry.rect_collision(new_rect1, new_rect2):
+            overlapping = False
+    
+    a1.pos = new_pos1
+    a2.pos = new_pos2
+
+def old_handle_pathing_collision(a1, a2):
     """a1 and a2 overlap, we must make it so they don't"""
     if a1.is_moving() and a2.is_moving():
         a1_angle = vectors.angle(a1.velocity)

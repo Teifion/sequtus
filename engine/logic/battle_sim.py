@@ -18,7 +18,7 @@ from engine.render import battle_screen
 class BattleSim (battle_screen.BattleScreen):
     def __init__(self, engine):
         # How many cycles between collision checks
-        self._collision_interval = 5
+        self._collision_interval = 2
         self._collision_inverval_count = 0
         
         super(BattleSim, self).__init__(engine)
