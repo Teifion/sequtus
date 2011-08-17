@@ -42,7 +42,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         data.append("\n**** Actors ****")
         for a in self.actors:
-            data.append("\nAID: %s, ID: %s" % (a.aid, str(a)))
+            data.append("\nAID: %s, ID: %s" % (a.oid, str(a)))
             data.append("pos: %s" % a.pos)
             data.append("rect: %s" % a.rect)
             data.append("velocity: %s" % a.velocity)
@@ -144,8 +144,8 @@ class BattleSim (battle_screen.BattleScreen):
             for j, b in enumerate(self.actors):
                 if i == j: continue
                 if j in collided: continue
-                if a.aid in b.dont_collide_with: continue
-                if b.aid in a.dont_collide_with: continue
+                if a.oid in b.dont_collide_with: continue
+                if b.oid in a.dont_collide_with: continue
                 if geometry.rect_collision(a.rect, b.rect, True):
                     collisions.append((a,b))
                     

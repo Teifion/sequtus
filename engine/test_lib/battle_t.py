@@ -10,8 +10,8 @@ class BattleTests (sim_t.SimTester):
         # State checks
         self.assertEqual(len(sim.actors), 2, "Sim loaded an incorrect number of actors")
         
-        self.assertEqual(sim.actors[0].aid, 0, "Sim does not correctly set the first actor's aid")
-        self.assertEqual(sim.actors[1].aid, 1, "Sim does not correctly increment actor aid")
+        self.assertEqual(sim.actors[0].oid, 0, "Sim does not correctly set the first actor's aid")
+        self.assertEqual(sim.actors[1].oid, 1, "Sim does not correctly increment actor aid")
         
         self.assertEqual(sim.actors[0].team, 1, "Sim does not correctly assign a team to actors")
         self.assertEqual(sim.actors[1].team, 2, "Sim does not correctly assign a team to actors")

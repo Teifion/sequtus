@@ -483,7 +483,7 @@ class BattleScreen (screen.Screen):
     
     def add_actor(self, a):
         a.rect = self.engine.images[a.image].get_rect()
-        a.aid = self._current_actor_id
+        a.oid = self._current_actor_id
         self._current_actor_id += 1
         self.actors.append(a)
 

@@ -27,7 +27,7 @@ def _pass_around(act1, act2):
     _step_around(a1, a2)
     
     a2.pause(30)
-    a1.dont_collide_with[a2.aid] = 15
+    a1.dont_collide_with[a2.oid] = 15
 
 # Trying out a new method
 def handle_pathing_collision(a1, a2):
@@ -138,7 +138,7 @@ def old_handle_pathing_collision(a1, a2):
         else:
             _step_around(a1, a2)
             _step_around(a2, a1)
-            a2.dont_collide_with[a1.aid] = 6
+            a2.dont_collide_with[a1.oid] = 6
         
     elif not a1.is_moving() and not a2.is_moving():
         # Presumably they were both on dont_collide_with lists
@@ -223,7 +223,7 @@ def _handle_one_moving_collision(act1, act2):
             
             # Use reverse to show that it's moving in response to a collision
             a2.insert_order_queue([("move", a2_target)])
-            a2.dont_collide_with[a1.aid] = 7
+            a2.dont_collide_with[a1.oid] = 7
             
             # Pause a1 a moment to left a2 move
             a1.pause(7)
@@ -277,7 +277,7 @@ def _step_around(a1, a2):
     orders = [["move", target1], ["move", target2], ["move", target3]]
     
     a1.insert_order_queue(orders)
-    a2.dont_collide_with[a1.aid] = 2
+    a2.dont_collide_with[a1.oid] = 2
 
 def _will_collide(a1, a2, target=None):
     """Answers if a2 will collide with a1's movement target"""

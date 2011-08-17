@@ -2,14 +2,13 @@ from __future__ import division
 import pygame
 from pygame.locals import *
 
+import object_base
 from engine.libs import vectors
 
-class Actor (object):
+class Actor (object_base.ObjectBase):
     """It's intended that you sub-class this"""
-    game_update_time = 10
     ai_update_time = 100
     
-    image               = ""
     max_hp              = 1
     max_shields         = 0
     
@@ -23,15 +22,10 @@ class Actor (object):
     max_shield_armour   = 0
     
     weapons             = []
-    flags               = []
-    size                = (0,0)
     
     def __init__(self):
         super(Actor, self).__init__()
         
-        self.pos = [-100, -100, 0]# Assume we're offscreen
-        
-        self.next_game_update = 0 # update() hasn't been called yet.
         self.next_ai_update = 0
         
         self.selected = False
@@ -46,21 +40,11 @@ class Actor (object):
         
         self.hp = 0
         self.completion = 100
-        self.velocity = [0,0,0]
         
         self._health_bar = (None, None)
         self._completion_bar = (None, None)
         
-        self.__is_moving = False
-        
         self.dont_collide_with = {}
-        self.recent_collisions = {}
-        
-        self.aid = 0
-    
-    # These allow us to order actors based on their aid
-    def __lt__(self, other): return self.aid < other.aid
-    def __gt__(self, other): return self.aid > other.aid
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -143,36 +127,10 @@ class Actor (object):
                 self.rect.height + 6,
         )
     
-    def contains_point(self, point):
-        """Point is a length 2 sequence X, Y"""
-        left = self.pos[0] - self.rect.width/2
-        right = self.pos[0] + self.rect.width/2
-        
-        top = self.pos[1] - self.rect.height/2
-        bottom = self.pos[1] + self.rect.height/2
-        
-        if left <= point[0] <= right:
-            if top <= point[1] <= bottom:
-                return True
-    
-    def inside(self, rect):
-        if rect[0] <= self.pos[0] <= rect[2]:
-            if rect[1] <= self.pos[1] <= rect[3]:
-                return True
-    
-    def new_image(self, img):
-        self.image = img
-        self.rect = self.image.get_rect()
-    
     def update(self):
-        self.check_ai()
-        self.pos = vectors.add_vectors(self.pos, self.velocity)
+        super(Actor, self).update()
         
-        # Set rect
-        self.rect.topleft = (
-            self.pos[0] - self.rect.width/2,
-            self.pos[1] - self.rect.height/2
-        )
+        self.check_ai()
         
         remove = []
         for k in self.dont_collide_with:
