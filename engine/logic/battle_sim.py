@@ -17,6 +17,10 @@ from engine.render import battle_screen
 
 class BattleSim (battle_screen.BattleScreen):
     def __init__(self, engine):
+        # How many cycles between collision checks
+        self._collision_interval = 5
+        self._collision_inverval_count = 0
+        
         super(BattleSim, self).__init__(engine)
         
         self.next_cycle = time.time()
@@ -116,14 +120,18 @@ class BattleSim (battle_screen.BattleScreen):
             a.update()
         
         # Check for collisions
-        collisions = self.get_collisions()
+        self._collision_inverval_count -= 1
         
-        # We now have a list of all the collisions
-        for obj1, obj2 in collisions:
-            # We order them based on aid, this way we always deal with the same
-            # actor in the same way and the order the collison was found is
-            # irrelevant
-            actor_lib.handle_pathing_collision(min(obj1, obj2), max(obj1, obj2))
+        if self._collision_inverval_count < 1:
+            self._collision_inverval_count = self._collision_interval
+            collisions = self.get_collisions()
+            
+            # We now have a list of all the collisions
+            for obj1, obj2 in collisions:
+                # We order them based on aid, this way we always deal with the same
+                # actor in the same way and the order the collison was found is
+                # irrelevant
+                actor_lib.handle_pathing_collision(min(obj1, obj2), max(obj1, obj2))
         
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
