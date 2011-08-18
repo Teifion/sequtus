@@ -48,18 +48,16 @@ def _bounce_one(a1, a2):
     
     # If they are head on then we want to swivel them a little
     if vectors.bound_angle(dir_angle[0]+180) == vel_angle[0]:
-        dir_angle[0] = vectors.bound_angle(dir_angle[0] + 20)
+        dir_angle[0] = vectors.bound_angle(dir_angle[0] + 40)
     
     # Keep trying distances further and further apart until they're
     # not going to be overlapping any more
     overlapping = True
-    dist = max(a1.size)
+    dist = vectors.total_velocity(a1.velocity)
     
     a2_rect = (a2.pos[0], a2.pos[1], a2.size[0], a2.size[1])
     
     while overlapping:
-        dist += 1
-        
         new_pos = vectors.add_vectors(a1.pos, vectors.move_to_vector(
             dir_angle, dist
         ))
@@ -68,10 +66,12 @@ def _bounce_one(a1, a2):
         
         if not geometry.rect_collision(new_rect, a2_rect, True):
             overlapping = False
+        
+        dist += 1
     
     # Add a bit to be safe
     new_pos = vectors.add_vectors(a1.pos, vectors.move_to_vector(
-        dir_angle, dist + 10
+        dir_angle, dist + vectors.total_velocity(a1.velocity)
     ))
     
     a1.pos = new_pos
