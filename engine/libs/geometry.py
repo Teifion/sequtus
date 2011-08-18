@@ -3,6 +3,10 @@ import pygame
 import math
 import vectors
 
+def _convert(r):
+    # Takes a pos, pos, size, size rect and returns a pos, pos, pos, pos rect
+    return (r[0], r[1], r[2] + r[0], r[3] + r[1])
+
 # 2D Function
 def rect_collision(r1, r2, convert=False):
     """
@@ -15,12 +19,12 @@ def rect_collision(r1, r2, convert=False):
     
     if convert:
         if type(r1) == tuple or type(r1) == list:
-            r1 = (r1[0], r1[1], r1[1] + r1[0], r1[3] + r1[1])
+            r1 = _convert(r1)
         else:
             r1 = (r1.left, r1.top, r1.right, r1.bottom)
         
         if type(r2) == tuple or type(r2) == list:
-            r2 = (r2[0], r2[1], r2[1] + r2[0], r2[3] + r2[1])
+            r2 = _convert(r2)
         else:
             r2 = (r2.left, r2.top, r2.right, r2.bottom)
     
