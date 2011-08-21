@@ -9,6 +9,15 @@ class Actor (object_base.ObjectBase):
     """It's intended that you sub-class this"""
     ai_update_time = 100
     
+    accepted_orders = [
+        "move",
+        "stop",
+        "hold",
+        "attack",
+        "defend",
+        "patrol",
+    ]
+    
     max_hp              = 1
     max_shields         = 0
     
@@ -36,7 +45,7 @@ class Actor (object_base.ObjectBase):
         # An order is a tuple of (command_type, target)
         self.order_queue = []
         self.micro_orders = []
-        self.current_order = ["stop", -1]
+        self.current_order = ["stop", -1, -1]
         
         self.hp = 0
         self.completion = 100
@@ -142,17 +151,20 @@ class Actor (object_base.ObjectBase):
         
         self.run_ai()
     
-    def issue_command(self, cmd, target):
+    def issue_command(self, cmd, pos, target=None):
         "This is used to override any current orders"
-        self.order_queue = [(cmd, target)]
-        self.next_order()
-    
-    def append_command(self, cmd, target):
-        self.order_queue.append([cmd, target])
-        
-        # No current command? Lets get to work on this one
-        if self.current_order[0] == "stop":
+        if cmd in self.accepted_orders:
+            self.order_queue = [(cmd, pos, target)]
             self.next_order()
+    
+    def append_command(self, cmd, pos, target=None):
+        if cmd in self.accepted_orders:
+            self.order_queue.append([cmd, pos, target])
+            
+            # No current command? Lets get to work on this one
+            if self.current_order[0] == "stop":
+                if self.current_order[1] <= 0:
+                    self.next_order()
     
     def next_order(self):
         # Make it update right away
@@ -166,40 +178,31 @@ class Actor (object_base.ObjectBase):
             self.current_order = self.order_queue.pop(0)
         
         elif self.order_queue == []:
-            self.current_order = ["stop", -1]
+            self.current_order = ["stop", -1, -1]
             return
         
-        # Check the target
-        target = self.current_order[1]
-        if type(target) == list or type(target) == tuple:
-            if len(target) == 2:
-                self.current_order = [self.current_order[0], [target[0], target[1], 0]]
+        # Check the target of our order, it might be a 2D vector, we need
+        # to make it a 3D vector
+        pos = self.current_order[1]
+        if type(pos) == list or type(pos) == tuple:
+            if len(pos) == 2:
+                self.current_order = [
+                    self.current_order[0],
+                    [pos[0], pos[1], self.pos[2]],
+                    self.current_order[2]
+                ]
     
-    def insert_order(self, cmd, target):
+    def insert_order(self, cmd, pos, target=None):
         """Pushes in a micro order from the engine itself usually something
         small so as to avoid a collision"""
         
-        self.micro_orders.insert(0, [cmd, target])
+        self.micro_orders.insert(0, [cmd, pos, target])
     
     def insert_order_queue(self, queue):
         queue.reverse()
         self.micro_orders = []
-        for cmd, target in queue:
-            self.micro_orders.insert(0, [cmd, target])
-    
-    def pause(self, delay):
-        self.insert_order("stop", delay)
-    
-    def reverse(self, distance=0, steps=0):
-        if self.current_action()[0] == "move": return
-        
-        direction = [vectors.bound_angle(vectors.angle(self.velocity)[0] + 180), 0]
-        
-        if steps > 0:
-            distance = vectors.total_velocity(self.velocity) * steps
-        
-        target = vectors.add_vectors(self.pos, vectors.move_to_vector(direction, distance))
-        self.insert_order("move", target)
+        for cmd, pos, target in queue:
+            self.micro_orders.insert(0, [cmd, pos, target])
     
     def current_action(self):
         if self.micro_orders == []:
@@ -208,16 +211,15 @@ class Actor (object_base.ObjectBase):
             return self.micro_orders[0]
     
     def is_moving(self):
-        cmd, target = self.current_action()
+        cmd, pos, target = self.current_action()
         
         if cmd in ("stop", "hold position"):
             return False
         
-        
         return True
     
     def get_move_target(self):
-        cmd, target = self.current_order
+        cmd, pos, target = self.current_order
         
         if cmd == "move":
             return target
@@ -229,52 +231,45 @@ class Actor (object_base.ObjectBase):
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
         if self.micro_orders == []:
-            cmd, target = self.current_order
+            cmd, pos, target = self.current_order
         else:
-            cmd, target = self.micro_orders[0]
+            cmd, pos, target = self.micro_orders[0]
         
         if cmd == "stop" or cmd == "hold position":
             if target > 0:
                 if self.micro_orders == []:
-                    self.current_order[1] -= 1
+                    self.current_order[2] -= 1
                 else:
-                    self.micro_orders[0][1] -= 1
+                    self.micro_orders[0][2] -= 1
         
         elif cmd == "move" or cmd == "reverse":
-            dist = vectors.distance(self.pos, target)
-            
-            if dist <= vectors.total_velocity(self.velocity):
-                self.pos = target
-                self.velocity = [0,0,0]
-                self.next_order()
+            pass
             
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
     
     def run_ai(self):
         if self.micro_orders == []:
-            cmd, target = self.current_order
+            cmd, pos, target = self.current_order
         else:
-            cmd, target = self.micro_orders[0]
+            cmd, pos, target = self.micro_orders[0]
         
         if cmd == "stop" or cmd == "hold position":
-            self.__is_moving = False
             self.velocity = [0,0,0]
             
             if target == 0:
                 self.next_order()
         
         elif cmd == "move" or cmd == "reverse":
-            self.__is_moving = True
-            dist = vectors.distance(self.pos, target)
-            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
+            dist = vectors.distance(self.pos, pos)
+            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, pos), self.max_velocity)
             
             if dist <= vectors.total_velocity(self.velocity):
-                self.pos = target
+                self.pos = pos
                 self.velocity = [0,0,0]
                 self.next_order()
             
         else:
-            raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
+            raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
         
     
