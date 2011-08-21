@@ -9,6 +9,7 @@ from pygame.locals import *
 # unit commands, resources etc etc
 class Panel (object):
     always_redraw = False
+    accepts_keydown = False
     
     def __init__(self, engine):
         super(Panel, self).__init__()
@@ -52,6 +53,8 @@ class Panel (object):
 # Used to draw a grid of information much like the build
 # menus from TA or C&C
 class TabularMenu (Panel):
+    accepts_keyup = True
+    
     def __init__(self, engine, size, grid_size, position):
         super(TabularMenu, self).__init__(engine)
         
@@ -59,6 +62,7 @@ class TabularMenu (Panel):
         self.grid_size  = grid_size
         
         self.position.topleft = position
+        self.key_map = {}
         
         """
         Buttons is a list of tuples: (image_name, callback, args)
@@ -87,6 +91,9 @@ class TabularMenu (Panel):
         
         self.position.size = self.size
         self.changed = False
+    
+    def handle_keyup(self, event):
+        print(event)
     
     def handle_mouseup(self, event, drag=False):
         relative_pos = (event.pos[0] - self.position.left, event.pos[1] - self.position.top)
