@@ -18,29 +18,30 @@ from pygame.locals import *
 
 import screen
 
-UP_ARROW = 273
-DOWN_ARROW = 274
-RIGHT_ARROW = 275
-LEFT_ARROW = 276
-
-NUM0 = 48
-NUM1 = 49
-NUM2 = 50
-NUM3 = 51
-NUM4 = 52
-NUM5 = 53
-NUM6 = 54
-NUM7 = 55
-NUM8 = 56
-NUM9 = 57
-
-NUMBERS = range(NUM0, NUM9+1)
+NUMBERS = range(K_0, K_9+1)
 
 class BattleScreen (screen.Screen):
     self_regulate = True
     
     def __init__(self, engine):
         super(BattleScreen, self).__init__((engine.window_width, engine.window_height))
+        
+        # Used to translate key pushes into orders (e.g. M for move)
+        # Note: These are the keyboard locations, not the letters
+        # it will work with the same buttons (not letters) on a Dvorak as 
+        # it will on a Qwerty
+        self.hotkeys = {
+            K_m: "move",
+            K_s: "stop",
+            K_a: "attack",
+            K_a: "defend",
+            K_h: "hold",
+            K_p: "patrol",
+            K_b: "build",
+        }
+        
+        # Used to modify the order given when the mouse it clicked
+        self.key_mod = None
         
         # Defaults to drawing to the screen sizes
         # we can override this if we want to
@@ -54,10 +55,10 @@ class BattleScreen (screen.Screen):
         
         self.scroll_speed = 15
         
-        self.scroll_up_key = UP_ARROW
-        self.scroll_down_key = DOWN_ARROW
-        self.scroll_right_key = RIGHT_ARROW
-        self.scroll_left_key = LEFT_ARROW
+        self.scroll_up_key = K_UP
+        self.scroll_down_key = K_DOWN
+        self.scroll_right_key = K_RIGHT
+        self.scroll_left_key = K_LEFT
         
         self.allow_mouse_scroll = False
         
@@ -196,7 +197,7 @@ class BattleScreen (screen.Screen):
         self._next_redraw = time.time() + self._redraw_delay
         self.redraw_count[0] += 1
     
-    def handle_keydown(self, event):
+    def handle_keyup(self, event):
         mods = pygame.key.get_mods()
         
         # Number key? Select or assign a control group
@@ -205,6 +206,16 @@ class BattleScreen (screen.Screen):
                 self.assign_control_group(event.key)
             else:
                 self.select_control_group(event.key)
+            
+            return
+        
+        # Make sure it's just one button being pushed
+        if len(self.keys_down) == 0:
+            if event.key in self.hotkeys:
+                self.key_mod = self.hotkeys[event.key]
+            else:
+                self.key_mod = None
+            
     
     def handle_keyhold(self):
         if time.time() < self.next_scroll:
@@ -250,13 +261,28 @@ class BattleScreen (screen.Screen):
         
         if event.button == 1:# Left click
             if not drag:
-                if not KMOD_SHIFT & mods:
-                    self.unselect_all_actors()
+                if self.key_mod:
+                    actor_target = None
+                    for a in self.actors:
+                        if a.contains_point(real_mouse_pos):
+                            actor_target = a
+                            break
+                    
+                    if KMOD_SHIFT & mods:
+                        for a in self.selected_actors:
+                            self.queue_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
+                    else:
+                        for a in self.selected_actors:
+                            self.add_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
+                    
+                else:
+                    if not KMOD_SHIFT & mods:
+                        self.unselect_all_actors()
                 
-                for a in self.actors:
-                    if a.contains_point(real_mouse_pos):
-                        self.left_click_actor(a)
-                        break
+                    for a in self.actors:
+                        if a.contains_point(real_mouse_pos):
+                            self.left_click_actor(a)
+                            break
         
         elif event.button == 3:# Right click
             actor_target = None
