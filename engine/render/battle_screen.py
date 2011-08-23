@@ -111,11 +111,15 @@ class BattleScreen (screen.Screen):
     def set_fps(self, fps):
         self._redraw_delay = 1/fps
     
-    def add_order(self, the_actor, command, target):
-        self.orders[self.tick + self.tick_jump].append((the_actor, command, target))
+    def add_order(self, the_actor, command, pos=None, target=None):
+        if type(the_actor) == int:
+            the_actor = self.actors[the_actor]
+        self.orders[self.tick + self.tick_jump].append((the_actor, command, pos, target))
     
-    def queue_order(self, the_actor, command, target):
-        self.q_orders[self.tick + self.tick_jump].append((the_actor, command, target))
+    def queue_order(self, the_actor, command, pos=None, target=None):
+        if type(the_actor) == int:
+            the_actor = self.actors[the_actor]
+        self.q_orders[self.tick + self.tick_jump].append((the_actor, command, pos, target))
     
     def redraw(self):
         if time.time() < self._next_redraw:
@@ -283,6 +287,8 @@ class BattleScreen (screen.Screen):
                         if a.contains_point(real_mouse_pos):
                             self.left_click_actor(a)
                             break
+            elif drag:
+                self.key_mod = None
         
         elif event.button == 3:# Right click
             actor_target = None

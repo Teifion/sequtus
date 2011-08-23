@@ -67,11 +67,11 @@ class BattleSim (battle_screen.BattleScreen):
         self._cycle_delay = 1/self.cycles_per_second
     
     def issue_orders(self):
-        for a, cmd, target in self.orders[self.tick]:
-            a.issue_command(cmd, target)
+        for a, cmd, pos, target in self.orders[self.tick]:
+            a.issue_command(cmd, pos, target)
         
-        for a, cmd, target in self.q_orders[self.tick]:
-            a.append_command(cmd, target)
+        for a, cmd, pos, target in self.q_orders[self.tick]:
+            a.append_command(cmd, pos, target)
         
         del(self.orders[self.tick])
         del(self.q_orders[self.tick])

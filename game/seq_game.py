@@ -62,33 +62,33 @@ class Sequtus (core.EngineV3):
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        self.current_screen.actors[0].issue_command("move", [200, 200])
-        self.current_screen.actors[1].issue_command("move", [200, 200])
+        self.current_screen.add_order(0, "move", [200, 200])
+        self.current_screen.add_order(1, "move", [200, 200])
         
-        self.current_screen.actors[2].issue_command("move", [400, 100])
-        self.current_screen.actors[3].issue_command("move", [400, 100])
+        self.current_screen.add_order(2, "move", [400, 100])
+        self.current_screen.add_order(3, "move", [400, 100])
         
-        self.current_screen.actors[4].issue_command("move", [700, 400])
+        self.current_screen.add_order(4, "move", [700, 400])
         
-        self.current_screen.actors[6].issue_command("move", [400, 300])
-        self.current_screen.actors[7].issue_command("move", [300, 300])
+        self.current_screen.add_order(6, "move", [400, 300])
+        self.current_screen.add_order(7, "move", [300, 300])
         
-        self.current_screen.actors[8].issue_command("move", [600, 600])
-        self.current_screen.actors[9].issue_command("move", [600, 500])
+        self.current_screen.add_order(8, "move", [600, 600])
+        self.current_screen.add_order(9, "move", [600, 500])
         self.current_screen.actors[9].max_velocity = 2
         
-        self.current_screen.actors[10].issue_command("move", [300, 500])
-        self.current_screen.actors[11].issue_command("move", [200, 600])
+        self.current_screen.add_order(10, "move", [300, 500])
+        self.current_screen.add_order(11, "move", [200, 600])
         
-        self.current_screen.actors[12].issue_command("move", [450, 700])
-        self.current_screen.actors[13].issue_command("move", [450, 700])
-        self.current_screen.actors[14].issue_command("move", [450, 700])
+        self.current_screen.add_order(12, "move", [450, 700])
+        self.current_screen.add_order(13, "move", [450, 700])
+        self.current_screen.add_order(14, "move", [450, 700])
         
-        self.current_screen.actors[15].issue_command("move", [150, 750])
-        self.current_screen.actors[16].issue_command("move", [150, 750])
-        self.current_screen.actors[17].issue_command("move", [150, 750])
+        self.current_screen.add_order(15, "move", [150, 750])
+        self.current_screen.add_order(16, "move", [150, 750])
+        self.current_screen.add_order(17, "move", [150, 750])
         
-        # self.current_screen.actors[0].issue_command("move", [150, 750])
-        # self.current_screen.actors[1].issue_command("move", [150, 750])
-        # self.current_screen.actors[2].issue_command("move", [150, 750])
+        # self.current_screen.add_order(0, "move", [150, 750])
+        # self.current_screen.add_order(1, "move", [150, 750])
+        # self.current_screen.add_order(2, "move", [150, 750])
         # self.current_screen.set_speed(20)

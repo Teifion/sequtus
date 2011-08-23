@@ -218,16 +218,6 @@ class Actor (object_base.ObjectBase):
         
         return True
     
-    def get_move_target(self):
-        cmd, pos, target = self.current_order
-        
-        if cmd == "move":
-            return target
-        elif cmd == "stop":
-            return None
-        else:
-            raise Exception("No handler for cmd type '%s'" % cmd)
-    
     def check_ai(self):
         # TODO Check with sim AI holder for new orders
         if self.micro_orders == []:
