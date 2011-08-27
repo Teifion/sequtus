@@ -31,6 +31,7 @@ class BattleSim (battle_screen.BattleScreen):
         self.loaded = False
         
         self.actor_types = {}
+        self.ability_types = {}
         self.cycle_count = [0, 0]
     
     def data_dump(self, file_path=None):
@@ -196,8 +197,12 @@ class BattleSim (battle_screen.BattleScreen):
         pass
     
     def load_setup(self, data):
-        # Load types
-        for type_name, type_data in data['types'].items():
+        # Load abilities
+        for type_name, type_data in data['abilities'].items():
+            self.ability_types[type_name] = type_data
+        
+        # Load actors
+        for type_name, type_data in data['actors'].items():
             actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
     
@@ -210,6 +215,10 @@ class BattleSim (battle_screen.BattleScreen):
             a = aclass()
             a.apply_template(atemplate)
             a.apply_data(actor_data)
+            
+            for ability in atemplate['abilities']:
+                print(ability)
+            
             self.add_actor(a)
         
         self.loaded = True

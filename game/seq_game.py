@@ -59,38 +59,9 @@ class Sequtus (core.EngineV3):
         self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
         self.current_screen.background_image = self.images['battlefield'].copy()
         
-        # self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
-        self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
-        
-        self.current_screen.add_order(0, "move", [200, 200])
-        self.current_screen.add_order(1, "move", [200, 200])
-        
-        self.current_screen.add_order(2, "move", [400, 100])
-        self.current_screen.add_order(3, "move", [400, 100])
-        
-        self.current_screen.add_order(4, "move", [700, 400])
-        
-        self.current_screen.add_order(6, "move", [400, 300])
-        self.current_screen.add_order(7, "move", [300, 300])
-        
-        self.current_screen.add_order(8, "move", [600, 600])
-        self.current_screen.add_order(9, "move", [600, 500])
-        self.current_screen.actors[9].max_velocity = 2
-        
-        self.current_screen.add_order(10, "move", [300, 500])
-        self.current_screen.add_order(11, "move", [200, 600])
-        
-        self.current_screen.add_order(12, "move", [450, 700])
-        self.current_screen.add_order(13, "move", [450, 700])
-        self.current_screen.add_order(14, "move", [450, 700])
-        
-        self.current_screen.add_order(15, "move", [150, 750])
-        self.current_screen.add_order(16, "move", [150, 750])
-        self.current_screen.add_order(17, "move", [150, 750])
-        
-        from engine.logic import effects
-        self.current_screen.effects.append(effects.Beam((50, 50), (100, 150), (255, 255, 255)))
-        
+        self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
+        # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
+                
         # self.current_screen.add_order(0, "move", [150, 750])
         # self.current_screen.add_order(1, "move", [150, 750])
         # self.current_screen.add_order(2, "move", [150, 750])

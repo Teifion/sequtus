@@ -42,3 +42,11 @@ class Beam (Effect):
         adjusted_target = (self.target[0] + offset[0], self.target[1] + offset[1])
         
         draw.line(surface, self.colour, adjusted_origin, adjusted_target, 2)
+
+
+
+_effect_lookup = {
+    "Beam": Beam,
+}
+def new_effect(effect_type, *args, **kwargs):
+    return _effect_lookup[effect_type(*args, **kwargs)]

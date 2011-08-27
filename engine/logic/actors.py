@@ -30,7 +30,7 @@ class Actor (object_base.ObjectBase):
     max_armour          = 0
     max_shield_armour   = 0
     
-    weapons             = []
+    abilities           = []
     
     def __init__(self):
         super(Actor, self).__init__()
@@ -124,9 +124,11 @@ class Actor (object_base.ObjectBase):
         self.max_armour         = data.get("max_armour", self.max_armour)
         self.max_shield_armour  = data.get("max_shield_armour", self.max_shield_armour)
         
-        self.weapons            = data.get("weapons", self.weapons)
+        # self.abilities          = data.get("abilities", self.abilities)
         self.flags              = data.get("flags", self.flags)
         self.size               = data.get("size", self.size)
+        
+        self.abilities = []
     
     def selection_rect(self):
         return pygame.Rect(
@@ -239,6 +241,8 @@ class Actor (object_base.ObjectBase):
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
     
     def run_ai(self):
+        print(self.abilities)
+        
         if self.micro_orders == []:
             cmd, pos, target = self.current_order
         else:
