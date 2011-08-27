@@ -88,6 +88,9 @@ class Sequtus (core.EngineV3):
         self.current_screen.add_order(16, "move", [150, 750])
         self.current_screen.add_order(17, "move", [150, 750])
         
+        from engine.logic import effects
+        self.current_screen.effects.append(effects.Beam((50, 50), (100, 150), (255, 255, 255)))
+        
         # self.current_screen.add_order(0, "move", [150, 750])
         # self.current_screen.add_order(1, "move", [150, 750])
         # self.current_screen.add_order(2, "move", [150, 750])

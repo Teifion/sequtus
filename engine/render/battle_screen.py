@@ -81,6 +81,7 @@ class BattleScreen (screen.Screen):
         
         self.terrain = {}
         self.bullets = []
+        self.effects = []
         
         # Used to store orders for X steps later
         # http://www.gamasutra.com/view/feature/3094/1500_archers_on_a_288_network_.php
@@ -171,6 +172,22 @@ class BattleScreen (screen.Screen):
             if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     surf.blit(bullet_img, r)
+        
+        # Effects
+        for e in self.effects:
+            print(e.rect, self.draw_margin)
+            r = pygame.Rect(e.rect)
+            r.left = e.rect.left + self.draw_margin[0]
+            r.top = e.rect.top + self.draw_margin[1]
+            
+            # Only draw effects within the screen
+            if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
+                if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
+                    print("Draw")
+                    e.draw(surf, self.draw_margin)
+            
+            e.update()
+        
         
         # Placement (such as placing a building)
         if self.place_image:
