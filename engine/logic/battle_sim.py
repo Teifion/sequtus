@@ -9,10 +9,10 @@ import pygame
 import time
 import sys
 import json
-import actor_subtypes
 import pdb
 
 from engine.libs import actor_lib, vectors, geometry, pathing
+from engine.logic import actor_subtypes, ai
 from engine.render import battle_screen
 
 class BattleSim (battle_screen.BattleScreen):
@@ -32,6 +32,8 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.actor_types = {}
         self.ability_types = {}
+        
+        self.ais = {}
         self.cycle_count = [0, 0]
     
     def data_dump(self, file_path=None):
@@ -115,6 +117,11 @@ class BattleSim (battle_screen.BattleScreen):
         time_over = time.time() - self.next_cycle
         if time_over > 0.25:
             print("Logic lag of %ss" % time_over)
+        
+        # Update the AIs
+        for t, a in self.ais.items():
+            a.update()
+            
         
         # Update the actors themselves
         for a in self.actors:
@@ -207,6 +214,12 @@ class BattleSim (battle_screen.BattleScreen):
             self.actor_types[type_name] = type_data
     
     def load_game(self, data):
+        teams = set()
+        
+        # Load AIs (AIs are optional)
+        for ai_team, ai_data in data.get('ais', {}).items():
+            print(ai_team, ai_data)
+        
         # Load actors
         for actor_data in data['actors']:
             atemplate   = self.actor_types[actor_data['type']]
@@ -217,9 +230,19 @@ class BattleSim (battle_screen.BattleScreen):
             a.apply_data(actor_data)
             
             for ability in atemplate['abilities']:
-                print(ability)
+                a.add_ability(self.ability_types[ability])
             
             self.add_actor(a)
+            teams.add(a.team)
+        
+        # Any team without a specifically chosen AI gets the default one
+        for t in teams:
+            if t not in self.ais:
+                self.ais[t] = ai.AI(self, t)
+        
+        # Now assign the AIs
+        for a in self.actors:
+            a.ai = self.ais[a.team]
         
         self.loaded = True
 

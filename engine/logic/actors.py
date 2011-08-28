@@ -2,8 +2,8 @@ from __future__ import division
 import pygame
 from pygame.locals import *
 
-import object_base
 from engine.libs import vectors
+from engine.logic import object_base, abilities
 
 class Actor (object_base.ObjectBase):
     """It's intended that you sub-class this"""
@@ -36,6 +36,7 @@ class Actor (object_base.ObjectBase):
         super(Actor, self).__init__()
         
         self.next_ai_update = 0
+        self.ai = None
         
         self.selected = False
         self.selector_rect = pygame.Rect(-10, -10, 1, 1)
@@ -54,6 +55,9 @@ class Actor (object_base.ObjectBase):
         self._completion_bar = (None, None)
         
         self.dont_collide_with = {}
+        self.effects = []
+        
+        self.enemy_targets = []
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -143,6 +147,9 @@ class Actor (object_base.ObjectBase):
         
         self.check_ai()
         
+        for a in self.abilities:
+            a.update()
+        
         remove = []
         for k in self.dont_collide_with:
             self.dont_collide_with[k] -= 1
@@ -152,6 +159,12 @@ class Actor (object_base.ObjectBase):
         for r in remove: del(self.dont_collide_with[r])
         
         self.run_ai()
+    
+    def add_ability(self, ability_data):
+        atype = ability_data['type']
+        the_ability = abilities.lookup[atype](self, ability_data)
+        
+        self.abilities.append(the_ability)
     
     def issue_command(self, cmd, pos, target=None):
         "This is used to override any current orders"
@@ -221,6 +234,8 @@ class Actor (object_base.ObjectBase):
         return True
     
     def check_ai(self):
+        self.next_ai_update -= 1
+        
         # TODO Check with sim AI holder for new orders
         if self.micro_orders == []:
             cmd, pos, target = self.current_order
@@ -239,14 +254,19 @@ class Actor (object_base.ObjectBase):
             
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
+        
+        # Update our objectives etc
+        if self.ai != None and self.next_ai_update < 1:
+            self.ai.update_actor(self)
+            self.next_ai_update = 10
     
     def run_ai(self):
-        print(self.abilities)
-        
         if self.micro_orders == []:
             cmd, pos, target = self.current_order
         else:
             cmd, pos, target = self.micro_orders[0]
+        
+        self._attack_ai()
         
         if cmd == "stop" or cmd == "hold position":
             self.velocity = [0,0,0]
@@ -265,5 +285,17 @@ class Actor (object_base.ObjectBase):
             
         else:
             raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
+    
+    def _attack_ai(self):
+        """AI handling the process of attacking"""
+        
+        if len(self.enemy_targets) == 0: return
+        
+        target = self.enemy_targets[0]
+        
+        for a in self.abilities:
+            if a.can_use(target):
+                a.use(target)
+            
         
     

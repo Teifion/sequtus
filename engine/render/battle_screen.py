@@ -150,6 +150,7 @@ class BattleScreen (screen.Screen):
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     surf.blit(actor_img, r)
                     
+                    # Selection box?
                     if a.selected:
                         r = a.selection_rect()
                         r.left += self.draw_margin[0]
@@ -160,6 +161,19 @@ class BattleScreen (screen.Screen):
                         
                         if a.completion < 100:
                             surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
+                    
+                    # Actor effects
+                    for e in a.effects:
+                        r = pygame.Rect(e.rect)
+                        r.left = e.rect.left + self.draw_margin[0]
+                        r.top = e.rect.top + self.draw_margin[1]
+                    
+                        # Only draw effects within the screen
+                        if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
+                            if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
+                                e.draw(surf, self.draw_margin)
+                    
+                        e.update()
         
         # Bullets
         for b in self.bullets:
@@ -175,7 +189,6 @@ class BattleScreen (screen.Screen):
         
         # Effects
         for e in self.effects:
-            print(e.rect, self.draw_margin)
             r = pygame.Rect(e.rect)
             r.left = e.rect.left + self.draw_margin[0]
             r.top = e.rect.top + self.draw_margin[1]
@@ -183,7 +196,6 @@ class BattleScreen (screen.Screen):
             # Only draw effects within the screen
             if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
-                    print("Draw")
                     e.draw(surf, self.draw_margin)
             
             e.update()

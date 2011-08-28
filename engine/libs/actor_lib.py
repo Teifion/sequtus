@@ -17,6 +17,11 @@ def build_template_cache(template, engine):
     temp_img = engine.images[template['image']]
     template['size'] = temp_img.get_rect().size
 
+def apply_damage(the_actor, damage):
+    """Applies damage to the actor, returns the alive status of the actor
+    True meaning that the actor is still alive."""
+    pass
+
 # Trying out a new method
 def handle_pathing_collision(a1, a2):
     if a1.max_velocity > 0 and a2.max_velocity > 0:

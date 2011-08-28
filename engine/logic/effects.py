@@ -23,7 +23,7 @@ class Effect (object):
         raise Exception("%s has not implemented draw(surface, offset)")
 
 class Beam (Effect):
-    def __init__(self, origin, target, colour):
+    def __init__(self, origin, target, colour, duration=None):
         super(Beam, self).__init__()
         self.origin = origin
         self.target = target
@@ -35,7 +35,11 @@ class Beam (Effect):
         right = max(origin[0], target[0])
         bottom = max(origin[1], target[1])
         
+        if duration: self.duration = duration
+        
         self.rect = Rect(left, top, right-left, bottom-top)
+        
+        print("New beam")
     
     def draw(self, surface, offset):
         adjusted_origin = (self.origin[0] + offset[0], self.origin[1] + offset[1])
@@ -43,10 +47,3 @@ class Beam (Effect):
         
         draw.line(surface, self.colour, adjusted_origin, adjusted_target, 2)
 
-
-
-_effect_lookup = {
-    "Beam": Beam,
-}
-def new_effect(effect_type, *args, **kwargs):
-    return _effect_lookup[effect_type(*args, **kwargs)]
