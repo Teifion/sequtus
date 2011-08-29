@@ -138,6 +138,8 @@ class BattleScreen (screen.Screen):
             self.draw_area[2], self.draw_area[3],
         ))
         
+        effects_to_draw = []
+        
         # Actors
         for a in self.actors:
             actor_img = self.engine.images[a.image]
@@ -163,17 +165,29 @@ class BattleScreen (screen.Screen):
                             surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
                     
                     # Actor effects
-                    for e in a.effects:
+                    to_delete = []
+                    
+                    for i, e in enumerate(a.effects):
+                        e.update()
+                        if e.dead:
+                            to_delete.insert(0, i)
+                            continue
+                        
                         r = pygame.Rect(e.rect)
                         r.left = e.rect.left + self.draw_margin[0]
                         r.top = e.rect.top + self.draw_margin[1]
-                    
+                        
                         # Only draw effects within the screen
                         if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
                             if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
-                                e.draw(surf, self.draw_margin)
+                                effects_to_draw.append(e)
                     
-                        e.update()
+                    # Delete any uneeded effects
+                    for i in to_delete:
+                        del(a.effects[i])
+                        
+                    
+                    
         
         # Bullets
         for b in self.bullets:
@@ -187,18 +201,9 @@ class BattleScreen (screen.Screen):
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     surf.blit(bullet_img, r)
         
-        # Effects
-        for e in self.effects:
-            r = pygame.Rect(e.rect)
-            r.left = e.rect.left + self.draw_margin[0]
-            r.top = e.rect.top + self.draw_margin[1]
-            
-            # Only draw effects within the screen
-            if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
-                if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
-                    e.draw(surf, self.draw_margin)
-            
-            e.update()
+        # Draw effects last
+        for e in effects_to_draw:
+            e.draw(surf, self.draw_margin)
         
         
         # Placement (such as placing a building)

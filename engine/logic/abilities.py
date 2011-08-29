@@ -88,7 +88,8 @@ class BeamWeapon (InstantHitWeapon):
             origin=self.actor.pos,
             target=target.pos,
             colour=self.effect['colour'],
-            duration=self.effect['duration']
+            duration=self.effect['duration'],
+            degrade=self.effect.get("degrade", (0,0,0)),
         )
         self.actor.effects.append(the_effect)
 
