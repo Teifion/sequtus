@@ -98,11 +98,11 @@ class TabularMenu (Panel):
     def handle_mouseup(self, event, drag=False):
         relative_pos = (event.pos[0] - self.position.left, event.pos[1] - self.position.top)
         
-        col = relative_pos[0]/self.grid_size[0]
-        row = relative_pos[1]/self.grid_size[1]
+        col = math.floor(relative_pos[0]/self.grid_size[0])
+        row = math.floor(relative_pos[1]/self.grid_size[1])
         col_count = int(math.floor(self.size[0]/self.grid_size[0]))
         
-        index = (col_count * row) + col
+        index = int((col_count * row) + col)
         
         # No button there? Ignore the click but they clicked the menu
         # so we don't want to pass this back to the screen

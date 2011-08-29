@@ -65,4 +65,4 @@ class Sequtus (core.EngineV3):
         # self.current_screen.add_order(0, "move", [150, 750])
         # self.current_screen.add_order(1, "move", [150, 750])
         # self.current_screen.add_order(2, "move", [150, 750])
-        # self.current_screen.set_speed(20)
+        self.current_screen.select_actor(self.current_screen.actors[0])

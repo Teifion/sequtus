@@ -173,6 +173,9 @@ class BattleSim (battle_screen.BattleScreen):
         
         aclass = actor_subtypes.types[actor_type['type']]
         
+        print(actor_data)
+        print(actor_type)
+        
         a = aclass()
         a.apply_template(actor_type)
         a.apply_data(actor_data)

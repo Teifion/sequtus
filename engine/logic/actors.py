@@ -110,7 +110,7 @@ class Actor (object_base.ObjectBase):
         
         self.completion = data.get("completion", self.completion)
         
-        self.actor_type = data["type"]
+        # self.actor_type = data["type"]
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""
