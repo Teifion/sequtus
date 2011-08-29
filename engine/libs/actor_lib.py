@@ -20,7 +20,12 @@ def build_template_cache(template, engine):
 def apply_damage(the_actor, damage):
     """Applies damage to the actor, returns the alive status of the actor
     True meaning that the actor is still alive."""
-    pass
+    
+    for k, v in damage.items():
+        the_actor.hp -= v
+    
+    return the_actor.hp <= 0
+
 
 # Trying out a new method
 def handle_pathing_collision(a1, a2):

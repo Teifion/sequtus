@@ -3,7 +3,7 @@
         "laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
-            "max_range":    1000,
+            "max_range":    300,
             "required_charge": 60,
             "effect":       {
                 "colour":   [0, 255, 0],
@@ -51,7 +51,7 @@
             "deceleration":     1,
             "turn_speed":       90,
             "drifts":           false,
-            "max_velocity":     5,
+            "max_velocity":     3,
             
             "max_armour":           0,
             "max_shield_armour":    0,
@@ -69,7 +69,7 @@
             "deceleration":     1,
             "turn_speed":       90,
             "drifts":           false,
-            "max_velocity":     5,
+            "max_velocity":     3,
             
             "max_armour":           0,
             "max_shield_armour":    0,

@@ -25,8 +25,9 @@ class AI (object):
                 self.enemy_actors.append(a)
         
         self.next_update = 10
-        
     
     def update_actor(self, the_actor):
         if self.enemy_actors != []:
             the_actor.enemy_targets = [self.enemy_actors[0]]
+        else:
+            the_actor.enemy_targets = []

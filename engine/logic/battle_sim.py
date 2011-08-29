@@ -121,11 +121,15 @@ class BattleSim (battle_screen.BattleScreen):
         # Update the AIs
         for t, a in self.ais.items():
             a.update()
-            
         
         # Update the actors themselves
-        for a in self.actors:
+        to_remove = []
+        for i, a in enumerate(self.actors):
             a.update()
+            
+            if a.hp <= 0: to_remove.insert(0, i)
+        for i in to_remove: del(self.actors[i])
+            
         
         # Check for collisions
         self._collision_inverval_count -= 1
