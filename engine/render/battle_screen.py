@@ -175,35 +175,21 @@ class BattleScreen (screen.Screen):
         for b in self.bullets:
             # --- Using code similar to Actors ---
             
-            # bullet_img = self.engine.images[b.image]
-            # r = pygame.Rect(bullet_img.get_rect())
-            # r.left = b.pos[0] + self.draw_margin[0] - b.width/2
-            # r.top = b.pos[1] + self.draw_margin[1] - b.height/2
-            # 
-            # # Only draw bullets within the screen
-            # if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
-            #     if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
-            #         if b.image == "":
-            #             # Bullet is dynamically drawn
-            #             b.draw(surf, self.draw_margin)
-            #         else:
-            #             # Bullet has an image
-            #             surf.blit(bullet_img, r)
+            bullet_img = self.engine.images[b.image]
+            r = pygame.Rect(bullet_img.get_rect())
+            r.left = b.pos[0] + self.draw_margin[0] - b.width/2
+            r.top = b.pos[1] + self.draw_margin[1] - b.height/2
             
-            # Bullets are small, why mess around with their size?
-            if self.draw_area[0] < b.pos[0] < self.draw_area[2]:
-                if self.draw_area[1] < b.pos[1] < self.draw_area[3]:
+            # Only draw bullets within the screen
+            if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
+                if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     if b.image == "":
                         # Bullet is dynamically drawn
                         b.draw(surf, self.draw_margin)
                     else:
-                        r = pygame.Rect(self.engine.images[b.image].get_rect())
-                        r.left = b.pos[0] + self.draw_margin[0] - b.width/2
-                        r.top = b.pos[1] + self.draw_margin[1] - b.height/2
-                        
                         # Bullet has an image
-                        surf.blit(self.engine.images[b.image], r)
-        
+                        surf.blit(bullet_img, r)
+                
         # Draw effects last
         to_delete = []
         
