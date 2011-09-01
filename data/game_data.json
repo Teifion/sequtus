@@ -17,9 +17,12 @@
             "max_range":    10000,
             "required_charge": 200,
             "bullet":       {
-                "velocity":     10,
-                "image":        "9px_bullet",
-                "size":         [9,9]
+                "velocity":         10,
+                "image":            "9px_bullet",
+                "size":             [9,9],
+                "damage":           {"raw":1},
+                "blast_radius":     500,
+                "dissipation_func": "square"
             }
         }
     },
