@@ -135,8 +135,11 @@ class BattleSim (battle_screen.BattleScreen):
         for i, b in enumerate(self.bullets):
             b.update()
             
-            if b.dead: to_remove.insert(0, i)
-        for i in to_remove: del(self.bullets[i])
+            if b.dead:
+                b.explode(self.actors)
+                to_remove.insert(0, i)
+        for i in to_remove:
+            del(self.bullets[i])
         
         
         # Check for collisions
