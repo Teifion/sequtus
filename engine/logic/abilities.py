@@ -1,4 +1,4 @@
-from engine.logic import effects
+from engine.logic import effects, bullets
 from engine.libs import vectors, actor_lib
 
 def _convert_dict(d):
@@ -17,10 +17,10 @@ class Ability (object):
     
     def __init__(self, actor, ability_data={}):
         super(Ability, self).__init__()
-        self.charge = 0
         self.actor = actor
         
         self.set_stats(ability_data)
+        self.charge = self.required_charge
     
     def set_stats(self, ability_data):
         for k, v in ability_data.items():
@@ -66,6 +66,7 @@ class WeaponAbility (Ability):
 class InstantHitWeapon (WeaponAbility):
     """Weapons that instantly hit their target such as lasers"""
     
+    effect = {}
     damage = {"raw":1}
     
     def use(self, target):
@@ -77,12 +78,28 @@ class InstantHitWeapon (WeaponAbility):
 class ProjectileWeapon (WeaponAbility):
     """Weapons that fire a bullet that takes time to reach it's target"""
     
-    bullet = ""
+    bullet = {}
+    
+    def use(self, target):
+        if type(target) == list or type(target) == tuple:
+            direction = vectors.angle(self.actor.pos, target)
+        else:
+            direction = vectors.angle(self.actor.pos, target.pos)
+        
+        self.generate_bullet(direction)
+        self.charge = 0
 
+class MassDriver (ProjectileWeapon):
+    def generate_bullet(self, direction):
+        the_bullet = bullets.Shell(
+            pos=self.actor.pos,
+            velocity=vectors.move_to_vector(direction, self.bullet['velocity']),
+            image = self.bullet['image'],
+            size = self.bullet['size'],
+        )
+        self.actor.bullets.append(the_bullet)
 
 class BeamWeapon (InstantHitWeapon):
-    effect = {}
-    
     def generate_effect(self, target):
         the_effect = effects.Beam(
             origin=self.actor.pos,
@@ -95,5 +112,6 @@ class BeamWeapon (InstantHitWeapon):
 
 lookup = {
     "BeamWeapon": BeamWeapon,
-    "ProjectileWeapon": ProjectileWeapon,
+    "MassDriver": MassDriver,
+    
 }

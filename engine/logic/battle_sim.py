@@ -129,7 +129,15 @@ class BattleSim (battle_screen.BattleScreen):
             
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
+        
+        # Bullets too
+        to_remove = []
+        for i, b in enumerate(self.bullets):
+            b.update()
             
+            if b.dead: to_remove.insert(0, i)
+        for i in to_remove: del(self.bullets[i])
+        
         
         # Check for collisions
         self._collision_inverval_count -= 1

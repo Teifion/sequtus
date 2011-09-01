@@ -56,6 +56,7 @@ class Actor (object_base.ObjectBase):
         
         self.dont_collide_with = {}
         self.effects = []
+        self.bullets = []
         
         self.enemy_targets = []
     

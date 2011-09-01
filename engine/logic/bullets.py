@@ -18,13 +18,26 @@ class Bullet (object_base.ObjectBase):
         super(Bullet, self).__init__()
         
         self.team = -1
-        
-        # An order is a tuple of (command_type, target)
-        self.hp = 0
+        self.dead = False
     
     def update(self):
         super(Bullet, self).update()
         
         # Check distance to target
         # potentially blow up
+        # print(self.target)
     
+    def draw(self, surface, offset):
+        """If the bullet has no image then it must be dynamically drawn"""
+        raise Exception("%s has no image but the draw function is not implemented" % self.__class__)
+
+class Shell (Bullet):
+    def __init__(self, pos, velocity, size=[1,1], image=""):
+        super(Shell, self).__init__()
+        self.pos = pos
+        self.velocity = velocity
+        self.width, self.height = size
+        
+        self.image = image
+        
+        self.rect = Rect(pos[0] - self.width/2, pos[1] - self.height/2, self.width, self.height)

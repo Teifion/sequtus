@@ -11,15 +11,15 @@
                 "degrade":  [0, 25, 0]
             }
         },
-        "blue laser":    {
-            "type":         "BeamWeapon",
+        "cannon":    {
+            "type":         "MassDriver",
             "min_range":    1,
-            "max_range":    350,
-            "required_charge": 70,
-            "effect":       {
-                "colour":   [0, 0, 255],
-                "duration": 6,
-                "degrade":  [0, 0, 25]
+            "max_range":    10000,
+            "required_charge": 200,
+            "bullet":       {
+                "velocity":     10,
+                "image":        "9px_bullet",
+                "size":         [9,9]
             }
         }
     },
@@ -85,7 +85,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["blue laser"],
+            "abilities":  ["cannon"],
             "flags":    ["constructor"]
         }
     }
