@@ -1,5 +1,5 @@
 from engine.logic import effects, bullets
-from engine.libs import vectors, actor_lib
+from engine.libs import vectors, actor_lib, math_lib
 
 def _convert_dict(d):
     out = {}
@@ -81,21 +81,29 @@ class ProjectileWeapon (WeaponAbility):
     bullet = {}
     
     def use(self, target):
-        if type(target) == list or type(target) == tuple:
-            direction = vectors.angle(self.actor.pos, target)
-        else:
-            direction = vectors.angle(self.actor.pos, target.pos)
-        
-        self.generate_bullet(direction)
+        self.generate_bullet(target)
         self.charge = 0
 
 class MassDriver (ProjectileWeapon):
-    def generate_bullet(self, direction):
+    def generate_bullet(self, target):
+        if type(target) == list or type(target) == tuple:
+            direction = vectors.angle(self.actor.pos, target)
+            target_pos = target
+        else:
+            direction = vectors.angle(self.actor.pos, target.pos)
+            target_pos = target.pos
+        
+        velocity = vectors.move_to_vector(direction, self.bullet['velocity'])
+        velocity[2] = math_lib.calc_trajectory(0.1, vectors.distance(self.actor.pos, target_pos), self.bullet['velocity'])
+        
         the_bullet = bullets.Shell(
             pos=self.actor.pos,
-            velocity=vectors.move_to_vector(direction, self.bullet['velocity']),
+            velocity=velocity,
             image = self.bullet['image'],
             size = self.bullet['size'],
+            blast_radius = self.bullet['blast_radius'],
+            damage = self.bullet['damage'],
+            dissipation_func = self.bullet.get('dissipation_func', "linear"),
         )
         self.actor.bullets.append(the_bullet)
 
