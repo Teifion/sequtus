@@ -1,5 +1,33 @@
 {
-    "types":    {
+    "abilities": {
+        "laser":    {
+            "type":         "BeamWeapon",
+            "min_range":    1,
+            "max_range":    300,
+            "required_charge": 60,
+            "effect":       {
+                "colour":   [0, 255, 0],
+                "duration": 5,
+                "degrade":  [0, 25, 0]
+            }
+        },
+        "cannon":    {
+            "type":         "MassDriver",
+            "min_range":    1,
+            "max_range":    10000,
+            "required_charge": 200,
+            "bullet":       {
+                "velocity":         10,
+                "image":            "9px_bullet",
+                "size":             [9,9],
+                "damage":           {"raw":1},
+                "blast_radius":     500,
+                "dissipation_func": "square"
+            }
+        }
+    },
+    
+    "actors":    {
         "Red building": {
             "image":            "test_image_100",
             "placement_image":  "test_image_100",
@@ -10,7 +38,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "weapons":  [],
+            "abilities":  [],
             "flags":    []
         },
         "Blue building": {
@@ -23,7 +51,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "weapons":  [],
+            "abilities":  [],
             "flags":    []
         },
         
@@ -42,7 +70,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "weapons":  [],
+            "abilities":  [],
             "flags":    ["constructor"]
         },
         "Blue circle": {
@@ -60,7 +88,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "weapons":  [],
+            "abilities":  [],
             "flags":    ["constructor"]
         }
     }
