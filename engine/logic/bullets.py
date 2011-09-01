@@ -3,7 +3,41 @@ import pygame
 from pygame.locals import *
 
 import object_base
-from engine.libs import vectors
+from engine.libs import vectors, actor_lib
+
+def _linear(percent):
+    return percent
+
+def _square(percent):
+    return percent * percent
+
+def _cubic(percent):
+    return percent * percent * percent
+
+dissipation_lookup = {
+    "linear":   _linear,
+    "square":   _square,
+    "cubic":    _cubic,
+}
+
+def dissipate(damage, distance, max_distance, func):
+    # Recursion for dictionary
+    if type(damage) == dict:
+        new_damage = {}
+        for k, v in damage.items():
+            new_damage[k] = dissipate(v, distance, max_distance, func)
+        
+        return new_damage
+    
+    # Raw number
+    # Percent is how much of the distance is left
+    percent = 1 - (distance/max_distance)
+    
+    if func in dissipation_lookup:
+        return dissipation_lookup[func](percent) * damage
+    
+    else:
+        raise KeyError("No dissipation function by the name of '%s'" % func)
 
 class Bullet (object_base.ObjectBase):
     """It's intended that you sub-class this"""
@@ -13,27 +47,43 @@ class Bullet (object_base.ObjectBase):
     turn_speed          = 0
     drifts              = True
     max_velocity        = 0
+    fall_rate           = 0.1
     
-    def __init__(self):
+    def __init__(self, blast_radius=0, damage={}, dissipation_func="linear"):
         super(Bullet, self).__init__()
         
         self.team = -1
         self.dead = False
+        
+        self.blast_radius = blast_radius
+        self.damage = damage
+        self.dissipation_func = dissipation_func
     
     def update(self):
+        self.velocity[2] -= self.fall_rate
+        
         super(Bullet, self).update()
         
-        # Check distance to target
-        # potentially blow up
-        # print(self.target)
+        # Ideally we'll work out if this is within terrain
+        # but in the meantime we'll just assume the terrain is flat
+        if self.pos[2] < 0:
+            self.dead = True
     
     def draw(self, surface, offset):
         """If the bullet has no image then it must be dynamically drawn"""
         raise Exception("%s has no image but the draw function is not implemented" % self.__class__)
-
+    
+    def explode(self, actors):
+        for a in actors:
+            if vectors.distance(self.pos, a.pos) <= self.blast_radius:
+                actor_lib.apply_damage(a, dissipate(
+                    self.damage, vectors.distance(self.pos, a.pos),
+                    self.blast_radius, self.dissipation_func)
+                )
+    
 class Shell (Bullet):
-    def __init__(self, pos, velocity, size=[1,1], image=""):
-        super(Shell, self).__init__()
+    def __init__(self, pos, velocity, size=[1,1], image="", blast_radius=0, damage={}, dissipation_func="linear"):
+        super(Shell, self).__init__(blast_radius, damage, dissipation_func)
         self.pos = pos
         self.velocity = velocity
         self.width, self.height = size
