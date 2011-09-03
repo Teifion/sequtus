@@ -7,7 +7,7 @@
             "required_charge": 60,
             "effect":       {
                 "colour":   [0, 255, 0],
-                "duration": 5,
+                "duration": 10,
                 "degrade":  [0, 25, 0]
             }
         },
