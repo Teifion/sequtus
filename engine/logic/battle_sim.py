@@ -131,16 +131,29 @@ class BattleSim (battle_screen.BattleScreen):
         for i in to_remove: del(self.actors[i])
         
         # Bullets too
-        to_remove = []
+        to_delete = []
         for i, b in enumerate(self.bullets):
             b.update()
             
             if b.dead:
-                b.explode(self.actors)
-                to_remove.insert(0, i)
-        for i in to_remove:
+                new_effect = b.explode(self.actors)
+                if new_effect != None:
+                    self.effects.append(new_effect)
+                to_delete.insert(0, i)
+        for i in to_delete:
             del(self.bullets[i])
         
+        # And lastly effects
+        to_delete = []
+        for i, e in enumerate(self.effects):
+            e.update()
+            if e.dead:
+                to_delete.insert(0, i)
+                continue
+        
+        # Delete any uneeded effects
+        for i in to_delete:
+            del(self.effects[i])
         
         # Check for collisions
         self._collision_inverval_count -= 1
