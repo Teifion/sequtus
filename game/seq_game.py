@@ -66,13 +66,13 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        # self.current_screen.add_order(0, "move", [100, 800])
-        # self.current_screen.add_order(1, "move", [200, 800])
-        # self.current_screen.add_order(2, "move", [300, 800])
-        # 
-        # self.current_screen.add_order(3, "move", [200, 600])
-        # self.current_screen.add_order(4, "move", [200, 700])
-        # self.current_screen.add_order(5, "move", [200, 800])
+        self.current_screen.add_order(0, "move", [100, 800])
+        self.current_screen.add_order(1, "move", [200, 800])
+        self.current_screen.add_order(2, "move", [300, 800])
+        
+        self.current_screen.add_order(3, "move", [200, 600])
+        self.current_screen.add_order(4, "move", [200, 700])
+        self.current_screen.add_order(5, "move", [200, 800])
         self.current_screen.select_actor(self.current_screen.actors[0])
         self.current_screen.select_actor(self.current_screen.actors[1])
         self.current_screen.select_actor(self.current_screen.actors[2])
