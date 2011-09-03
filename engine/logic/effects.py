@@ -50,3 +50,23 @@ class Beam (Effect):
         
         draw.line(surface, real_colour, adjusted_origin, adjusted_target, 2)
 
+class Explosion (Effect):
+    def __init__(self, center, colour, radius, colour_change=(0,0,0), radius_change=0, duration=None):
+        super(Explosion, self).__init__()
+        self.colour = colour
+        self.radius = radius
+        self.colour_change = colour_change
+        self.radius_change = radius_change
+        self.center = center
+        
+        if duration: self.duration = duration
+        
+        self.rect = Rect(center[0]-radius, center[1]-radius, radius*2, radius*2)
+        
+    def draw(self, surface, offset):
+        adjusted_center = (self.center[0] + offset[0], self.center[1] + offset[1])
+        real_colour = [min(self.colour[i] + self.colour_change[i] * self.age, 255) for i in range(3)]
+        
+        draw.circle(surface, real_colour, adjusted_center, self.radius + self.radius_change * self.age, 1)
+            
+    
