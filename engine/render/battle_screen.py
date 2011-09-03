@@ -191,14 +191,7 @@ class BattleScreen (screen.Screen):
                         surf.blit(bullet_img, r)
                 
         # Draw effects last
-        to_delete = []
-        
         for i, e in enumerate(self.effects):
-            e.update()
-            if e.dead:
-                to_delete.insert(0, i)
-                continue
-            
             r = pygame.Rect(e.rect)
             r.left = e.rect.left + self.draw_margin[0]
             r.top = e.rect.top + self.draw_margin[1]
@@ -207,11 +200,6 @@ class BattleScreen (screen.Screen):
             if r.right > self.draw_area[0] and r.left < self.draw_area[2]:
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     e.draw(surf, self.draw_margin)
-        
-        # Delete any uneeded effects
-        for i in to_delete:
-            del(self.effects[i])
-        
         
         # Placement (such as placing a building)
         if self.place_image:
