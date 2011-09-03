@@ -14,15 +14,15 @@
         "cannon":    {
             "type":         "MassDriver",
             "min_range":    1,
-            "max_range":    10000,
-            "required_charge": 200,
+            "max_range":    500,
+            "required_charge": 50,
             "bullet":       {
-                "velocity":         10,
+                "velocity":         15,
                 "image":            "9px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":1},
-                "blast_radius":     500,
-                "dissipation_func": "square"
+                "damage":           {"raw":2},
+                "blast_radius":     100,
+                "dissipation_func": "linear"
             }
         }
     },
