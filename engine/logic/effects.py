@@ -1,5 +1,8 @@
 from pygame import draw, Rect
 
+def bound_colour(colour):
+    return [min(max(c, 0), 255) for c in colour]
+
 class Effect (object):
     """An effect is a purely visual item such as map marker or the
     after-glow from a laser beam."""
@@ -48,7 +51,7 @@ class Beam (Effect):
         
         real_colour = [self.colour[i] - self.degrade[i] * self.age for i in range(3)]
         
-        draw.line(surface, real_colour, adjusted_origin, adjusted_target, 2)
+        draw.line(surface, bound_colour(real_colour), adjusted_origin, adjusted_target, 2)
 
 class Explosion (Effect):
     def __init__(self, center, colour, radius, colour_change=(0,0,0), radius_change=0, duration=None):
@@ -65,8 +68,8 @@ class Explosion (Effect):
         
     def draw(self, surface, offset):
         adjusted_center = (self.center[0] + offset[0], self.center[1] + offset[1])
-        real_colour = [min(self.colour[i] + self.colour_change[i] * self.age, 255) for i in range(3)]
+        real_colour = [self.colour[i] + self.colour_change[i] * self.age for i in range(3)]
         
-        draw.circle(surface, real_colour, adjusted_center, self.radius + self.radius_change * self.age, 1)
+        draw.circle(surface, bound_colour(real_colour), adjusted_center, self.radius + self.radius_change * self.age, 1)
             
     
