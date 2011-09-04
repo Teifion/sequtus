@@ -39,8 +39,6 @@ class Battle (battle_sim.BattleSim):
         self.post_init()
     
     def logic_cycle(self):
-        self.actors[0].completion += 1
-        
         super(Battle, self).logic_cycle()
     
     def rebuild_build_menu(self):
