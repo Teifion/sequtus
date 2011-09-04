@@ -49,8 +49,8 @@ class Battle (battle_sim.BattleSim):
         if self.actor_types == {}:
             return
         
-        buttons.append(("red_building_menu", self.place_actor_mode, [self.actor_types["Red building"]]))
-        buttons.append(("blue_building_menu", self.place_actor_mode, [self.actor_types["Blue building"]]))
+        buttons.append(("red_building_menu", self.place_actor_mode, [{"type":"Red building"}]))
+        buttons.append(("blue_building_menu", self.place_actor_mode, [{"type":"Blue building"}]))
         
         self.panels["build"].buttons = buttons
         self.panels["build"].changed = True

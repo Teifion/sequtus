@@ -67,9 +67,10 @@ class Explosion (Effect):
         self.rect = Rect(center[0]-radius, center[1]-radius, radius*2, radius*2)
         
     def draw(self, surface, offset):
-        adjusted_center = (self.center[0] + offset[0], self.center[1] + offset[1])
+        adjusted_center = (int(self.center[0] + offset[0]), int(self.center[1] + offset[1]))
         real_colour = [self.colour[i] + self.colour_change[i] * self.age for i in range(3)]
         
-        draw.circle(surface, bound_colour(real_colour), adjusted_center, self.radius + self.radius_change * self.age, 1)
+        # Typecast to an int to stop float warning
+        draw.circle(surface, bound_colour(real_colour), adjusted_center, int(self.radius + self.radius_change * self.age), 2)
             
     

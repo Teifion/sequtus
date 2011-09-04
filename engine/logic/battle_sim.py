@@ -190,22 +190,27 @@ class BattleSim (battle_screen.BattleScreen):
         
         return collisions
     
-    def place_actor(self, event, drag, actor_type, actor_data = {}):
-        """Called when there's a click while in placement mode"""
+    def place_actor_from_click(self, event, drag, actor_data):
         self.place_image = None
-        real_mouse_pos = (event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1])
+        actor_data['pos'] = [event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1], 0]
         
-        aclass = actor_subtypes.types[actor_type['type']]
+        return self.place_actor(actor_data)
+    
+    def place_actor(self, actor_data):
+        """Called when there's a click while in placement mode"""
+        class_type = self.actor_types[actor_data['type']]['type']
+        aclass = actor_subtypes.types[class_type]
         
         a = aclass()
-        a.apply_template(actor_type)
+        a.apply_template(self.actor_types[actor_data['type']])
         a.apply_data(actor_data)
         
-        # It's a new unit so it's 0% complete so far
-        a.completion = 0
+        # Assume 0 completion
+        a.completion = actor_data.get("completion", 0)
         
-        if "pos" not in actor_data:
-            a.pos[0], a.pos[1] = real_mouse_pos
+        for ability in self.actor_types[actor_data['type']]['abilities']:
+            a.add_ability(self.ability_types[ability])
+        
         self.add_actor(a)
     
     def load_all(self, config_path, setup_path, game_path, local=True):
@@ -250,18 +255,10 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Load actors
         for actor_data in data['actors']:
-            atemplate   = self.actor_types[actor_data['type']]
-            aclass      = actor_subtypes.types[atemplate['type']]
-            
-            a = aclass()
-            a.apply_template(atemplate)
-            a.apply_data(actor_data)
-            
-            for ability in atemplate['abilities']:
-                a.add_ability(self.ability_types[ability])
-            
-            self.add_actor(a)
-            teams.add(a.team)
+            # Assume it's complete
+            actor_data['completion'] = actor_data.get("completion", 100)
+            self.place_actor(actor_data)
+            teams.add(actor_data['team'])
         
         # Any team without a specifically chosen AI gets the default one
         for t in teams:

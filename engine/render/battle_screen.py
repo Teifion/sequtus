@@ -22,6 +22,7 @@ NUMBERS = range(K_0, K_9+1)
 
 class BattleScreen (screen.Screen):
     self_regulate = True
+    player_team = None
     
     def __init__(self, engine):
         super(BattleScreen, self).__init__((engine.window_width, engine.window_height))
@@ -303,10 +304,12 @@ class BattleScreen (screen.Screen):
                     
                     if KMOD_SHIFT & mods:
                         for a in self.selected_actors:
-                            self.queue_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
+                            if a.team == self.player_team:
+                                self.queue_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
                     else:
                         for a in self.selected_actors:
-                            self.add_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
+                            if a.team == self.player_team:
+                                self.add_order(a, self.key_mod, pos=real_mouse_pos, target=actor_target)
                     
                 else:
                     if not KMOD_SHIFT & mods:
@@ -323,30 +326,34 @@ class BattleScreen (screen.Screen):
             actor_target = None
             for a in self.actors:
                 if a.contains_point(real_mouse_pos):
-                    actor_target = a
-                    break
+                    if a.team == self.player_team:
+                        actor_target = a
+                        break
             
             # Now issue the command
             if not actor_target:
                 for a in self.selected_actors:
-                    if KMOD_SHIFT & mods:
-                        self.queue_order(a, "move", real_mouse_pos)
-                    else:
-                        self.add_order(a, "move", real_mouse_pos)
+                    if a.team == self.player_team:
+                        if KMOD_SHIFT & mods:
+                            self.queue_order(a, "move", real_mouse_pos)
+                        else:
+                            self.add_order(a, "move", real_mouse_pos)
                         
             else:
                 if actor_target.team != self.selected_actors[0].team:
                     for a in self.selected_actors:
-                        if KMOD_SHIFT & mods:
-                            self.queue_order(a, "attack", actor_target)
-                        else:
-                            self.add_order(a, "attack", actor_target)
+                        if a.team == self.player_team:
+                            if KMOD_SHIFT & mods:
+                                self.queue_order(a, "attack", actor_target)
+                            else:
+                                self.add_order(a, "attack", actor_target)
                 else:
                     for a in self.selected_actors:
-                        if KMOD_SHIFT & mods:
-                            self.queue_order(a, "defend", actor_target)
-                        else:
-                            self.add_order(a, "defend", actor_target)
+                        if a.team == self.player_team:
+                            if KMOD_SHIFT & mods:
+                                self.queue_order(a, "defend", actor_target)
+                            else:
+                                self.add_order(a, "defend", actor_target)
             
         else:
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)
@@ -434,12 +441,27 @@ class BattleScreen (screen.Screen):
             drag_rect[3] - self.draw_margin[1],
         )
         
+        contains_friendly = False
+        short_list = []
         if event.button == 1:
             if not KMOD_SHIFT & mods:
                 self.unselect_all_actors()
-                
+            
+            # First see if there are friendlies there
+            # if the selection contains friendlies then we
+            # should only select the friendlies
             for a in self.actors:
                 if a.inside(drag_rect):
+                    if a.team == self.player_team:
+                        contains_friendly = True
+                    short_list.append(a)
+            
+            # contains_friendly
+            for a in short_list:
+                if contains_friendly:
+                    if a.team == self.player_team:
+                        self.select_actor(a)
+                else:
                     self.select_actor(a)
     
     def unselect_all_actors(self):
@@ -537,9 +559,9 @@ class BattleScreen (screen.Screen):
         """Used to enter placement mode where an icon hovers beneath the
         cursor and when clicked is built or suchlike"""
         
-        self.place_image = actor_type['placement_image']
+        self.place_image = self.actor_types[actor_type['type']]['placement_image']
         
-        self.mouseup_callback = self.place_actor
+        self.mouseup_callback = self.place_actor_from_click
         self.mouseup_callback_args = [actor_type]
     
     def add_actor(self, a):

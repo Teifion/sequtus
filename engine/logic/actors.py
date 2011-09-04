@@ -104,14 +104,14 @@ class Actor (object_base.ObjectBase):
     
     def apply_data(self, data):
         """Applies transitory data such as position and hp"""
+        self.actor_type = data["type"]
+        
         self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
         self.velocity = data.get("velocity", self.velocity)
         self.team = data.get("team", self.team)
         
         self.completion = data.get("completion", self.completion)
-        
-        # self.actor_type = data["type"]
     
     def apply_template(self, data):
         """Applies more permanent data such as max hp and move speed"""
