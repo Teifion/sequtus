@@ -91,4 +91,8 @@ class Sequtus (core.EngineV3):
                 self.current_screen.place_actor({"type":"Blue circle","pos":[i*50+500, j*50+500,0],"team":2,"completion":100,"hp":10})
                 self.current_screen.add_order(len(self.current_screen.actors)-1, "move", [100, 700])
         
+        for i in range(0, 30):
+            for j in range(0, 30):
+                self.current_screen.place_actor({"type":"Blue circle","pos":[i*60+1500, j*60+1500,0],"team":2,"completion":100,"hp":10})
+        
         # self.current_screen.set_speed(20)
