@@ -211,6 +211,11 @@ class BattleSim (battle_screen.BattleScreen):
         for ability in self.actor_types[actor_data['type']]['abilities']:
             a.add_ability(self.ability_types[ability])
         
+        # If AI's exist, assign the actor to one
+        if a.team in self.ais:
+            a.ai = self.ais[a.team]
+            
+        
         self.add_actor(a)
     
     def load_all(self, config_path, setup_path, game_path, local=True):
