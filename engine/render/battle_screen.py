@@ -436,12 +436,12 @@ class BattleScreen (screen.Screen):
         mods = pygame.key.get_mods()
         self.drag_rect = None
         
-        # Correct for margins
+        # Correct for margins and scroll
         drag_rect = (
-            drag_rect[0] - self.draw_margin[0],
-            drag_rect[1] - self.draw_margin[1],
-            drag_rect[2] - self.draw_margin[0],
-            drag_rect[3] - self.draw_margin[1],
+            drag_rect[0] - self.draw_margin[0] + self.scroll_x,
+            drag_rect[1] - self.draw_margin[1] + self.scroll_y,
+            drag_rect[2] - self.draw_margin[0] + self.scroll_x,
+            drag_rect[3] - self.draw_margin[1] + self.scroll_y,
         )
         
         contains_friendly = False
