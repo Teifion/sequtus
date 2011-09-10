@@ -8,6 +8,7 @@ import pygame
 
 from engine.render import core
 from engine.logic import battle_sim
+from engine.libs import sim_lib
 from game import image_composition, seq_sim
 from game_screens import main_menu, game_setup, battle
 
@@ -91,4 +92,4 @@ class Sequtus (core.EngineV3):
                 self.current_screen.place_actor({"type":"Blue circle","pos":[i*50+500, j*50+500,0],"team":2,"completion":100,"hp":10})
                 self.current_screen.add_order(len(self.current_screen.actors)-1, "move", [100, 700])
         
-        self.current_screen.set_speed(30)
+        sim_lib.set_speed(self.current_screen, 30)

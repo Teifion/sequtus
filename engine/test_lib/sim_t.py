@@ -5,6 +5,7 @@ import traceback
 import time
 import sys
 
+from engine.libs import sim_lib
 from engine.render import core
 from engine.logic import battle_sim
 
@@ -33,7 +34,7 @@ class BattleTester (battle_sim.BattleSim):
     def __init__(self, engine):
         super(BattleTester, self).__init__(engine)
         
-        self.set_speed(10000)
+        sim_lib.set_speed(self, 10000)
         self.cycles = 0
         self.max_cycles = 0
         self.testing = True

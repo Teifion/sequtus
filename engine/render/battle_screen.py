@@ -10,13 +10,13 @@ BattleScreen itself is subclassed by BattleSim so as to keep the logic
 code separate from the display/interface code.
 """
 
-import multiprocessing
 import time
 
 import pygame
 from pygame.locals import *
 
-import screen
+from engine.render import screen
+from engine.libs import screen_lib
 
 NUMBERS = range(K_0, K_9+1)
 
@@ -81,7 +81,7 @@ class BattleScreen (screen.Screen):
         
         self._next_redraw = time.time()
         self._redraw_delay = 0
-        self.set_fps(40)
+        screen_lib.set_fps(self, 40)
         
         self.terrain = {}
         self.bullets = []
@@ -117,9 +117,6 @@ class BattleScreen (screen.Screen):
     
     def post_init(self):
         self.draw_margin = [self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1]]
-    
-    def set_fps(self, fps):
-        self._redraw_delay = 1/fps
     
     def add_order(self, the_actor, command, pos=None, target=None):
         if type(the_actor) == int:

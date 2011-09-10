@@ -11,7 +11,7 @@ import sys
 import json
 import pdb
 
-from engine.libs import actor_lib, vectors, geometry, pathing
+from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
 from engine.logic import actor_subtypes, ai
 from engine.render import battle_screen
 
@@ -61,7 +61,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.next_cycle = time.time()
         
-        self.set_speed(100)
+        sim_lib.set_speed(self, 100)
         
         self.running = True
         self.loaded = False
@@ -88,7 +88,7 @@ class BattleSim (battle_screen.BattleScreen):
             data.append("dont_collide: %s" % a.dont_collide_with)
         
         data.append("\n**** Collisions **** ")
-        data.append(str(self.get_collisions()))
+        data.append(str(sim_lib.get_collisions(self.actors)))
         
         data = "\n".join(data)
         
@@ -99,13 +99,9 @@ class BattleSim (battle_screen.BattleScreen):
         else:
             with open(file_path, "w") as f:
                 f.write(data)
-        
-        
-    def set_speed(self, cycles_per_second):
-        self.cycles_per_second = cycles_per_second
-        self._cycle_delay = 1/self.cycles_per_second
     
     def issue_orders(self):
+        """Issues the orders that have been stored in the delayed storage"""
         for a, cmd, pos, target in self.orders[self.tick]:
             a.issue_command(cmd, pos, target)
         
@@ -121,10 +117,6 @@ class BattleSim (battle_screen.BattleScreen):
             super(BattleSim, self).redraw()
             return
         
-        # Main logic execution loop
-        # if time.time() > self.next_cycle:
-        #     self.logic_cycle()
-        
         # Now to potentially draw the screen
         super(BattleSim, self).redraw()
     
@@ -139,8 +131,8 @@ class BattleSim (battle_screen.BattleScreen):
                 raise
     
     def logic_cycle(self):
+        """The core function of the sim, this is where the 'magic happens'"""
         if int(time.time()) != self.cycle_count[1]:
-            # print("CPS: %s" % self.cycle_count[0])
             self.cycle_count = [0, int(time.time())]
         
         self.tick += 1
@@ -196,7 +188,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         if self._collision_inverval_count < 1:
             self._collision_inverval_count = self._collision_interval
-            collisions = self.get_collisions()
+            collisions = sim_lib.get_collisions(self.actors)
             
             # We now have a list of all the collisions
             for obj1, obj2 in collisions:
@@ -208,21 +200,6 @@ class BattleSim (battle_screen.BattleScreen):
         # Set next cycle time
         self.next_cycle = time.time() + self._cycle_delay
         self.cycle_count[0] += 1
-    
-    def get_collisions(self):
-        collisions = []
-        collided = set()
-        for i, a in enumerate(self.actors):
-            for j, b in enumerate(self.actors):
-                if j in collided: continue
-                if i == j: continue
-                if geometry.rect_collision(a.rect, b.rect, True):
-                    collisions.append((a,b))
-                    
-                    collided.add(i)
-                    collided.add(j)
-        
-        return collisions
     
     def place_actor_from_click(self, event, drag, actor_data):
         self.place_image = None
