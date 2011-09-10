@@ -109,6 +109,11 @@ class BattleScreen (screen.Screen):
         self.scroll_delay = 0.01
         
         self._current_actor_id = 0
+        
+        # This is switched instead of a function call because it's possible
+        # that we may alter the selection several times in a row and it would
+        # be a waste to rebuild menus several times
+        self._selection_has_changed = False
     
     def post_init(self):
         self.draw_margin = [self.scroll_x + self.draw_area[0], self.scroll_y + self.draw_area[1]]
@@ -127,6 +132,10 @@ class BattleScreen (screen.Screen):
         self.q_orders[self.tick + self.tick_jump].append((the_actor, command, pos, target))
     
     def redraw(self):
+        if self._selection_has_changed:
+            self.selection_changed()
+            self._selection_has_changed = False
+        
         if time.time() < self._next_redraw:
             return
         
@@ -419,7 +428,7 @@ class BattleScreen (screen.Screen):
             for a in actors_to_select:
                 self.select_actor(a)
         
-        self.selection_changed()
+        self._selection_has_changed = True
     
     def handle_mousedrag(self, event, drag_rect):
         if event.buttons[0] == 1:
@@ -471,17 +480,17 @@ class BattleScreen (screen.Screen):
         for a in self.selected_actors[:]:
             del(self.selected_actors[self.selected_actors.index(a)])
             a.selected = False
-            self.selection_changed()
+            self._selection_has_changed = True
     
     def unselect_actor(self, a):
         del(self.selected_actors[self.selected_actors.index(a)])
         a.selected = False
-        self.selection_changed()
+        self._selection_has_changed = True
     
     def select_actor(self, a):
         self.selected_actors.append(a)
         a.selected = True
-        self.selection_changed()
+        self._selection_has_changed = True
     
     def update(self):
         # It might be that the mouse is scrolling
@@ -521,7 +530,7 @@ class BattleScreen (screen.Screen):
             for a in self.control_groups[key][:]:
                 self.select_actor(a)
             
-            self.selection_changed()
+            self._selection_has_changed = True
     
     def selection_changed(self):
         pass
