@@ -44,16 +44,19 @@ class BattleScreen (screen.Screen):
         # Used to modify the order given when the mouse it clicked
         self.key_mod = None
         
-        # Defaults to drawing to the screen sizes
-        # we can override this if we want to
-        self.draw_top, self.draw_left = 0, 0
+        # Defaults to drawing to the screen sizes, this gets overriden later
+        # it's used to work out what size rectangle to draw to for the
+        # battlefield (so taking into account panels and menus)
         self.draw_area = (0, 0, engine.window_width, engine.window_height)
+        
+        # The margins that are used for things like menus and panels, we don't
+        # want to draw battlefield stuff to these
         self.draw_margin = [0, 0]
         
         self.background_image = pygame.Surface((1,1))
         self.background = pygame.Surface((1,1))
-        self.have_scrolled = False
         
+        self.have_scrolled = False
         self.scroll_speed = 15
         
         self.scroll_up_key = K_UP
@@ -219,8 +222,8 @@ class BattleScreen (screen.Screen):
         if self.drag_rect != None:
             # draw.rect uses a origin and size arguments, not topleft and bottomright
             line_rect = (
-                self.drag_rect[0] + self.draw_margin[0],
-                self.drag_rect[1] + self.draw_margin[1],
+                self.drag_rect[0] + self.draw_margin[0] + self.scroll_x,
+                self.drag_rect[1] + self.draw_margin[1] + self.scroll_y,
                 self.drag_rect[2] - self.drag_rect[0],
                 self.drag_rect[3] - self.drag_rect[1],
             )
