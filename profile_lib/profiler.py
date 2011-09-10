@@ -9,10 +9,10 @@ def general_test():
     s.start()
 
 def run(suite):
-    if suite == "custom":
+    if suite == "custom" or suite == "":
         run_str = 'seq_game.Sequtus().start()'
         
-    elif suite == "":
+    elif suite == "auto":
         autoprofiler.run()
         return
     
