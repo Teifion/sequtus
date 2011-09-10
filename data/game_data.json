@@ -3,8 +3,8 @@
         "laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
-            "max_range":    300,
-            "required_charge": 60,
+            "max_range":    400,
+            "required_charge": 40,
             "effect":       {
                 "colour":   [0, 255, 0],
                 "duration": 10,
@@ -20,8 +20,8 @@
                 "velocity":         15,
                 "image":            "9px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":2},
-                "blast_radius":     100,
+                "damage":           {"raw":1},
+                "blast_radius":     130,
                 "dissipation_func": "linear"
             }
         }
