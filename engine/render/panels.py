@@ -47,8 +47,10 @@ class Panel (object):
         raise Exception("{0}.draw() is not implemented".format(self.__class__))
     
     def handle_mouseup(self, event, drag=False):
-        # Return True to signal that the click was handled
         raise Exception("{0}.handle_mouseup() is not implemented".format(self.__class__))
+
+    def handle_doubleclick(self, first_click, second_click):
+        return self.handle_mouseup(second_click)
 
 # Used to draw a grid of information much like the build
 # menus from TA or C&C
@@ -152,8 +154,33 @@ class MiniMap (Panel):
         #     for x, y, size in actor_list:
         #         self._image.fill(team_colour, pygame.Rect(x,y, size, size))
         
+        # Draw view screen rect on map
+        r = pygame.Rect(0,0, self.engine.window_width / xratio, self.engine.window_height / yratio)
+        
+        r.left = - self.engine.current_screen.scroll_x / xratio
+        r.top = - self.engine.current_screen.scroll_y / yratio
+        
+        pygame.draw.rect(self._image, (255, 255, 255), r, 1)
+        
         self.position.size = self.size
-
+    
+    def handle_mouseup(self, event, drag=False):
+        # Get the local X and Y
+        x, y = event.pos
+        x -= self.position[0]
+        y -= self.position[1]
+        
+        # Ratios to work out where we are
+        xratio = self.map_size[0] / self.size[0]
+        yratio = self.map_size[1] / self.size[1]
+        
+        xratio = 10
+        yratio = 10
+        
+        map_x = x * xratio
+        map_y = y * yratio
+        
+        self.engine.current_screen.scroll_to_coords(map_x, map_y)
 
 # Used to display text upon a blank background
 class InfoBox (Panel):

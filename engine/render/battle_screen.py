@@ -524,35 +524,41 @@ class BattleScreen (screen.Screen):
         pass
     
     def scroll_right(self, rate = 1):
-        last_pos = self.scroll_x
-        
         self.scroll_x -= rate * self.scroll_speed
         self.scroll_x = max(self.scroll_boundaries[0], self.scroll_x)
         
         self.draw_margin[0] = self.scroll_x + self.draw_area[0]
     
     def scroll_left(self, rate = 1):
-        last_pos = self.scroll_x
-        
         self.scroll_x += rate * self.scroll_speed
         self.scroll_x = min(self.scroll_boundaries[2], self.scroll_x)
         
         self.draw_margin[0] = self.scroll_x + self.draw_area[0]
         
     def scroll_down(self, rate = 1):
-        last_pos = self.scroll_y
-        
         self.scroll_y -= rate * self.scroll_speed
         self.scroll_y = max(self.scroll_boundaries[1], self.scroll_y)
         
         self.draw_margin[1] = self.scroll_y + self.draw_area[1]
         
     def scroll_up(self, rate = 1):
-        last_pos = self.scroll_y
-        
         self.scroll_y += rate * self.scroll_speed
         self.scroll_y = min(self.scroll_boundaries[3], self.scroll_y)
         
+        self.draw_margin[1] = self.scroll_y + self.draw_area[1]
+    
+    def scroll_to_coords(self, x, y):
+        """Scroll so that the coords x,y are at the centre of the view"""
+        
+        self.scroll_x = - x + self.engine.window_width/2
+        self.scroll_y = - y + self.engine.window_height/2
+        
+        # Boundaries
+        self.scroll_x = min(self.scroll_boundaries[2], max(self.scroll_boundaries[0], self.scroll_x))
+        self.scroll_y = min(self.scroll_boundaries[3], max(self.scroll_boundaries[1], self.scroll_y))
+        
+        # Alter draw margin
+        self.draw_margin[0] = self.scroll_x + self.draw_area[0]
         self.draw_margin[1] = self.scroll_y + self.draw_area[1]
     
     def place_actor_mode(self, actor_type):

@@ -50,8 +50,6 @@ class Screen (object):
                     surf.blit(a.image, a.rect)
         
         pygame.display.flip()
-                    
-        
     
     def update_window(self):
         """Used when we've changed screen or want to simply redraw everything"""
