@@ -1,3 +1,6 @@
 {
-    
+    "collision_interval":   2,
+    "scroll_speed":         15,
+    "allow_mouse_scroll":   false,
+    "scroll_delay":         0.01
 }

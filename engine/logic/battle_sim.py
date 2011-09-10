@@ -15,10 +15,46 @@ from engine.libs import actor_lib, vectors, geometry, pathing
 from engine.logic import actor_subtypes, ai
 from engine.render import battle_screen
 
+def handle_number(v):
+    if type(v) not in (int, float):
+        raise Exception("%s (%s) is not of type int or float yet is meant to be cast as a number" % (
+            v, type(v)
+        ))
+    
+    return v
+
+def handle_boolean(v):
+    if type(v) != bool:
+        raise Exception("%s (%s) is not a boolean but needs to be cast as one" % (
+            v, type(v)
+        ))
+    
+    return v
+
+attribute_handlers = {
+    "number":   handle_number,
+    "boolean":  handle_boolean,
+}
+
+attribute_list = (
+    ("collision_interval",  "_collision_interval", "number"),
+    ("scroll_speed",        "scroll_speed", "number"),
+    ("allow_mouse_scroll",  "allow_mouse_scroll", "boolean"),
+    ("scroll_delay",        "scroll_delay", "number"),
+)
+
+
+for a, b, t in attribute_list:
+    if t not in attribute_handlers:
+        raise Exception("Error initialising battle_sim.py: attribute %s maps to a type %s but there is no handler for that type" % (
+            a, t
+        ))
+
+
 class BattleSim (battle_screen.BattleScreen):
     def __init__(self, engine):
         # How many cycles between collision checks
-        self._collision_interval = 2
+        self._collision_interval = 5
         self._collision_inverval_count = 0
         
         super(BattleSim, self).__init__(engine)
@@ -237,7 +273,12 @@ class BattleSim (battle_screen.BattleScreen):
             self.load_game(data)
     
     def load_config(self, data):
-        pass
+        for name, maps_to, data_type in attribute_list:
+            if name not in data: continue
+            
+            v = attribute_handlers[data_type](data[name])
+            
+            setattr(self, maps_to, v)
     
     def load_setup(self, data):
         # Load abilities
