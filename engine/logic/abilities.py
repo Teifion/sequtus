@@ -1,3 +1,5 @@
+import random
+
 from engine.logic import effects, bullets
 from engine.libs import vectors, actor_lib, math_lib
 
@@ -105,14 +107,17 @@ class ConstructionAbility (Ability):
     def use(self, target):
         target.completion += (self.construction_rate * target.construction_rate)
         self.generate_effect(target)
+        
+        self.charge = 0
     
     def generate_effect(self, target):
+        colour = [self.effect['colour'][i] + random.random() * self.effect['variation'][i] for i in range(3)]
+        
         the_effect = effects.Beam(
             origin=self.actor.pos,
             target=target.pos,
-            colour=self.effect['colour'],
-            duration=self.effect['duration'],
-            degrade=self.effect.get("degrade", (0,0,0)),
+            colour=effects.bound_colour(colour),
+            duration=self.required_charge-1,
         )
         self.actor.effects.append(the_effect)
         
