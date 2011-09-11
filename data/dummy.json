@@ -1,76 +1,22 @@
 {
     "actors":   [
         {
-            "type": "Red circle",
+            "type": "Blue circle",
+            "pos":  [1000, 1000, 0],
+            "team": 2,
+            "hp":   10
+        },
+        {
+            "type": "Worker",
             "pos":  [100, 100, 0],
             "team": 1,
             "hp":   10
         },
         {
-            "type": "Red circle",
-            "pos":  [150, 100, 0],
+            "type": "Red building",
+            "pos":  [200, 200, 0],
             "team": 1,
-            "hp":   10
-        },
-        {
-            "type": "Red circle",
-            "pos":  [200, 100, 0],
-            "team": 1,
-            "hp":   10
-        },
-        {
-             "type": "Red circle",
-             "pos":  [100, 200, 0],
-             "team": 1,
-             "hp":   10
-         },
-         {
-             "type": "Red circle",
-             "pos":  [150, 200, 0],
-             "team": 1,
-             "hp":   10
-         },
-         {
-             "type": "Red circle",
-             "pos":  [200, 200, 0],
-             "team": 1,
-             "hp":   10
-         },
-        {
-            "type": "Blue circle",
-            "pos":  [650, 500, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [650, 550, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [650, 600, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [750, 500, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [750, 550, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
-            "type": "Blue circle",
-            "pos":  [750, 600, 0],
-            "team": 2,
-            "hp":   10
+            "completion":   0
         }
     ]
 }
