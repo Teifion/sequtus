@@ -31,6 +31,8 @@ class Sequtus (core.EngineV3):
             "battlefield":      pygame.image.load('media/battlefield.png'),
             
             "red_rune":         pygame.image.load('media/red_rune.png'),
+            "red_square":       pygame.image.load('media/red_square.png'),
+            
             "blue_rune":        pygame.image.load('media/blue_rune.png'),
             
             "red_building_menu":      pygame.image.load('media/red_building_menu.png'),
@@ -68,28 +70,10 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        self.current_screen.add_order(0, "move", [100, 800])
-        self.current_screen.add_order(1, "move", [200, 800])
-        self.current_screen.add_order(2, "move", [300, 800])
-        self.current_screen.add_order(3, "move", [100, 900])
-        self.current_screen.add_order(4, "move", [200, 900])
-        self.current_screen.add_order(5, "move", [300, 900])
+        self.current_screen.select_actor(self.current_screen.actors[2])
+        self.current_screen.add_order(self.current_screen.actors[1], "defend", target=self.current_screen.actors[2])
         
-        self.current_screen.add_order(6, "move", [200, 600])
-        self.current_screen.add_order(7, "move", [200, 700])
-        self.current_screen.add_order(8, "move", [200, 800])
-        self.current_screen.add_order(9, "move", [300, 600])
-        self.current_screen.add_order(10, "move", [300, 700])
-        self.current_screen.add_order(11, "move", [300, 800])
-        
-        for i in range(0, 5):
-            for j in range(0, 5):
-                self.current_screen.place_actor({"type":"Red circle","pos":[i*50, j*50,0],"team":1,"completion":100,"hp":10})
-                self.current_screen.add_order(len(self.current_screen.actors)-1, "move", [400, 1000])
-        
-        for i in range(0, 5):
-            for j in range(0, 5):
-                self.current_screen.place_actor({"type":"Blue circle","pos":[i*50+500, j*50+500,0],"team":2,"completion":100,"hp":10})
-                self.current_screen.add_order(len(self.current_screen.actors)-1, "move", [100, 700])
+        self.current_screen.queue_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[1])
+        self.current_screen.queue_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[2])
         
         sim_lib.set_speed(self.current_screen, 30)
