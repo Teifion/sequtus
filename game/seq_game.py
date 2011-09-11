@@ -73,7 +73,10 @@ class Sequtus (core.EngineV3):
         self.current_screen.select_actor(self.current_screen.actors[2])
         self.current_screen.add_order(self.current_screen.actors[1], "defend", target=self.current_screen.actors[2])
         
-        self.current_screen.queue_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[1])
+        self.current_screen.add_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[1])
         self.current_screen.queue_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[2])
+        
+        self.current_screen.add_order(self.current_screen.actors[3], "attack", target=self.current_screen.actors[2])
+        self.current_screen.queue_order(self.current_screen.actors[3], "attack", target=self.current_screen.actors[1])
         
         sim_lib.set_speed(self.current_screen, 30)

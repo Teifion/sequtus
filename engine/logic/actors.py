@@ -167,19 +167,13 @@ class Actor (object_base.ObjectBase):
     
     def update(self):
         super(Actor, self).update()
+        if self.completion < 100:
+            return
         
         self.check_ai()
         
         for a in self.abilities:
             a.update()
-        
-        remove = []
-        for k in self.dont_collide_with:
-            self.dont_collide_with[k] -= 1
-            if self.dont_collide_with[k] < 1:
-                remove.append(k)
-        
-        for r in remove: del(self.dont_collide_with[r])
         
         self.run_ai()
     
@@ -264,6 +258,10 @@ class Actor (object_base.ObjectBase):
             cmd, pos, target = self.current_order
         else:
             cmd, pos, target = self.micro_orders[0]
+        
+        if type(target) not in (list, tuple, int):
+            if target.hp <= 0:
+                self.next_order()
         
         if cmd == "stop" or cmd == "hold position":
             if target > 0:
@@ -391,9 +389,9 @@ class Actor (object_base.ObjectBase):
     def _attack_ai(self):
         """AI handling the process of attacking"""
         
-        if len(self.enemy_targets) == 0: return
+        target = self.get_first_target()
         
-        target = self.enemy_targets[0]
+        if target == None: return
         
         for a in self.abilities:
             if a.can_use(target):
