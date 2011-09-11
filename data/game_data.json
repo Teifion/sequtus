@@ -31,6 +31,7 @@
             "min_range":    1,
             "max_range":    300,
             "required_charge": 1,
+            "construction_rate":   1,
             "effect":       {
                 "colour":   [0, 255, 0],
                 "duration": 1,

@@ -69,6 +69,9 @@ class WeaponAbility (Ability):
 class ConstructionAbility (Ability):
     max_range = 10
     
+    construction_rate = 0
+    repair_rate = 0
+    
     def can_use(self, target=None, **kwargs):
         if not super(ConstructionAbility, self).can_use(target, **kwargs):
             return False
@@ -83,10 +86,24 @@ class ConstructionAbility (Ability):
         if self.actor.team != target.team:
             return False
         
+        # Is the ally still under construction?
+        if target.completion < 100:
+            if self.construction_rate <= 0:
+                return False
+        
+        else:
+            # Is the ally hurt?
+            if target.hp >= target.max_hp:
+                return False
+        
+            # Can we repair stuff?
+            if self.repair_rate <= 0:
+                return False
+        
         return True
     
     def use(self, target):
-        target.completion += 0.1
+        target.completion += (self.construction_rate * target.construction_rate)
         self.generate_effect(target)
     
     def generate_effect(self, target):

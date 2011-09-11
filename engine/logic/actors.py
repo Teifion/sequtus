@@ -55,6 +55,7 @@ class Actor (object_base.ObjectBase):
         self.current_order = ["stop", -1, -1]
         
         self.hp = 0
+        self.construction_rate = 1
         self.completion = 100
         
         self._health_bar = (None, None)
@@ -151,6 +152,8 @@ class Actor (object_base.ObjectBase):
         
         self.max_heal_range         = data.get("max_heal_range", self.max_heal_range)
         self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
+        
+        self.construction_rate         = data.get("construction_rate", self.construction_rate)
         
         self.abilities = []
     
@@ -273,10 +276,20 @@ class Actor (object_base.ObjectBase):
             pass
 
         elif cmd == "attack":
-            pass
+            if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
+                if target in self.priority_targets:
+                    i = self.priority_targets.index(target)
+                    del(self.priority_targets[i])
+                
+                self.priority_targets.insert(0, target)
         
         elif cmd == "defend":
-            pass
+            if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
+                if target in self.priority_targets:
+                    i = self.priority_targets.index(target)
+                    del(self.priority_targets[i])
+                
+                self.priority_targets.insert(0, target)
         
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
@@ -293,6 +306,7 @@ class Actor (object_base.ObjectBase):
             cmd, pos, target = self.micro_orders[0]
         
         self._attack_ai()
+        self._help_ai()
         
         if cmd == "stop" or cmd == "hold position":
             self.velocity = [0,0,0]
@@ -324,19 +338,55 @@ class Actor (object_base.ObjectBase):
                 
         
         elif cmd == "defend":
-            pass
+            t = self.get_first_ally()
+            
+            # If we have a target, lets move closer to it
+            if t != None:
+                dist = vectors.distance(self.pos, t.pos)
+                
+                if dist > self.optimum_heal_range:
+                    target_pos = vectors.get_midpoint(self.pos, t.pos, self.optimum_heal_range)
+                    self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
+                else:
+                    self.velocity = [0,0,0]
             
         else:
             raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
     
     def get_first_target(self):
         if len(self.priority_targets) > 0:
-            return self.priority_targets[0]
+            for a in self.priority_targets:
+                if a.team != self.team:
+                    return a
         
         if len(self.enemy_targets) > 0:
             return self.enemy_targets[0]
         
         return None
+    
+    def get_first_ally(self):
+        if len(self.priority_targets) > 0:
+            for a in self.priority_targets:
+                if a.team == self.team:
+                    return a
+        
+        return None
+    
+    def _help_ai(self):
+        """AI handling the process of helping allies"""
+        target = None
+        for a in self.priority_targets:
+            if a.team == self.team:
+                target = a
+                break
+        
+        # No ally found, skip this function
+        if target == None:
+            return
+        
+        for a in self.abilities:
+            if a.can_use(target):
+                a.use(target)
     
     def _attack_ai(self):
         """AI handling the process of attacking"""

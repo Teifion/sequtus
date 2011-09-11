@@ -36,7 +36,7 @@ def build_template_cache(template, engine):
                 minmax_attack_range = min(minmax_attack_range, ability_type['max_range'])
             else:
                 max_heal_range = max(max_heal_range, ability_type['max_range'])
-                minmax_heal_attack_range = min(minmax_heal_range, ability_type['max_range'])
+                minmax_heal_range = min(minmax_heal_range, ability_type['max_range'])
     
     if minmax_attack_range == 99999:
         minmax_attack_range = 0
