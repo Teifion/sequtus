@@ -14,6 +14,42 @@ def build_template_cache(template, engine):
         template["drifts"]          = False
         template["max_velocity"]    = 0
     
+    max_attack_range = 0
+    minmax_attack_range = 99999
+    
+    max_heal_range = 0
+    minmax_heal_range = 99999
+    
+    for a in template['abilities']:
+        ability_type = engine.current_screen.ability_types[a]
+        ability_damage = {}
+        
+        if "damage" in ability_type:
+            ability_damage = ability_type['damage']
+        elif "bullet" in ability_type:
+            if "damage" in ability_type['bullet']:
+                ability_damage = ability_type['bullet']['damage']
+        
+        if "max_range" in ability_type:
+            if ability_damage != {}:
+                max_attack_range = max(max_attack_range, ability_type['max_range'])
+                minmax_attack_range = min(minmax_attack_range, ability_type['max_range'])
+            else:
+                max_heal_range = max(max_heal_range, ability_type['max_range'])
+                minmax_heal_attack_range = min(minmax_heal_range, ability_type['max_range'])
+    
+    if minmax_attack_range == 99999:
+        minmax_attack_range = 0
+    
+    if minmax_heal_range == 99999:
+        minmax_heal_range = 0
+    
+    template['optimum_attack_range']    = minmax_attack_range
+    template['max_attack_range']        = max_attack_range
+    
+    template['optimum_heal_range']      = minmax_heal_range
+    template['max_heal_range']          = max_heal_range
+    
     temp_img = engine.images[template['image']]
     template['size'] = temp_img.get_rect().size
 

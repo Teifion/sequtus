@@ -14,6 +14,7 @@ class Ability (object):
     
     required_charge = 20
     charge_rate = 1
+    weapon = False
     
     def __init__(self, actor, ability_data={}):
         super(Ability, self).__init__()
@@ -47,10 +48,10 @@ class Ability (object):
 class WeaponAbility (Ability):
     min_range = 0
     max_range = 10
+    weapon = True
     
     def can_use(self, target=None, **kwargs):
-        """Called to see if the ability can be used"""
-        if self.charge < self.required_charge:
+        if not super(WeaponAbility, self).can_use(target, **kwargs):
             return False
         
         if vectors.distance(self.actor.pos, target.pos) > self.max_range:
@@ -60,8 +61,44 @@ class WeaponAbility (Ability):
             if vectors.distance(self.actor.pos, target.pos) < self.min_range:
                 return False
         
+        if self.actor.team == target.team:
+            return False
+        
+        return True
+
+class ConstructionAbility (Ability):
+    max_range = 10
+    
+    def can_use(self, target=None, **kwargs):
+        if not super(ConstructionAbility, self).can_use(target, **kwargs):
+            return False
+        
+        if vectors.distance(self.actor.pos, target.pos) > self.max_range:
+            return False
+        
+        if self.min_range > 0:
+            if vectors.distance(self.actor.pos, target.pos) < self.min_range:
+                return False
+        
+        if self.actor.team != target.team:
+            return False
+        
         return True
     
+    def use(self, target):
+        target.completion += 0.1
+        self.generate_effect(target)
+    
+    def generate_effect(self, target):
+        the_effect = effects.Beam(
+            origin=self.actor.pos,
+            target=target.pos,
+            colour=self.effect['colour'],
+            duration=self.effect['duration'],
+            degrade=self.effect.get("degrade", (0,0,0)),
+        )
+        self.actor.effects.append(the_effect)
+        
 
 class InstantHitWeapon (WeaponAbility):
     """Weapons that instantly hit their target such as lasers"""
@@ -70,6 +107,9 @@ class InstantHitWeapon (WeaponAbility):
     damage = {"raw":1}
     
     def use(self, target):
+        if target.team == self.actor.team:
+            return False
+        
         actor_lib.apply_damage(target, self.damage)
         self.generate_effect(target)
         
@@ -81,6 +121,9 @@ class ProjectileWeapon (WeaponAbility):
     bullet = {}
     
     def use(self, target):
+        if target.team == self.actor.team:
+            return False
+        
         self.generate_bullet(target)
         self.charge = 0
 
@@ -119,7 +162,8 @@ class BeamWeapon (InstantHitWeapon):
         self.actor.effects.append(the_effect)
 
 lookup = {
-    "BeamWeapon": BeamWeapon,
-    "MassDriver": MassDriver,
+    "BeamWeapon":   BeamWeapon,
+    "MassDriver":   MassDriver,
     
+    "Construction": ConstructionAbility,
 }

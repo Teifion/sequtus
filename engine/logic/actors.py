@@ -32,6 +32,12 @@ class Actor (object_base.ObjectBase):
     
     abilities           = []
     
+    optimum_attack_range    = 100
+    max_attack_range        = 100
+    
+    optimum_heal_range    = 100
+    max_heal_range        = 100
+    
     def __init__(self):
         super(Actor, self).__init__()
         
@@ -55,10 +61,17 @@ class Actor (object_base.ObjectBase):
         self._completion_bar = (None, None)
         
         self.dont_collide_with = {}
+        
+        # These are passed down to the screen, we hold onto them for only a moment
         self.effects = []
         self.bullets = []
         
+        # A list of all potential enemy targets as picked by the AI
         self.enemy_targets = []
+        
+        # A list of preferred targets in order of priority
+        self.priority_targets = []
+        
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -132,6 +145,12 @@ class Actor (object_base.ObjectBase):
         # self.abilities          = data.get("abilities", self.abilities)
         self.flags              = data.get("flags", self.flags)
         self.size               = data.get("size", self.size)
+        
+        self.max_attack_range       = data.get("max_attack_range", self.max_attack_range)
+        self.optimum_attack_range   = data.get("optimum_attack_range", self.optimum_attack_range)
+        
+        self.max_heal_range         = data.get("max_heal_range", self.max_heal_range)
+        self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
         
         self.abilities = []
     
@@ -250,9 +269,15 @@ class Actor (object_base.ObjectBase):
                 else:
                     self.micro_orders[0][2] -= 1
         
-        elif cmd == "move" or cmd == "reverse":
+        elif cmd == "move":
             pass
-            
+
+        elif cmd == "attack":
+            pass
+        
+        elif cmd == "defend":
+            pass
+        
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
         
@@ -275,7 +300,7 @@ class Actor (object_base.ObjectBase):
             if target == 0:
                 self.next_order()
         
-        elif cmd == "move" or cmd == "reverse":
+        elif cmd == "move":
             dist = vectors.distance(self.pos, pos)
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, pos), self.max_velocity)
             
@@ -283,9 +308,35 @@ class Actor (object_base.ObjectBase):
                 self.pos = pos
                 self.velocity = [0,0,0]
                 self.next_order()
+        
+        elif cmd == "attack":
+            t = self.get_first_target()
+            
+            # If we have a target, lets move closer to it
+            if t != None:
+                dist = vectors.distance(self.pos, t.pos)
+                
+                if dist > self.optimum_attack_range:
+                    target_pos = vectors.get_midpoint(self.pos, t.pos, self.optimum_attack_range)
+                    self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
+                else:
+                    self.velocity = [0,0,0]
+                
+        
+        elif cmd == "defend":
+            pass
             
         else:
             raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
+    
+    def get_first_target(self):
+        if len(self.priority_targets) > 0:
+            return self.priority_targets[0]
+        
+        if len(self.enemy_targets) > 0:
+            return self.enemy_targets[0]
+        
+        return None
     
     def _attack_ai(self):
         """AI handling the process of attacking"""
