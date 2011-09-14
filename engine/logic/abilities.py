@@ -78,7 +78,6 @@ class ConstructionAbility (Ability):
     max_range = 10
     
     construction_rate = 0
-    repair_rate = 0
     
     defence_flags = ["construct"]
     
@@ -97,18 +96,8 @@ class ConstructionAbility (Ability):
             return False
         
         # Is the ally still under construction?
-        if target.completion < 100:
-            if self.construction_rate <= 0:
-                return False
-        
-        else:
-            # Is the ally hurt?
-            if target.hp >= target.max_hp:
-                return False
-        
-            # Can we repair stuff?
-            if self.repair_rate <= 0:
-                return False
+        if target.completion >= 100:
+            return False
         
         return True
     
@@ -128,7 +117,56 @@ class ConstructionAbility (Ability):
             duration=self.required_charge-1,
         )
         self.actor.effects.append(the_effect)
+
+class RepairAbility (Ability):
+    max_range = 10
+    
+    repair_rate = 0
+    
+    defence_flags = ["repair"]
+    
+    def can_use(self, target=None, **kwargs):
+        if not super(RepairAbility, self).can_use(target, **kwargs):
+            return False
         
+        if vectors.distance(self.actor.pos, target.pos) > self.max_range:
+            return False
+        
+        if self.min_range > 0:
+            if vectors.distance(self.actor.pos, target.pos) < self.min_range:
+                return False
+        
+        if self.actor.team != target.team:
+            return False
+        
+        # Is the ally still under construction?
+        if target.completion < 100:
+            return False
+        
+        # Is the ally hurt?
+        if target.hp >= target.max_hp:
+            return False
+        
+        return True
+    
+    def use(self, target):
+        target.hp += (self.repair_rate * target.repair_rate)
+        target.hp = min(target.hp, target.max_hp)
+        self.generate_effect(target)
+        
+        self.charge = 0
+    
+    def generate_effect(self, target):
+        colour = [self.effect['colour'][i] + random.random() * self.effect['variation'][i] for i in range(3)]
+        
+        the_effect = effects.Beam(
+            origin=self.actor.pos,
+            target=target.pos,
+            colour=effects.bound_colour(colour),
+            duration=self.required_charge-1,
+        )
+        self.actor.effects.append(the_effect)
+
 
 class InstantHitWeapon (WeaponAbility):
     """Weapons that instantly hit their target such as lasers"""
@@ -196,4 +234,5 @@ lookup = {
     "MassDriver":   MassDriver,
     
     "Construction": ConstructionAbility,
+    "Repair": RepairAbility,
 }

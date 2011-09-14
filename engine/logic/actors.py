@@ -38,6 +38,8 @@ class Actor (object_base.ObjectBase):
     optimum_heal_range    = 100
     max_heal_range        = 100
     
+    repair_rate             = 1
+    
     def __init__(self):
         super(Actor, self).__init__()
         
@@ -343,28 +345,29 @@ class Actor (object_base.ObjectBase):
                 self.next_order()
         
         elif cmd == "attack":
-            t = self.get_first_target()
+            target = self.get_first_target()
             
             # If we have a target, lets move closer to it
-            if t != None:
-                dist = vectors.distance(self.pos, t.pos)
+            if target != None:
+                dist = vectors.distance(self.pos, target.pos)
                 
                 if dist > self.optimum_attack_range:
-                    target_pos = vectors.get_midpoint(self.pos, t.pos, self.optimum_attack_range)
+                    target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
                     self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
                 else:
                     self.velocity = [0,0,0]
                 
         
         elif cmd == "aid":
-            t = self.get_first_ally()
+            if target == None:
+                target = self.get_first_ally()
             
             # If we have a target, lets move closer to it
-            if t != None:
-                dist = vectors.distance(self.pos, t.pos)
+            if target != None:
+                dist = vectors.distance(self.pos, target.pos)
                 
                 if dist > self.optimum_heal_range:
-                    target_pos = vectors.get_midpoint(self.pos, t.pos, self.optimum_heal_range)
+                    target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_heal_range)
                     self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
                 else:
                     self.velocity = [0,0,0]

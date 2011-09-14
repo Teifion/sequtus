@@ -36,6 +36,17 @@
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
             }
+        },
+        "Repair":    {
+            "type":         "Repair",
+            "min_range":    1,
+            "max_range":    300,
+            "required_charge": 2,
+            "repair_rate":   5,
+            "effect":       {
+                "colour":   [200, 200, 200],
+                "variation":  [50, 50, 50]
+            }
         }
     },
     
@@ -82,7 +93,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Construction"],
+            "abilities":  ["Construction", "Repair"],
             "flags":    ["T1 Constructor"]
         },
         
