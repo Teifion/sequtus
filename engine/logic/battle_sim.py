@@ -204,6 +204,7 @@ class BattleSim (battle_screen.BattleScreen):
     def place_actor_from_click(self, event, drag, actor_data):
         self.place_image = None
         actor_data['pos'] = [event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1], 0]
+        actor_data['team'] = self.player_team
         
         return self.place_actor(actor_data)
     
@@ -225,7 +226,6 @@ class BattleSim (battle_screen.BattleScreen):
         # If AI's exist, assign the actor to one
         if a.team in self.ais:
             a.ai = self.ais[a.team]
-            
         
         self.add_actor(a)
     
