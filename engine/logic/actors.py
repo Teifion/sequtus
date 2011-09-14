@@ -259,7 +259,7 @@ class Actor (object_base.ObjectBase):
         else:
             cmd, pos, target = self.micro_orders[0]
         
-        if type(target) not in (list, tuple, int):
+        if type(target) not in (list, tuple, int) and target != None:
             if target.hp <= 0:
                 self.next_order()
         
@@ -354,6 +354,7 @@ class Actor (object_base.ObjectBase):
     def get_first_target(self):
         if len(self.priority_targets) > 0:
             for a in self.priority_targets:
+                if a == None: continue
                 if a.team != self.team:
                     return a
         
