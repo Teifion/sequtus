@@ -203,3 +203,6 @@ class InfoBox (Panel):
         
         self.position.size = self.size
     
+    # Not expected to respond to mouse events
+    def handle_mouseup(self, event, drag=False):
+        pass
