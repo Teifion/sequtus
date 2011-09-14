@@ -35,7 +35,7 @@ class BattleScreen (screen.Screen):
             K_m: "move",
             K_s: "stop",
             K_a: "attack",
-            K_a: "defend",
+            # K_a: "aid",
             K_h: "hold",
             K_p: "patrol",
             K_b: "build",
@@ -339,30 +339,31 @@ class BattleScreen (screen.Screen):
                         actor_target = a
                         break
             
-            # Now issue the command
+            # No actor clicked, this means we're moving
             if not actor_target:
                 for a in self.selected_actors:
                     if a.team == self.player_team:
                         if KMOD_SHIFT & mods:
-                            self.queue_order(a, "move", real_mouse_pos)
+                            self.queue_order(a, "move", pos=real_mouse_pos)
                         else:
-                            self.add_order(a, "move", real_mouse_pos)
+                            self.add_order(a, "move", pos=real_mouse_pos)
                         
+            # An actor was clicked
             else:
                 if actor_target.team != self.selected_actors[0].team:
                     for a in self.selected_actors:
                         if a.team == self.player_team:
                             if KMOD_SHIFT & mods:
-                                self.queue_order(a, "attack", actor_target)
+                                self.queue_order(a, "attack", target=actor_target)
                             else:
-                                self.add_order(a, "attack", actor_target)
+                                self.add_order(a, "attack", target=actor_target)
                 else:
                     for a in self.selected_actors:
                         if a.team == self.player_team:
                             if KMOD_SHIFT & mods:
-                                self.queue_order(a, "defend", actor_target)
+                                self.queue_order(a, "aid", target=actor_target)
                             else:
-                                self.add_order(a, "defend", actor_target)
+                                self.add_order(a, "aid", target=actor_target)
             
         else:
             print("battle_screen.handle_mouseup: event.button = %s" % event.button)

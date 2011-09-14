@@ -70,13 +70,8 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        self.current_screen.select_actor(self.current_screen.actors[2])
-        self.current_screen.add_order(self.current_screen.actors[1], "defend", target=self.current_screen.actors[2])
-        
-        self.current_screen.add_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[1])
-        self.current_screen.queue_order(self.current_screen.actors[0], "attack", target=self.current_screen.actors[2])
-        
-        self.current_screen.add_order(self.current_screen.actors[3], "attack", target=self.current_screen.actors[2])
-        self.current_screen.queue_order(self.current_screen.actors[3], "attack", target=self.current_screen.actors[1])
+        self.current_screen.select_actor(self.current_screen.actors[0])
+        self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[1])
+        self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[2])
         
         sim_lib.set_speed(self.current_screen, 30)

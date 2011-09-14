@@ -1,14 +1,8 @@
 {
     "actors":   [
         {
-            "type": "Blue circle",
-            "pos":  [400, 400, 0],
-            "team": 2,
-            "hp":   10
-        },
-        {
             "type": "Worker",
-            "pos":  [1000, 1000, 0],
+            "pos":  [100, 100, 0],
             "team": 1,
             "hp":   10
         },
@@ -19,10 +13,10 @@
             "completion":   20
         },
         {
-            "type": "Blue circle",
-            "pos":  [400, 500, 0],
-            "team": 2,
-            "hp":   10
+            "type": "Red building",
+            "pos":  [400, 200, 0],
+            "team": 1,
+            "completion":   20
         }
     ]
 }

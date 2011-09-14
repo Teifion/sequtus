@@ -14,7 +14,7 @@ class Actor (object_base.ObjectBase):
         "stop",
         "hold",
         "attack",
-        "defend",
+        "aid",
         "patrol",
     ]
     
@@ -73,6 +73,9 @@ class Actor (object_base.ObjectBase):
         # A list of preferred targets in order of priority
         self.priority_targets = []
         
+        # Flags for order abilities
+        self.offence_flags = set()
+        self.defence_flags = set()
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -181,6 +184,9 @@ class Actor (object_base.ObjectBase):
         atype = ability_data['type']
         the_ability = abilities.lookup[atype](self, ability_data)
         
+        for f in the_ability.offence_flags: self.offence_flags.add(f)
+        for f in the_ability.defence_flags: self.defence_flags.add(f)
+        
         self.abilities.append(the_ability)
     
     def issue_command(self, cmd, pos, target=None):
@@ -272,7 +278,7 @@ class Actor (object_base.ObjectBase):
         
         elif cmd == "move":
             pass
-
+            
         elif cmd == "attack":
             if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
                 if target in self.priority_targets:
@@ -281,7 +287,22 @@ class Actor (object_base.ObjectBase):
                 
                 self.priority_targets.insert(0, target)
         
-        elif cmd == "defend":
+        elif cmd == "aid":
+            
+            # Can we aid them?
+            can_aid = False
+            if "construct" in self.defence_flags:
+                if target.completion < 100:
+                    can_aid = True
+            
+            if "repair" in self.defence_flags:
+                if target.hp < target.max_hp:
+                    can_aid = True
+            
+            if not can_aid:
+                self.next_order()
+                return self.check_ai()
+            
             if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
                 if target in self.priority_targets:
                     i = self.priority_targets.index(target)
@@ -335,7 +356,7 @@ class Actor (object_base.ObjectBase):
                     self.velocity = [0,0,0]
                 
         
-        elif cmd == "defend":
+        elif cmd == "aid":
             t = self.get_first_ally()
             
             # If we have a target, lets move closer to it
@@ -354,7 +375,6 @@ class Actor (object_base.ObjectBase):
     def get_first_target(self):
         if len(self.priority_targets) > 0:
             for a in self.priority_targets:
-                if a == None: continue
                 if a.team != self.team:
                     return a
         

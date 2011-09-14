@@ -18,6 +18,10 @@ class Ability (object):
     charge_rate = 1
     weapon = False
     
+    # Flags for order types
+    defence_flags = []
+    offence_flags = []
+    
     def __init__(self, actor, ability_data={}):
         super(Ability, self).__init__()
         self.actor = actor
@@ -52,6 +56,8 @@ class WeaponAbility (Ability):
     max_range = 10
     weapon = True
     
+    offence_flags = ["attack"]
+    
     def can_use(self, target=None, **kwargs):
         if not super(WeaponAbility, self).can_use(target, **kwargs):
             return False
@@ -73,6 +79,8 @@ class ConstructionAbility (Ability):
     
     construction_rate = 0
     repair_rate = 0
+    
+    defence_flags = ["construct"]
     
     def can_use(self, target=None, **kwargs):
         if not super(ConstructionAbility, self).can_use(target, **kwargs):
