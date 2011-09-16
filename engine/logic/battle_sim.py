@@ -6,6 +6,8 @@ The sim is expected to be subclassed so as to program in the game rules.
 """
 
 import pygame
+from pygame.locals import *
+
 import time
 import sys
 import json
@@ -207,6 +209,12 @@ class BattleSim (battle_screen.BattleScreen):
         self.place_image = None
         actor_data['pos'] = [event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1], 0]
         actor_data['team'] = self.player_team
+        
+        mods = pygame.key.get_mods()
+        
+        # Number key? Select or assign a control group
+        if KMOD_SHIFT & mods:
+            self.place_actor_mode(actor_data['type'])
         
         return self.place_actor(actor_data)
     
