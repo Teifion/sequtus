@@ -15,9 +15,8 @@ def get_collisions(actors):
             if i == j: continue
             if geometry.rect_collision(a.rect, b.rect, True):
                 collisions.append((a,b))
-                
-                collided.add(i)
-                collided.add(j)
+        
+        collided.add(i)
     
     return collisions
 
