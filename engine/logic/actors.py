@@ -177,8 +177,7 @@ class Actor (object_base.ObjectBase):
     
     def update(self):
         super(Actor, self).update()
-        if self.completion < 100:
-            return
+        if self.completion < 100: return
         
         self.check_ai()
         

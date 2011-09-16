@@ -154,6 +154,7 @@ class BattleScreen (screen.Screen):
             a.frame += 1
             
             actor_img = self.engine.images[a.image].get(a.frame)
+            # actor_img = self.engine.images[a.image]
             r = pygame.Rect(actor_img.get_rect())
             r.left = a.pos[0] + self.draw_margin[0] - r.width/2
             r.top = a.pos[1] + self.draw_margin[1] - r.height/2
@@ -218,7 +219,7 @@ class BattleScreen (screen.Screen):
         if self.place_image:
             img = self.engine.images[self.place_image]
             r = img.get_rect()
-            surf.blit(img, pygame.Rect(
+            surf.blit(img.get(), pygame.Rect(
                 self.mouse[0] - r.width/2, self.mouse[1] - r.height/2,
                 r.width, r.height,
             ))

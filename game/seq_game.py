@@ -75,4 +75,6 @@ class Sequtus (core.EngineV3):
         # self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[1])
         # self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[2])
         
+        # self.current_screen.place_actor({"type":"Red building", "team":1, "pos":[400,400,0], "completion":100})
+        
         sim_lib.set_speed(self.current_screen, 30)

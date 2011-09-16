@@ -64,7 +64,7 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Laser"],
-            "flags":    [],
+            "flags":    ["T1 Factory"],
             
             "required_techs":   []
         },
@@ -156,7 +156,8 @@
     },
     
     "build_lists": {
-        "T1 Constructor": ["Red circle", "Worker", "Red building"]
+        "T1 Constructor": ["Red building"],
+        "T1 Factory": ["Red circle", "Worker"]
     },
     
     "tech_trees": {

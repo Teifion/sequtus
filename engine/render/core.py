@@ -117,11 +117,9 @@ class Animation (object):
                 tile.blit(img, (0,0), (x * tile_width, y * tile_height, tile_width, tile_height))
                 
                 self.images.append(tile)
-        
-        self.rect = pygame.Rect((0,0, tile_width, tile_height))
     
     def get_rect(self):
-        return self.rect
+        return self.images[0].get_rect()
     
     def get(self, img_number=0):
         img_number = int(math.floor(self.animation_rate * img_number))
@@ -133,7 +131,8 @@ class Animation (object):
         return self.images[img_number]
     
     def __getitem__(self, key):
-        return get(self, key)
+        if key in self.images: return self.images[key]
+        return self.get(key)
 
 
 

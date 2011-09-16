@@ -83,7 +83,7 @@ class TabularMenu (Panel):
         for actor_name, image_name in self.buttons:
             img = self.engine.images[image_name]
             
-            self._image.blit(img, pygame.Rect(
+            self._image.blit(img.get(), pygame.Rect(
                 col * self.grid_size[0], row * self.grid_size[1],
                 self.grid_size[0], self.grid_size[1],
             ))
