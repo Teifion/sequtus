@@ -68,6 +68,8 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.actor_types = {}
         self.ability_types = {}
+        self.build_lists = {}
+        self.tech_trees = {}
         
         self.ais = {}
         self.cycle_count = [0, 0]
@@ -266,6 +268,14 @@ class BattleSim (battle_screen.BattleScreen):
         for type_name, type_data in data['actors'].items():
             actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
+        
+        # Load tech trees
+        for tree_name, tree_data in data['tech_trees'].items():
+            self.tech_trees[tree_name] = tree_data
+        
+        # Load build dicts
+        for build_name, build_list in data['build_lists'].items():
+            self.build_lists[build_name] = build_list
     
     def load_game(self, data):
         teams = set()

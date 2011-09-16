@@ -8,6 +8,7 @@ class Battle (battle_sim.BattleSim):
         super(Battle, self).__init__(engine)
         
         self.panels["build"] = panels.TabularMenu(engine,
+            screen = self,
             size = (200, engine.window_height-200),
             grid_size = (100, 100),
             position = (0, 200),
@@ -42,16 +43,10 @@ class Battle (battle_sim.BattleSim):
         super(Battle, self).logic_cycle()
     
     def rebuild_build_menu(self):
-        buttons = []
-        
         if self.actor_types == {}:
             return
         
-        buttons.append(("red_building_menu", self.place_actor_mode, [{"type":"Red building"}]))
-        buttons.append(("blue_building_menu", self.place_actor_mode, [{"type":"Blue building"}]))
-        
-        self.panels["build"].buttons = buttons
-        self.panels["build"].changed = True
+        self.panels["build"].build_from_actor_list(self.build_lists, self.selected_actors)
     
     def selection_changed(self):
         self.rebuild_build_menu()

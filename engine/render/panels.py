@@ -57,9 +57,10 @@ class Panel (object):
 class TabularMenu (Panel):
     accepts_keyup = True
     
-    def __init__(self, engine, size, grid_size, position):
+    def __init__(self, engine, screen, size, grid_size, position):
         super(TabularMenu, self).__init__(engine)
         
+        self.screen     = screen
         self.size       = size
         self.grid_size  = grid_size
         
@@ -77,8 +78,9 @@ class TabularMenu (Panel):
         
         col_count = math.floor(self.size[0]/self.grid_size[0])
         
+        
         col, row = 0, 0
-        for image_name, callback, args in self.buttons:
+        for actor_name, image_name in self.buttons:
             img = self.engine.images[image_name]
             
             self._image.blit(img, pygame.Rect(
@@ -87,12 +89,39 @@ class TabularMenu (Panel):
             ))
             
             col += 1
-            if col > col_count:
+            if col >= col_count:
                 col = 0
                 row += 1
         
         self.position.size = self.size
         self.changed = False
+    
+    def build_from_actor_list(self, build_list, actors):
+        """
+        Takes a build dict and a list of actors, it then populates itself based
+        on what can be built.
+        """
+        buttons = []
+        
+        # First build a list of all the flags
+        flags = []
+        for a in actors: flags.extend(a.flags)
+        flags = set(flags)
+        
+        # Now get a list of what can be built
+        for f in flags:
+            if f in build_list:
+                for a in build_list[f]:
+                    if a in self.screen.actor_types:
+                        img_name = self.screen.actor_types[a]['menu_image']
+                    else:
+                        print(a, list(self.screen.actor_types.keys()))
+                        raise Exception("No handler")
+                    
+                    buttons.append((a, img_name))
+        
+        self.buttons = buttons
+        self.changed = True
     
     def handle_keyup(self, event):
         print(event)
@@ -112,10 +141,18 @@ class TabularMenu (Panel):
             return True
         
         # Get the information for the button
-        image_name, callback, args = self.buttons[index]
+        item_name = self.buttons[index]
         
-        # Perform callback
-        callback(*args)
+        # What are we looking at?
+        if item_name in self.screen.actor_types:
+            actor_type = self.screen.actor_types[item_name]
+            
+            if "placement_image" in actor_type:
+                self.screen.place_actor_mode(actor_type)
+            else:
+                raise Exception("No placement image")
+        else:
+            raise Exception("Not found in actor types")
         
         return True
     

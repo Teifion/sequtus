@@ -54,6 +54,8 @@
         "Red building": {
             "image":            "red_building",
             "placement_image":  "red_building_placement",
+            "menu_image":       "red_building_menu",
+            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -62,11 +64,15 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Laser"],
-            "flags":    []
+            "flags":    [],
+            
+            "required_techs":   []
         },
         "Blue building": {
             "image":            "blue_building",
             "placement_image":  "blue_building_placement",
+            "menu_image":       "blue_building_menu",
+            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -75,11 +81,15 @@
             "max_shield_armour":    0,
             
             "abilities":  [],
-            "flags":    []
+            "flags":    [],
+            
+            "required_techs":   []
         },
         
         "Worker": {
             "image":            "red_square",
+            "menu_image":       "red_square",
+            
             "type":             "walker",
             "max_hp":           10,
             "max_shields":      0,
@@ -94,11 +104,15 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Construction", "Repair"],
-            "flags":    ["T1 Constructor"]
+            "flags":    ["T1 Constructor"],
+            
+            "required_techs":   []
         },
         
         "Red circle": {
             "image":            "red_rune",
+            "menu_image":       "red_rune",
+            
             "type":             "walker",
             "max_hp":           10,
             "max_shields":      0,
@@ -113,10 +127,14 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Laser"],
-            "flags":    []
+            "flags":    [],
+            
+            "required_techs":   []
         },
         "Blue circle": {
             "image":            "blue_rune",
+            "menu_image":       "blue_rune",
+            
             "type":             "walker",
             "max_hp":           10,
             "max_shields":      0,
@@ -131,7 +149,19 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Cannon"],
-            "flags":    []
+            "flags":    [],
+            
+            "required_techs":   []
+        }
+    },
+    
+    "build_lists": {
+        "T1 Constructor": ["Red circle", "Worker", "Red building"]
+    },
+    
+    "tech_trees": {
+        "red": {
+            
         }
     }
 }
