@@ -1,3 +1,5 @@
+import weakref
+
 class AI (object):
     """An object for assigning actions to actors. In it's most basic
     incarnation it does things such as auto-assigning combat targets
@@ -22,7 +24,7 @@ class AI (object):
         
         for a in self.sim.actors:
             if a.team != self.team:
-                self.enemy_actors.append(a)
+                self.enemy_actors.append(weakref.ref(a)())
         
         self.next_update = 10
     

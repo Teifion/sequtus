@@ -12,6 +12,7 @@ import time
 import sys
 import json
 import pdb
+import weakref
 
 from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
 from engine.logic import actor_subtypes, ai

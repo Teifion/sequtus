@@ -7,17 +7,9 @@
             "hp":   10
         },
         {
-            "type": "Red building",
-            "pos":  [200, 200, 0],
-            "team": 1,
-            "completion":   100,
-            "hp":   10
-        },
-        {
-            "type": "Red building",
-            "pos":  [400, 200, 0],
-            "team": 1,
-            "completion":   20
+            "type": "Blue circle",
+            "pos":  [300, 300, 0],
+            "team": 2
         }
     ]
 }

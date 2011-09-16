@@ -1,4 +1,7 @@
 from __future__ import division
+
+import weakref
+
 import pygame
 from pygame.locals import *
 
@@ -285,7 +288,7 @@ class Actor (object_base.ObjectBase):
             if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
                 if target in self.priority_targets:
                     i = self.priority_targets.index(target)
-                    del(self.priority_targets[i])
+                    # del(self.priority_targets[i])
                 
                 self.priority_targets.insert(0, target)
         

@@ -11,6 +11,7 @@ code separate from the display/interface code.
 """
 
 import time
+import weakref
 
 import pygame
 from pygame.locals import *
@@ -308,7 +309,7 @@ class BattleScreen (screen.Screen):
                     actor_target = None
                     for a in self.actors:
                         if a.contains_point(real_mouse_pos):
-                            actor_target = a
+                            actor_target = weakref.ref(a)()
                             break
                     
                     if KMOD_SHIFT & mods:
