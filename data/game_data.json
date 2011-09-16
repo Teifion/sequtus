@@ -88,7 +88,7 @@
         
         "Worker": {
             "image":            "red_square",
-            "menu_image":       "red_square",
+            "menu_image":       "red_square_menu",
             
             "type":             "walker",
             "max_hp":           10,
@@ -111,7 +111,7 @@
         
         "Red circle": {
             "image":            "red_rune",
-            "menu_image":       "red_rune",
+            "menu_image":       "red_rune_menu",
             
             "type":             "walker",
             "max_hp":           10,

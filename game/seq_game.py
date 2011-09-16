@@ -31,7 +31,10 @@ class Sequtus (core.EngineV3):
             "battlefield":      pygame.image.load('media/battlefield.png'),
             
             "red_rune":         pygame.image.load('media/red_rune.png'),
+            "red_rune_menu":         pygame.image.load('media/red_rune_menu.png'),
+            
             "red_square":       pygame.image.load('media/red_square.png'),
+            "red_square_menu":       pygame.image.load('media/red_square_menu.png'),
             
             "blue_rune":        pygame.image.load('media/blue_rune.png'),
             
