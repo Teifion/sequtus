@@ -151,7 +151,9 @@ class BattleScreen (screen.Screen):
         
         # Actors
         for a in self.actors:
-            actor_img = self.engine.images[a.image]
+            a.frame += 1
+            
+            actor_img = self.engine.images[a.image].get(a.frame)
             r = pygame.Rect(actor_img.get_rect())
             r.left = a.pos[0] + self.draw_margin[0] - r.width/2
             r.top = a.pos[1] + self.draw_margin[1] - r.height/2
@@ -186,7 +188,7 @@ class BattleScreen (screen.Screen):
         for b in self.bullets:
             # --- Using code similar to Actors ---
             
-            bullet_img = self.engine.images[b.image]
+            bullet_img = self.engine.images[b.image].get()
             r = pygame.Rect(bullet_img.get_rect())
             r.left = b.pos[0] + self.draw_margin[0] - b.width/2
             r.top = b.pos[1] + self.draw_margin[1] - b.height/2

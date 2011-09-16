@@ -25,12 +25,13 @@ class Sequtus (core.EngineV3):
     def __init__(self):
         super(Sequtus, self).__init__()
         
-        self.images = {
+        self._images = {
             "background":       image_composition.starfield(),
             
             "battlefield":      pygame.image.load('media/battlefield.png'),
             
-            "red_rune":         pygame.image.load('media/red_rune.png'),
+            # "red_rune":         pygame.image.load('media/red_rune.png'),
+            "red_rune":         core.Animation("media/red_rune_anim.png", 5, 1),
             "red_rune_menu":         pygame.image.load('media/red_rune_menu.png'),
             
             "red_square":       pygame.image.load('media/red_square.png'),
@@ -51,6 +52,31 @@ class Sequtus (core.EngineV3):
             "11px_bullet":              pygame.image.load('media/11px_bullet.png'),
             "15px_bullet":              pygame.image.load('media/15px_bullet.png'),
         }
+        
+        self.images = {
+            "battlefield":      core.Animation('media/battlefield.png'),
+            
+            "red_rune":         core.Animation("media/red_rune_anim.png", 9, 1),
+            "red_rune_menu":         core.Animation('media/red_rune_menu.png'),
+            
+            "red_square":       core.Animation('media/red_square.png'),
+            "red_square_menu":       core.Animation('media/red_square_menu.png'),
+            
+            "blue_rune":        core.Animation('media/blue_rune.png'),
+            
+            "red_building_menu":      core.Animation('media/red_building_menu.png'),
+            "blue_building_menu":     core.Animation('media/blue_building_menu.png'),
+            
+            "red_building":         core.Animation('media/red_building.png'),
+            "blue_building":        core.Animation('media/blue_building.png'),
+            
+            "red_building_placement":       core.Animation('media/red_building_placement.png'),
+            "blue_building_placement":      core.Animation('media/blue_building_placement.png'),
+            
+            "9px_bullet":               core.Animation('media/9px_bullet.png'),
+            "11px_bullet":              core.Animation('media/11px_bullet.png'),
+            "15px_bullet":              core.Animation('media/15px_bullet.png'),
+        }
     
     def startup(self):
         super(Sequtus, self).startup()
@@ -67,7 +93,7 @@ class Sequtus (core.EngineV3):
         
         self.current_screen.name = "Sequtus"
         self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
-        self.current_screen.background_image = self.images['battlefield'].copy()
+        self.current_screen.background_image = self.images['battlefield'].get().copy()
         self.current_screen.player_team = 1
         
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")

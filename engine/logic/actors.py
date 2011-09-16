@@ -81,6 +81,8 @@ class Actor (object_base.ObjectBase):
         # Flags for order abilities
         self.offence_flags = set()
         self.defence_flags = set()
+        
+        self.frame = 0
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:

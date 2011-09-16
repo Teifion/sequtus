@@ -1,5 +1,6 @@
 import sys
 import time
+import math
 
 import pygame
 from pygame.locals import *
@@ -87,4 +88,52 @@ class EngineV3 (object):
                 self.clock.tick(self.fps)
         
         self.quit()
+
+class Animation (object):
+    """An object that takes a picture and cuts it up into separate frames
+    so that we can animate certain objects"""
     
+    def __init__(self, filepath, columns=1, rows=1, animation_rate = 0.5):
+        super(Animation, self).__init__()
+        
+        if columns < 1:
+            raise Exception("Cannot have fewer than 1 column in an animation")
+        
+        if rows < 1:
+            raise Exception("Cannot have fewer than 1 row in an animation")
+        
+        self.images = []
+        self.animation_rate = animation_rate
+        
+        img = pygame.image.load(filepath)
+        r = img.get_rect()
+        
+        tile_width = r.width / columns
+        tile_height = r.height / rows
+        
+        for x in range(columns):
+            for y in range(rows):
+                tile = pygame.Surface((tile_width, tile_height), SRCALPHA)
+                tile.blit(img, (0,0), (x * tile_width, y * tile_height, tile_width, tile_height))
+                
+                self.images.append(tile)
+        
+        self.rect = pygame.Rect((0,0, tile_width, tile_height))
+    
+    def get_rect(self):
+        return self.rect
+    
+    def get(self, img_number=0):
+        img_number = int(math.floor(self.animation_rate * img_number))
+        
+        # Too high a number? Loop around
+        if img_number >= len(self.images):
+            img_number = img_number % len(self.images)
+        
+        return self.images[img_number]
+    
+    def __getitem__(self, key):
+        return get(self, key)
+
+
+

@@ -1,7 +1,7 @@
 {
     "actors":   [
         {
-            "type": "Worker",
+            "type": "Red circle",
             "pos":  [100, 100, 0],
             "team": 1,
             "hp":   10
