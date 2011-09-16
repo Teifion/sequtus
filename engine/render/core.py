@@ -111,8 +111,8 @@ class Animation (object):
         tile_width = r.width / columns
         tile_height = r.height / rows
         
-        for x in range(columns):
-            for y in range(rows):
+        for y in range(rows):
+            for x in range(columns):
                 tile = pygame.Surface((tile_width, tile_height), SRCALPHA)
                 tile.blit(img, (0,0), (x * tile_width, y * tile_height, tile_width, tile_height))
                 

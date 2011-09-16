@@ -25,34 +25,6 @@ class Sequtus (core.EngineV3):
     def __init__(self):
         super(Sequtus, self).__init__()
         
-        self._images = {
-            "background":       image_composition.starfield(),
-            
-            "battlefield":      pygame.image.load('media/battlefield.png'),
-            
-            # "red_rune":         pygame.image.load('media/red_rune.png'),
-            "red_rune":         core.Animation("media/red_rune_anim.png", 5, 1),
-            "red_rune_menu":         pygame.image.load('media/red_rune_menu.png'),
-            
-            "red_square":       pygame.image.load('media/red_square.png'),
-            "red_square_menu":       pygame.image.load('media/red_square_menu.png'),
-            
-            "blue_rune":        pygame.image.load('media/blue_rune.png'),
-            
-            "red_building_menu":      pygame.image.load('media/red_building_menu.png'),
-            "blue_building_menu":     pygame.image.load('media/blue_building_menu.png'),
-            
-            "red_building":         pygame.image.load('media/red_building.png'),
-            "blue_building":        pygame.image.load('media/blue_building.png'),
-            
-            "red_building_placement":       pygame.image.load('media/red_building_placement.png'),
-            "blue_building_placement":      pygame.image.load('media/blue_building_placement.png'),
-            
-            "9px_bullet":               pygame.image.load('media/9px_bullet.png'),
-            "11px_bullet":              pygame.image.load('media/11px_bullet.png'),
-            "15px_bullet":              pygame.image.load('media/15px_bullet.png'),
-        }
-        
         self.images = {
             "battlefield":      core.Animation('media/battlefield.png'),
             
@@ -62,7 +34,7 @@ class Sequtus (core.EngineV3):
             "red_square":       core.Animation('media/red_square.png'),
             "red_square_menu":       core.Animation('media/red_square_menu.png'),
             
-            "blue_rune":        core.Animation('media/blue_rune.png'),
+            "blue_rune":        core.Animation('media/blue_rune_anim.png', 3, 3, 0.2),
             
             "red_building_menu":      core.Animation('media/red_building_menu.png'),
             "blue_building_menu":     core.Animation('media/blue_building_menu.png'),
