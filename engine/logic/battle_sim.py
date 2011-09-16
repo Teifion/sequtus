@@ -210,9 +210,8 @@ class BattleSim (battle_screen.BattleScreen):
         actor_data['pos'] = [event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1], 0]
         actor_data['team'] = self.player_team
         
+        # If holding the shift key, allow them to continue placing
         mods = pygame.key.get_mods()
-        
-        # Number key? Select or assign a control group
         if KMOD_SHIFT & mods:
             self.place_actor_mode(actor_data['type'])
         
