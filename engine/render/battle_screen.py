@@ -575,10 +575,10 @@ class BattleScreen (screen.Screen):
         """Used to enter placement mode where an icon hovers beneath the
         cursor and when clicked is built or suchlike"""
         
-        self.place_image = self.actor_types[actor_type['type']]['placement_image']
+        self.place_image = self.actor_types[actor_type]['placement_image']
         
         self.mouseup_callback = self.place_actor_from_click
-        self.mouseup_callback_args = [actor_type]
+        self.mouseup_callback_args = [{"type":actor_type}]
     
     def add_actor(self, a):
         a.rect = self.engine.images[a.image].get_rect()

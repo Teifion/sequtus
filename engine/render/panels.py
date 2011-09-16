@@ -141,14 +141,14 @@ class TabularMenu (Panel):
             return True
         
         # Get the information for the button
-        item_name = self.buttons[index]
+        item_name, item_image = self.buttons[index]
         
         # What are we looking at?
         if item_name in self.screen.actor_types:
             actor_type = self.screen.actor_types[item_name]
             
             if "placement_image" in actor_type:
-                self.screen.place_actor_mode(actor_type)
+                self.screen.place_actor_mode(item_name)
             else:
                 raise Exception("No placement image")
         else:
