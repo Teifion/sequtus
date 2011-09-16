@@ -71,10 +71,8 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        # self.current_screen.select_actor(self.current_screen.actors[0])
-        # self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[1])
-        # self.current_screen.queue_order(0, "aid", target=self.current_screen.actors[2])
-        
-        # self.current_screen.place_actor({"type":"Red building", "team":1, "pos":[400,400,0], "completion":100})
+        self.current_screen.select_actor(self.current_screen.actors[0])
+        self.current_screen.rebuild_build_menu()
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
         
         sim_lib.set_speed(self.current_screen, 30)

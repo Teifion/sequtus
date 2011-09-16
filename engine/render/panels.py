@@ -148,9 +148,24 @@ class TabularMenu (Panel):
             actor_type = self.screen.actor_types[item_name]
             
             if "placement_image" in actor_type:
+                # It has a placement image, it's placed by the player
                 self.screen.place_actor_mode(item_name)
+                
             else:
-                raise Exception("No placement image")
+                # No placement image, the actor is added to the build queue
+                # and placed later
+                choice = (None, 999999)
+                for a in self.screen.actors:
+                    if a.can_build(actor_type):
+                        if len(a.build_queue) < choice[1]:
+                            choice = (a, len(a.build_queue))
+                
+                if choice[0] != None:
+                    choice[0].build_queue.append(item_name)
+                else:
+                    raise Exception("Cannot build that unit using current selection: item_name = %s" % item_name)
+                
+                    
         else:
             raise Exception("Not found in actor types")
         

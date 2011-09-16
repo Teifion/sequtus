@@ -66,7 +66,7 @@ class Actor (object_base.ObjectBase):
         self._health_bar = (None, None)
         self._completion_bar = (None, None)
         
-        self.dont_collide_with = {}
+        self.build_offset = [0,0]
         
         # These are passed down to the screen, we hold onto them for only a moment
         self.effects = []
@@ -83,6 +83,7 @@ class Actor (object_base.ObjectBase):
         self.defence_flags = set()
         
         self.frame = 0
+        self.build_queue = []
     
     def health_bar(self, scroll_x, scroll_y):
         if self._health_bar[1] != self.hp:
@@ -152,6 +153,8 @@ class Actor (object_base.ObjectBase):
         
         self.max_armour         = data.get("max_armour", self.max_armour)
         self.max_shield_armour  = data.get("max_shield_armour", self.max_shield_armour)
+        
+        self.build_offset       = data.get("build_offset", self.build_offset)
         
         # self.abilities          = data.get("abilities", self.abilities)
         self.flags              = data.get("flags", self.flags)
@@ -378,6 +381,10 @@ class Actor (object_base.ObjectBase):
             
         else:
             raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
+        
+        # Do we have something to build?
+        if self.build_queue != []:
+            pass
     
     def get_first_target(self):
         if len(self.priority_targets) > 0:

@@ -160,6 +160,11 @@ class BattleSim (battle_screen.BattleScreen):
         for i, a in enumerate(self.actors):
             a.update()
             
+            # Is the actor trying to place a new unit?
+            if a.build_queue != []:
+                if actor_can_place_new_unit:
+                    place_new_unit
+            
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
         
