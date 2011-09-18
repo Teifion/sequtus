@@ -301,10 +301,16 @@ class BattleScreen (screen.Screen):
         # First check panels
         for i, p in self.panels.items():
             if p.contains(event.pos):
-                if p.handle_mouseup(event, drag):
+                result = p.handle_mouseup(event, drag)
+                
+                if result == True:# Panel has handled it
                     return
-                else:
+                elif result == False:# Panel has not handled it
                     break
+                else:
+                    # Panel has sent us back a new event
+                    # we re-run this function with the new event
+                    return self.handle_mouseup(result, drag)
         
         if event.button == 1:# Left click
             if not drag:
