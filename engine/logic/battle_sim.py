@@ -161,21 +161,25 @@ class BattleSim (battle_screen.BattleScreen):
             a.update()
             
             # Is the actor trying to place a new unit?
-            if a.build_queue != []:
-                a_type = self.actor_types[a.build_queue[0]]
+            # We only check as often as we check for collisions, this gives a cycle
+            # for an already started actor to be given a position as it defaults to 0,0
+            # and this has an impact on it's rect
+            if self._collision_inverval_count < 2:
+                if a.build_queue != []:
+                    a_type = self.actor_types[a.build_queue[0]]
                 
-                new_rect_pos = vectors.add_vectors(a.pos, a.build_offset)
-                new_rect = pygame.Rect(new_rect_pos[0], new_rect_pos[1], a_type['size'][0], a_type['size'][1])
+                    new_rect_pos = vectors.add_vectors(a.pos, a.build_offset)
+                    new_rect = pygame.Rect(new_rect_pos[0], new_rect_pos[1], a_type['size'][0], a_type['size'][1])
                 
-                if not sim_lib.test_possible_collision(self.actors, new_rect):
-                    to_add.append((a, {
-                        "type": a.build_queue[0],
-                        "pos":  new_rect_pos,
-                        "team": a.team,
-                        "order_queue": list(a.rally_orders),
-                    }))
+                    if not sim_lib.test_possible_collision(self.actors, new_rect):
+                        to_add.append((a, {
+                            "type": a.build_queue[0],
+                            "pos":  new_rect_pos,
+                            "team": a.team,
+                            "order_queue": list(a.rally_orders),
+                        }))
                     
-                    del(a.build_queue[0])
+                        del(a.build_queue[0])
             
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
