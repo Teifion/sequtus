@@ -305,7 +305,7 @@ class BattleScreen (screen.Screen):
                 
                 if result == True:# Panel has handled it
                     return
-                elif result == False:# Panel has not handled it
+                elif result == False or result == None:# Panel has not handled it
                     break
                 else:
                     # Panel has sent us back a new event

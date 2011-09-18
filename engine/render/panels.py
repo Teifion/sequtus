@@ -168,6 +168,10 @@ class TabularMenu (Panel):
         print(event)
     
     def handle_mouseup(self, event, drag=False):
+        # It's simply a timing error
+        if self.screen.selected_actors == []:
+            return
+        
         relative_pos = (event.pos[0] - self.position.left, event.pos[1] - self.position.top)
         
         col = math.floor(relative_pos[0]/self.grid_size[0])
@@ -205,7 +209,9 @@ class TabularMenu (Panel):
                     choice[0].build_queue.append(item_name)
                     self.update_queue_sizes()
                 else:
-                    raise Exception("Cannot build that unit using current selection: item_name = %s" % item_name)
+                    raise Exception("""Cannot build that unit using current selection:
+item_name = %s
+Selection: %s""" % (item_name, [a.actor_type for a in self.screen.selected_actors]))
                 
                     
         else:
