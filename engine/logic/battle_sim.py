@@ -176,8 +176,6 @@ class BattleSim (battle_screen.BattleScreen):
                     }))
                     
                     del(a.build_queue[0])
-                else:
-                    raise Exception("Creator %s cannot place actor type %s" % (a.type, a.build_queue[0]))
             
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
