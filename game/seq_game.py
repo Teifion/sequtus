@@ -76,5 +76,11 @@ class Sequtus (core.EngineV3):
         self.current_screen.actors[0].issue_command("move", pos=[1000, 1000])
         self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
         self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(128,242)))
+        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(128,242)))
         
         sim_lib.set_speed(self.current_screen, 30)

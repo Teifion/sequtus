@@ -67,6 +67,8 @@ class TabularMenu (Panel):
         self.position.topleft = position
         self.key_map = {}
         
+        self._build_list = None
+        
         """
         Buttons is a list of tuples: (image_name, callback, args)
         """
@@ -76,17 +78,24 @@ class TabularMenu (Panel):
         self._image = pygame.Surface(self.size)
         self._image.fill((100, 100, 100), pygame.Rect(0, 0, self.size[0], self.size[1]))
         
+        font = pygame.font.SysFont(None, 30)
         col_count = math.floor(self.size[0]/self.grid_size[0])
         
-        
         col, row = 0, 0
-        for actor_name, image_name in self.buttons:
+        for actor_name, image_name, queue_length in self.buttons:
             img = self.engine.images[image_name]
             
             self._image.blit(img.get(), pygame.Rect(
                 col * self.grid_size[0], row * self.grid_size[1],
                 self.grid_size[0], self.grid_size[1],
             ))
+            
+            # Print the queue size if needed
+            if queue_length > 0:
+                textobj = font.render(str(queue_length), 1, (0,0,0))
+                textrect = textobj.get_rect()
+                textrect.topleft = col * self.grid_size[0] + 5, row * self.grid_size[1] + 3
+                self._image.blit(textobj, textrect)
             
             col += 1
             if col >= col_count:
@@ -96,7 +105,28 @@ class TabularMenu (Panel):
         self.position.size = self.size
         self.changed = False
     
-    def build_from_actor_list(self, build_list, actors):
+    def update_queue_sizes(self, button=None):
+        if type(button) in (tuple, list):
+            raise Exception("No handler to reference a specific button")
+        
+        elif button != None:
+            raise Exception("No handler to reference a specific actor item")
+        
+        build_queues = {}
+        for a in self.screen.selected_actors:
+            for b in a.build_queue:
+                if b not in build_queues:
+                    build_queues[b] = 0
+                
+                build_queues[b] += 1
+        
+        for i in range(len(self.buttons)):
+            if self.buttons[i][0] in build_queues:
+                self.buttons[i][2] = build_queues[self.buttons[i][0]]
+        
+        self.changed = True
+    
+    def build_from_actor_list(self):
         """
         Takes a build dict and a list of actors, it then populates itself based
         on what can be built.
@@ -105,20 +135,31 @@ class TabularMenu (Panel):
         
         # First build a list of all the flags
         flags = []
-        for a in actors: flags.extend(a.flags)
+        
+        # Build a list of all the things currently in the build queues
+        build_queues = {}
+        for a in self.screen.selected_actors:
+            flags.extend(a.flags)
+            
+            for b in a.build_queue:
+                if b not in build_queues:
+                    build_queues[b] = 0
+                
+                build_queues[b] += 1
+        
         flags = set(flags)
         
         # Now get a list of what can be built
         for f in flags:
-            if f in build_list:
-                for a in build_list[f]:
+            if f in self.screen.build_lists:
+                for a in self.screen.build_lists[f]:
                     if a in self.screen.actor_types:
                         img_name = self.screen.actor_types[a]['menu_image']
                     else:
                         print(a, list(self.screen.actor_types.keys()))
                         raise Exception("No handler")
                     
-                    buttons.append((a, img_name))
+                    buttons.append([a, img_name, build_queues.get(a, 0)])
         
         self.buttons = buttons
         self.changed = True
@@ -141,7 +182,7 @@ class TabularMenu (Panel):
             return True
         
         # Get the information for the button
-        item_name, item_image = self.buttons[index]
+        item_name, item_image, queue_length = self.buttons[index]
         
         # What are we looking at?
         if item_name in self.screen.actor_types:
@@ -162,6 +203,7 @@ class TabularMenu (Panel):
                 
                 if choice[0] != None:
                     choice[0].build_queue.append(item_name)
+                    self.update_queue_sizes()
                 else:
                     raise Exception("Cannot build that unit using current selection: item_name = %s" % item_name)
                 

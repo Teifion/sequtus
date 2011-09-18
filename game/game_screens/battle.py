@@ -41,12 +41,17 @@ class Battle (battle_sim.BattleSim):
     
     def logic_cycle(self):
         super(Battle, self).logic_cycle()
+        
+        if self.signal_menu_rebuild:
+            self.rebuild_build_menu()
+            self.signal_menu_rebuild = False
+            
     
     def rebuild_build_menu(self):
         if self.actor_types == {}:
             return
         
-        self.panels["build"].build_from_actor_list(self.build_lists, self.selected_actors)
+        self.panels["build"].build_from_actor_list()
     
     def selection_changed(self):
         self.rebuild_build_menu()

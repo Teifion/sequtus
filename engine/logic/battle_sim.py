@@ -76,6 +76,9 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.ais = {}
         self.cycle_count = [0, 0]
+        
+        # Used to signal that we may need to update a menu
+        self.signal_menu_rebuild = False
     
     def data_dump(self, file_path=None):
         """Dumps data for debugging purposes"""
@@ -178,7 +181,7 @@ class BattleSim (battle_screen.BattleScreen):
                             "team": a.team,
                             "order_queue": list(a.rally_orders),
                         }))
-                    
+                        self.signal_menu_rebuild = True
                         del(a.build_queue[0])
             
             if a.hp <= 0: to_remove.insert(0, i)

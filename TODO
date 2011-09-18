@@ -7,9 +7,9 @@ Order Queuing
 Double click 1 unit to select all of the same type on the screen
 
 **Macro**
-TODO - Build from multiple factories/workers at once and distribute the workload concurrently
+Build from multiple factories/workers at once and distribute the workload concurrently
 TODO - Threaded pathfinding
-TODO - Rally points and build queues
+Rally points and build queues
 TODO - Unit attitdues (aggresive, defensive etc)
 TODO - Units pick their targets with some intelligence (pea shooters don't shoot tanks)
 TODO - Minimap with the ability to scroll to that location by clicking on it and issue orders via it too
@@ -19,7 +19,7 @@ TODO - Fog of War
 TODO - Line of sight
 TODO - Diplomacy that allows teamwork and subterfuge
 TODO - Disguised units (spies appear as friendly units)
-TODO - Tech trees and conditional rules (can't build B until you have A)
+Tech trees and conditional rules (can't build B until you have A)
 TODO - Units/Buildings unique to certain teams
 
 **Misc**
