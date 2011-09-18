@@ -6,6 +6,18 @@ class Building (actors.Actor):
     def update(self):
         super(Building, self).update()
         self.velocity = [0,0,0]
+    
+    def issue_command(self, cmd, pos=None, target=None):
+        if cmd == "move":
+            self.rally_orders = [(cmd, pos, target)]
+        else:
+            super(Building, self).issue_command(cmd, pos, target)
+    
+    def append_command(self, cmd, pos=None, target=None):
+        if cmd == "move":
+            self.rally_orders.append((cmd, pos, target))
+        else:
+            super(Building, self).append_command(cmd, pos, target)
 
 class Walker (actors.Actor):
     pass

@@ -253,7 +253,7 @@ class BattleSim (battle_screen.BattleScreen):
         a.completion    = actor_data.get("completion", 0)
         a.hp            = actor_data.get("hp", 0.1)
         
-        a.order_queue = actor_data.get('order_queue', [])
+        a.order_queue   = actor_data.get('order_queue', [])
         
         for ability in self.actor_types[actor_data['type']]['abilities']:
             a.add_ability(self.ability_types[ability])

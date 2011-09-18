@@ -41,7 +41,7 @@
             "type":         "Construction",
             "max_range":    100,
             "required_charge":      2,
-            "construction_rate":    2,
+            "construction_rate":    10,
             "effect":       {
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
@@ -135,7 +135,7 @@
             "deceleration":     1,
             "turn_speed":       90,
             "drifts":           false,
-            "max_velocity":     3,
+            "max_velocity":     4,
             
             "max_armour":           0,
             "max_shield_armour":    0,

@@ -103,10 +103,17 @@ class ConstructionAbility (Ability):
         return True
     
     def use(self, target):
+        # Just incase there are multiple sources building it
+        # we don't want to run "next_order" several times
+        if target.completion >= 100: return
+        
         target.completion += (self.construction_rate * target.construction_rate)
         target.hp += (self.construction_rate * target.construction_heal_rate)
         
         self.generate_effect(target)
+        
+        if target.completion >= 100:
+            target.next_order()
         
         self.charge = 0
     
