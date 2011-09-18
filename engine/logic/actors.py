@@ -87,6 +87,8 @@ class Actor (object_base.ObjectBase):
         self.build_queue = []
     
     def health_bar(self, scroll_x, scroll_y):
+        """Define width if the actor will be a non-standard
+        size (such as if it's rotated)"""
         if self._health_bar[1] != self.hp:
             s = pygame.Surface((self.rect.width, 3))
             
@@ -108,11 +110,13 @@ class Actor (object_base.ObjectBase):
         return self._health_bar[0], hp_rect
     
     def completion_bar(self, scroll_x, scroll_y):
+        """Define width if the actor will be a non-standard
+        size (such as if it's rotated)"""
         if self._completion_bar[1] != self.completion:
             s = pygame.Surface((self.rect.width, 3))
             
             comp_percent = self.completion/100
-            fill_width = self.rect.width * comp_percent
+            fill_width = width * comp_percent
             
             s.fill((0,0,0), pygame.Rect(0,0, self.rect.width, 3))
             s.fill((200,200,255), pygame.Rect(0,0, fill_width, 3))
@@ -128,6 +132,14 @@ class Actor (object_base.ObjectBase):
         
         return self._completion_bar[0], comp_rect
     
+    def selection_rect(self):
+        return pygame.Rect(
+                self.rect.left - 3,
+                self.rect.top - 3,
+                self.rect.width + 6,
+                self.rect.height + 6,
+        )
+    
     def apply_data(self, data):
         """Applies transitory data such as position and hp"""
         self.actor_type = data["type"]
@@ -135,6 +147,7 @@ class Actor (object_base.ObjectBase):
         self.hp = data.get("hp", self.max_hp)
         self.pos = data.get("pos", self.pos)
         self.velocity = data.get("velocity", self.velocity)
+        self.facing = data.get("facing", self.facing)
         self.team = data.get("team", self.team)
         
         self.completion = data.get("completion", self.completion)
@@ -171,14 +184,6 @@ class Actor (object_base.ObjectBase):
         self.construction_heal_rate     = self.construction_rate/100 * self.max_hp
         
         self.abilities = []
-    
-    def selection_rect(self):
-        return pygame.Rect(
-                self.rect.left - 3,
-                self.rect.top - 3,
-                self.rect.width + 6,
-                self.rect.height + 6,
-        )
     
     def update(self):
         super(Actor, self).update()

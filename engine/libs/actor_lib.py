@@ -1,8 +1,7 @@
 from __future__ import division
+
 import pygame
-import vectors
-import geometry
-import drawing
+from engine.libs import vectors, geometry, drawing
 
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""

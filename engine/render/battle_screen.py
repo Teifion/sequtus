@@ -17,13 +17,14 @@ import pygame
 from pygame.locals import *
 
 from engine.render import screen
-from engine.libs import screen_lib
+from engine.libs import screen_lib, actor_lib
 
 NUMBERS = range(K_0, K_9+1)
 
 class BattleScreen (screen.Screen):
     self_regulate = True
     player_team = None
+    facings = 360/4# The number of different angles we'll draw
     
     def __init__(self, engine):
         super(BattleScreen, self).__init__((engine.window_width, engine.window_height))
@@ -41,6 +42,8 @@ class BattleScreen (screen.Screen):
             K_p: "patrol",
             K_b: "build",
         }
+        
+        self.image_cache = {}
         
         # Used to modify the order given when the mouse it clicked
         self.key_mod = None
@@ -130,18 +133,24 @@ class BattleScreen (screen.Screen):
         self.q_orders[self.tick + self.tick_jump].append((the_actor, command, pos, target))
     
     def redraw(self):
+        """Overrides the basic redraw as it's intended to be used with more animation"""
+        if time.time() < self._next_redraw:
+            return
+        
         if self._selection_has_changed:
             self.selection_changed()
             self._selection_has_changed = False
         
-        if time.time() < self._next_redraw:
-            return
+        # Force actors to rotate for testing
+        for a in self.actors:
+            a.facing[0] += 2
+            if a.facing[0] >= 360:
+                a.facing[0] = 0
         
         if int(time.time()) != self.redraw_count[1]:
             # print("FPS: %s" % self.redraw_count[0])
             self.redraw_count = [0, int(time.time())]
         
-        """Overrides the basic redraw as it's intended to be used with more animation"""
         # Draw background taking into account scroll
         surf = self.engine.display
         surf.blit(self.background_image, pygame.Rect(
@@ -151,10 +160,23 @@ class BattleScreen (screen.Screen):
         
         # Actors
         for a in self.actors:
-            a.frame += 1
+            rounded_facing = screen_lib.get_facing_angle(a.facing[0], self.facings)
             
-            actor_img = self.engine.images[a.image].get(a.frame)
-            # actor_img = self.engine.images[a.image]
+            a.frame += 1
+            img_name = "%s_%s_%s" % (
+                a.image,
+                self.engine.images[a.image].real_frame(a.frame),
+                rounded_facing
+            )
+            
+            if img_name not in self.image_cache:
+                self.image_cache[img_name] = screen_lib.make_rotated_image(
+                    image = self.engine.images[a.image].get(a.frame),
+                    angle = rounded_facing
+                )
+            
+            # Get the actor's image and rectangle
+            actor_img = self.image_cache[img_name]
             r = pygame.Rect(actor_img.get_rect())
             r.left = a.pos[0] + self.draw_margin[0] - r.width/2
             r.top = a.pos[1] + self.draw_margin[1] - r.height/2
@@ -166,15 +188,15 @@ class BattleScreen (screen.Screen):
                     
                     # Selection box?
                     if a.selected:
-                        r = a.selection_rect()
-                        r.left += self.draw_margin[0]
-                        r.top += self.draw_margin[1]
-                        pygame.draw.rect(surf, (255, 255, 255), r, 1)
+                        """Removed selection boxes for now as I'm not sure how I want them to work
+                        with rotated actors"""
+                        # selection_r = pygame.transform.rotate(a.selection_rect(), -rounded_facing)
+                        # pygame.draw.rect(surf, (255, 255, 255), selection_r, 1)
                         
                         surf.blit(*a.health_bar(self.draw_margin[0], self.draw_margin[1]))
                         
                         if a.completion < 100:
-                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
+                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1], r.width))
                     
                     # Pass effects from the actor to the battle screen
                     # this means that if the actor dies the effect still lives on

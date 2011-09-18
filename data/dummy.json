@@ -1,14 +1,23 @@
 {
     "actors":   [
         {
-            "type": "Red building",
+            "type": "Red circle",
             "pos":  [100, 100, 0],
+            "facing": [0, 0],
             "team": 1,
             "hp":   10
         },
         {
-            "type": "Red building",
-            "pos":  [400, 100, 0],
+            "type": "Red circle",
+            "pos":  [200, 100, 0],
+            "facing": [45, 0],
+            "team": 1,
+            "hp":   10
+        },
+        {
+            "type": "Red circle",
+            "pos":  [300, 100, 0],
+            "facing": [90, 0],
             "team": 1,
             "hp":   10
         }

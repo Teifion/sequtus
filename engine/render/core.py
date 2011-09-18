@@ -121,12 +121,14 @@ class Animation (object):
     def get_rect(self):
         return self.images[0].get_rect()
     
+    def real_frame(self, frame):
+        """If the frame count is too high, we need to bring it back
+        to the correct number"""
+        return frame % len(self.images)
+    
     def get(self, img_number=0):
         img_number = int(math.floor(self.animation_rate * img_number))
-        
-        # Too high a number? Loop around
-        if img_number >= len(self.images):
-            img_number = img_number % len(self.images)
+        img_number = self.real_frame(img_number)
         
         return self.images[img_number]
     

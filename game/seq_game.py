@@ -28,7 +28,7 @@ class Sequtus (core.EngineV3):
         self.images = {
             "battlefield":      core.Animation('media/battlefield.png'),
             
-            "red_rune":         core.Animation("media/red_rune_anim.png", 9, 1),
+            "red_rune":         core.Animation("media/red_triangle.png", 9, 1),
             "red_rune_menu":         core.Animation('media/red_rune_menu.png'),
             
             "red_square":       core.Animation('media/red_square.png'),
@@ -72,15 +72,10 @@ class Sequtus (core.EngineV3):
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
         self.current_screen.select_actor(self.current_screen.actors[0])
-        self.current_screen.rebuild_build_menu()
-        self.current_screen.actors[0].issue_command("move", pos=[1000, 1000])
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(28,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(128,242)))
-        self.current_screen.panels['build'].handle_mouseup(pygame.event.Event(6, button=1, pos=(128,242)))
+        self.current_screen.select_actor(self.current_screen.actors[1])
+        self.current_screen.select_actor(self.current_screen.actors[2])
+        # self.current_screen.actors[0].issue_command("move", pos=[100, 500])
+        # self.current_screen.actors[1].issue_command("move", pos=[200, 500])
+        # self.current_screen.actors[2].issue_command("move", pos=[300, 500])
         
         sim_lib.set_speed(self.current_screen, 30)
