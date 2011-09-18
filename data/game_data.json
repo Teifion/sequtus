@@ -37,6 +37,16 @@
                 "variation":  [0, 50, 50]
             }
         },
+        "Unit constructor":    {
+            "type":         "Construction",
+            "max_range":    100,
+            "required_charge":      2,
+            "construction_rate":    2,
+            "effect":       {
+                "colour":   [0, 100, 100],
+                "variation":  [0, 50, 50]
+            }
+        },
         "Repair":    {
             "type":         "Repair",
             "min_range":    1,
@@ -56,7 +66,7 @@
             "placement_image":  "red_building_placement",
             "menu_image":       "red_building_menu",
             
-            "build_offset":     [0, 0],
+            "build_offset":     [0, 75, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -65,7 +75,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Laser"],
+            "abilities":  ["Unit constructor"],
             "flags":    ["T1 Factory"],
             
             "required_techs":   []
@@ -75,7 +85,7 @@
             "placement_image":  "blue_building_placement",
             "menu_image":       "blue_building_menu",
             
-            "build_offset":     [0, 0],
+            "build_offset":     [0, 0, 0],
             
             "type":             "building",
             "max_hp":           100,

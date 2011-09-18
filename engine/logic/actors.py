@@ -56,6 +56,7 @@ class Actor (object_base.ObjectBase):
         
         # An order is a tuple of (command_type, target)
         self.order_queue = []
+        self.rally_orders = []# List of orders given to new units created by this actor
         self.micro_orders = []
         self.current_order = ["stop", -1, -1]
         
@@ -189,6 +190,22 @@ class Actor (object_base.ObjectBase):
         
         self.run_ai()
     
+    def can_build(self, item_data, build_lists):
+        """Discovers if this actor has the pre-reqs to build the item"""
+        
+        # Check for tech requirements
+        if item_data.get('required_techs', []) != []:
+            raise Exception("No handler for required techs in a unit")
+        
+        # Now we go through all the build lists we have and see if our build
+        # request is in one of them
+        for f in self.flags:
+            if f in build_lists:
+                if item_data['name'] in build_lists[f]:
+                    return True
+        
+        return False
+    
     def add_ability(self, ability_data):
         atype = ability_data['type']
         the_ability = abilities.lookup[atype](self, ability_data)
@@ -198,13 +215,13 @@ class Actor (object_base.ObjectBase):
         
         self.abilities.append(the_ability)
     
-    def issue_command(self, cmd, pos, target=None):
+    def issue_command(self, cmd, pos=None, target=None):
         "This is used to override any current orders"
         if cmd in self.accepted_orders:
             self.order_queue = [(cmd, pos, target)]
             self.next_order()
     
-    def append_command(self, cmd, pos, target=None):
+    def append_command(self, cmd, pos=None, target=None):
         if cmd in self.accepted_orders:
             self.order_queue.append([cmd, pos, target])
             

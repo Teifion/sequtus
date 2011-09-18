@@ -90,7 +90,6 @@ class BattleSim (battle_screen.BattleScreen):
             data.append("pos: %s" % a.pos)
             data.append("rect: %s" % a.rect)
             data.append("velocity: %s" % a.velocity)
-            data.append("dont_collide: %s" % a.dont_collide_with)
         
         data.append("\n**** Collisions **** ")
         data.append(str(sim_lib.get_collisions(self.actors)))
@@ -157,16 +156,35 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Update the actors themselves
         to_remove = []
+        to_add = []
         for i, a in enumerate(self.actors):
             a.update()
             
             # Is the actor trying to place a new unit?
             if a.build_queue != []:
-                if actor_can_place_new_unit:
-                    place_new_unit
+                a_type = self.actor_types[a.build_queue[0]]
+                
+                new_rect_pos = vectors.add_vectors(a.pos, a.build_offset)
+                new_rect = pygame.Rect(new_rect_pos[0], new_rect_pos[1], a_type['size'][0], a_type['size'][1])
+                
+                if not sim_lib.test_possible_collision(self.actors, new_rect):
+                    to_add.append((a, {
+                        "type": a.build_queue[0],
+                        "pos":  new_rect_pos,
+                        "team": a.team,
+                        "order_queue": list(a.rally_orders),
+                    }))
+                    
+                    del(a.build_queue[0])
+                else:
+                    raise Exception("Creator %s cannot place actor type %s" % (a.type, a.build_queue[0]))
             
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
+        for builder, new_actor in to_add:
+            new_target = self.place_actor(new_actor)
+            builder.issue_command("aid", target=new_target)
+            
         
         # Bullets too
         to_delete = []
@@ -224,7 +242,8 @@ class BattleSim (battle_screen.BattleScreen):
         return self.place_actor(actor_data)
     
     def place_actor(self, actor_data):
-        """Called when there's a click while in placement mode"""
+        """Called when there's a click while in placement mode.
+        Returns a weakref to the actor just created"""
         class_type = self.actor_types[actor_data['type']]['type']
         aclass = actor_subtypes.types[class_type]
         
@@ -233,7 +252,10 @@ class BattleSim (battle_screen.BattleScreen):
         a.apply_data(actor_data)
         
         # Assume 0 completion
-        a.completion = actor_data.get("completion", 0)
+        a.completion    = actor_data.get("completion", 0)
+        a.hp            = actor_data.get("hp", 0.1)
+        
+        a.order_queue = actor_data.get('order_queue', [])
         
         for ability in self.actor_types[actor_data['type']]['abilities']:
             a.add_ability(self.ability_types[ability])
@@ -243,6 +265,8 @@ class BattleSim (battle_screen.BattleScreen):
             a.ai = self.ais[a.team]
         
         self.add_actor(a)
+        
+        return weakref.ref(a)()
     
     def load_all(self, config_path, setup_path, game_path, local=True):
         """Uses a local path for each of the 3 load types"""
@@ -281,6 +305,7 @@ class BattleSim (battle_screen.BattleScreen):
         for type_name, type_data in data['actors'].items():
             actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
+            self.actor_types[type_name]['name'] = type_name
         
         # Load tech trees
         for tree_name, tree_data in data['tech_trees'].items():

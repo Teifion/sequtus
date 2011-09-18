@@ -156,7 +156,7 @@ class TabularMenu (Panel):
                 # and placed later
                 choice = (None, 999999)
                 for a in self.screen.actors:
-                    if a.can_build(actor_type):
+                    if a.can_build(actor_type, self.screen.build_lists):
                         if len(a.build_queue) < choice[1]:
                             choice = (a, len(a.build_queue))
                 

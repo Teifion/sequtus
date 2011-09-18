@@ -75,6 +75,7 @@ class WeaponAbility (Ability):
         return True
 
 class ConstructionAbility (Ability):
+    min_range = 0
     max_range = 10
     
     construction_rate = 0
@@ -102,6 +103,7 @@ class ConstructionAbility (Ability):
         return True
     
     def use(self, target):
+        # print(use)
         target.completion += (self.construction_rate * target.construction_rate)
         self.generate_effect(target)
         

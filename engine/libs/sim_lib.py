@@ -20,5 +20,15 @@ def get_collisions(actors):
     
     return collisions
 
-
+def test_possible_collision(actors, new_rect):
+    """
+    Used to test if a potential actor will collide with anything else
+    returns True if there will be a collision
+    """
+    
+    for a in actors:
+        if geometry.rect_collision(a.rect, new_rect, True):
+            return True
+    
+    return False
 
