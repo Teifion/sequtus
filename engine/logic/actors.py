@@ -167,7 +167,8 @@ class Actor (object_base.ObjectBase):
         self.max_heal_range         = data.get("max_heal_range", self.max_heal_range)
         self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
         
-        self.construction_rate         = data.get("construction_rate", self.construction_rate)
+        self.construction_rate          = data.get("construction_rate", self.construction_rate)
+        self.construction_heal_rate     = self.construction_rate/100 * self.max_hp
         
         self.abilities = []
     

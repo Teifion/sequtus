@@ -103,8 +103,9 @@ class ConstructionAbility (Ability):
         return True
     
     def use(self, target):
-        # print(use)
         target.completion += (self.construction_rate * target.construction_rate)
+        target.hp += (self.construction_rate * target.construction_heal_rate)
+        
         self.generate_effect(target)
         
         self.charge = 0
