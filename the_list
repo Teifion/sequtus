@@ -20,7 +20,7 @@ View
 Scrolling (Mouse + Keyboard)
 Minimap scroll (scroll to a location via the Minimap)
 HP bars
-Animated units (smoke coming from chimneys)
+Animated units (e.g. smoke coming from chimneys)
 
 Selection
 =========
@@ -73,6 +73,7 @@ Smart targeting (units shoot at what makes sense)
 
 Global AI
 =========
+Computer teams
 
 Gameplay / Game rules
 =====================
