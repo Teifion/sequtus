@@ -1,0 +1,87 @@
+I found writing Sequtus that there were a lot of things that I took for
+granted in RTS and the project started to seem like it would never get
+anywhere. I thus made this list of all the things you might want to include
+in an RTS, you can pick from here what you want in your game and get a much
+more accurate idea of how far through it you are. If you have anything to
+add to the list then please do let me know.
+
+
+Core logic
+==========
+Collision detection and handling
+Teams
+Terrain
+Unit life and death
+Line of Sight
+Fog of War
+
+View
+====
+Scrolling (Mouse + Keyboard)
+Minimap scroll (scroll to a location via the Minimap)
+HP bars
+Animated units (smoke coming from chimneys)
+
+Selection
+=========
+Single unit selection (Click a unit to select it)
+Shift + Single unit selection
+Drag selection
+Shift + Drag selection
+Double click selection (all units of that type on screen)
+Shoft + Double click selection
+Control key grouping + selection
+Double tap group key to scroll to group
+
+Micro control
+=============
+Formations
+Hotkeys
+Suicide command (useful with unit limits)
+
+Macro control
+=============
+Order queues
+Build queues
+Auto targeting (units don't sit there taking damage)
+Issue orders via Minimap
+Pathfinding (threaded where possible)
+Concurrent / Distributed building
+
+Common abilities
+================
+Move
+Attack
+Defend/Aid
+Repair/Heal
+Build
+Direct weapons (lasers)
+Indirect weapons (catapults)
+
+Uncommon abilities
+==================
+Disguised units
+
+Automation
+==========
+Rally points
+
+Local AI
+========
+Unit attitudes (aggressive, defensive etc)
+Smart targeting (units shoot at what makes sense)
+
+Global AI
+=========
+
+Gameplay / Game rules
+=====================
+Unit experience gain
+Tech trees (Need A to build B to build C)
+Diplomacy allowing for subterfuge
+Team unique units/buildings
+
+Misc
+====
+Recordable games / Playback function
+Variable game speed
