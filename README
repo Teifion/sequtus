@@ -1,7 +1,3 @@
-This is still very much a theoretical idea at the moment, the code within
-is not representative of the final ideas.
-
-
 Sequtus is my first RTS and designed to help me learn how to make an RTS
 engine for any future games.
 
@@ -14,4 +10,72 @@ Dependancies:
 
 Run as:
     python main.py
+
+
+
+Items from the_list implemented so far:
+
+Core logic
+==========
+Collision detection and handling
+Teams
+Unit life and death
+
+View
+====
+Scrolling (Mouse + Keyboard)
+Minimap scroll (scroll to a location via the Minimap)
+HP bars
+Animated units (e.g. smoke coming from chimneys)
+
+Selection
+=========
+Single unit selection (Click a unit to select it)
+Shift + Single unit selection
+Drag selection
+Shift + Drag selection
+Double click selection (all units of that type on screen)
+Shoft + Double click selection
+Control key grouping + selection
+
+Micro control
+=============
+
+Macro control
+=============
+Order queues
+Build queues
+Auto targeting (units don't sit there taking damage)
+Issue orders via Minimap
+Concurrent / Distributed building
+
+Common abilities
+================
+Move
+Attack
+Defend/Aid
+Repair/Heal
+Build
+Direct weapons (lasers)
+Indirect weapons (catapults)
+
+Uncommon abilities
+==================
+
+Automation
+==========
+Rally points
+
+Local AI
+========
+
+Global AI
+=========
+
+Gameplay / Game rules
+=====================
+Tech trees (Need A to build B to build C)
+
+Misc
+====
 
