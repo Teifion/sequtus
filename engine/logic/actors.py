@@ -459,6 +459,9 @@ class Actor (object_base.ObjectBase):
         
         # Waiting for vectors.angle_direction to be ready
         if vectors.angle_direction(self.facing[0], target_angle):
+            # Note to self when you come back to this
+            # vectors.angle_diff: will provide a minus number if you turn counter-clockwise
+            # Just test the case of the number returned and you have your answer
             raise Exception("Not implimented")
         else:
             raise Exception("Not implimented")

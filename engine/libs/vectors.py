@@ -52,30 +52,6 @@ def bound_angle(angle):
     while angle < 0: angle += 360
     return angle
 
-def angle_direction(angle1, angle2):
-    """Returns True if angle2 is clockwise of angle1."""
-    
-    if type(angle1) == list or type(angle1) == tuple:
-        return [angle_direction(angle1[0], angle2[0]), angle_direction(angle1[1], angle2[1])]
-    
-    # Distance going right
-    if angle1 > angle2:# We cross 360
-        clockwise = angle2 - angle1 + 360
-    else:
-        clockwise = angle2 - angle1
-    
-    # Distance going left
-    if angle2 > angle1:# We cross 360
-        anti_clockwise = angle1 - angle2 + 360
-    else:
-        anti_clockwise = angle1 - angle2
-    
-    # Now return the shortest path
-    if abs(clockwise) < abs(anti_clockwise):
-        return True
-    else:
-        return False
-
 def angle_diff(angle1, angle2=0):
     """Gives the amount you need to turn by to get from angle1 to angle2
     
