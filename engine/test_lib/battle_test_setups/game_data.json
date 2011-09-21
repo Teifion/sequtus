@@ -91,5 +91,16 @@
             "abilities":  [],
             "flags":    ["constructor"]
         }
+    },
+    
+    "build_lists": {
+        "T1 Constructor": ["Red building"],
+        "T1 Factory": ["Red circle", "Worker"]
+    },
+    
+    "tech_trees": {
+        "red": {
+            
+        }
     }
 }

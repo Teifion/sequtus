@@ -366,26 +366,41 @@ class Actor (object_base.ObjectBase):
                 self.next_order()
         
         elif cmd == "move":
-            dist = vectors.distance(self.pos, pos)
-            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, pos), self.max_velocity)
+            self._move_ai(pos)
             
-            if dist <= vectors.total_velocity(self.velocity):
+            if vectors.distance(self.pos, pos) <= vectors.total_velocity(self.velocity):
                 self.pos = pos
                 self.velocity = [0,0,0]
                 self.next_order()
+            
+            # dist = vectors.distance(self.pos, pos)
+            # self.velocity = vectors.move_to_vector(vectors.angle(self.pos, pos), self.max_velocity)
+            # 
+            # if dist <= vectors.total_velocity(self.velocity):
+            #     self.pos = pos
+            #     self.velocity = [0,0,0]
+            #     self.next_order()
         
         elif cmd == "attack":
             target = self.get_first_target()
             
             # If we have a target, lets move closer to it
             if target != None:
-                dist = vectors.distance(self.pos, target.pos)
+                attack_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
                 
-                if dist > self.optimum_attack_range:
-                    target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
-                    self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
-                else:
+                self._move_ai(attack_pos)
+                
+                if vectors.distance(self.pos, attack_pos) <= vectors.total_velocity(self.velocity):
+                    self.pos = attack_pos
                     self.velocity = [0,0,0]
+                
+                # dist = vectors.distance(self.pos, target.pos)
+                # 
+                # if dist > self.optimum_attack_range:
+                #     target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
+                #     self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
+                # else:
+                #     self.velocity = [0,0,0]
                 
         
         elif cmd == "aid":
@@ -427,6 +442,36 @@ class Actor (object_base.ObjectBase):
                     return a
         
         return None
+    
+    def _move_ai(self, target):
+        # First we turn
+        if self._turn_ai(target):
+            
+            # And if facing the right way we accelerate
+            self._accelerate_ai(target)
+    
+    def _turn_ai(self, target):
+        target_angle = vectors.angle(self.pos, target)
+        
+        if vectors.angle_diff(self.facing, target_angle) < self.turn_speed:
+            self.facing = target_angle
+            return True
+        
+        # Waiting for vectors.angle_direction to be ready
+        if vectors.angle_direction(self.facing[0], target_angle):
+            raise Exception("Not implimented")
+        else:
+            raise Exception("Not implimented")
+        
+        return False
+    
+    def _accelerate_ai(self, target):
+        dist = vectors.distance(self.pos, target)
+        
+        if dist > self.max_velocity:
+            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
+        else:
+            self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), dist)
     
     def _help_ai(self):
         """AI handling the process of helping allies"""

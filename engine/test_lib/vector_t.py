@@ -188,5 +188,31 @@ class VectorTests(unittest.TestCase):
             except Exception as e:
                 print("\n\nTrying to midpoint({}, {}, {})\n\n".format(pos1, pos2, distance))
                 raise
+    
+    def test_angle_direction(self):
+        vals = (
+            (100, 120, True),
+            (90, 300, False),
+        )
+        
+        for a1, a2, expected in vals:
+            # We use the inverse to ensure it's working out the opposite correctly
+            result = vectors.angle_direction(a1, a2)
+            result2 = vectors.angle_direction(a2, a1)
+            
+            try:
+                self.assertEqual(result, expected)
+            except Exception as e:
+                print("\n\nTrying to angle_direction %d to %d" % (a1, a2))
+                raise
+            
+            try:
+                self.assertEqual(not result, result2)
+            except Exception as e:
+                print("\n\nTrying to angle_direction %d to %d" % (a2, a1))
+                raise
+
+            
+            
 
 suite = unittest.TestLoader().loadTestsFromTestCase(VectorTests)
