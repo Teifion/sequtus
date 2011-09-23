@@ -133,7 +133,7 @@
             
             "acceleration":     1,
             "deceleration":     1,
-            "turn_speed":       90,
+            "turn_speed":       10,
             "drifts":           false,
             "max_velocity":     4,
             
@@ -155,7 +155,7 @@
             
             "acceleration":     1,
             "deceleration":     1,
-            "turn_speed":       90,
+            "turn_speed":       10,
             "drifts":           false,
             "max_velocity":     3,
             

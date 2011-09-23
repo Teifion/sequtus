@@ -141,12 +141,6 @@ class BattleScreen (screen.Screen):
             self.selection_changed()
             self._selection_has_changed = False
         
-        # Force actors to rotate for testing
-        for a in self.actors:
-            a.facing[0] += 2
-            if a.facing[0] >= 360:
-                a.facing[0] = 0
-        
         if int(time.time()) != self.redraw_count[1]:
             # print("FPS: %s" % self.redraw_count[0])
             self.redraw_count = [0, int(time.time())]
