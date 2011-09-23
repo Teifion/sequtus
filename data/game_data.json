@@ -132,7 +132,7 @@
             "max_shields":      0,
             
             "acceleration":     1,
-            "deceleration":     1,
+            "deceleration":     0.5,
             "turn_speed":       10,
             "drifts":           false,
             "max_velocity":     4,
@@ -154,7 +154,7 @@
             "max_shields":      0,
             
             "acceleration":     1,
-            "deceleration":     1,
+            "deceleration":     0.5,
             "turn_speed":       10,
             "drifts":           false,
             "max_velocity":     3,

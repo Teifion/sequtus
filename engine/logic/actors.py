@@ -160,7 +160,7 @@ class Actor (object_base.ObjectBase):
         self.max_shields        = data.get("max_shields", self.max_shields)
         
         self.acceleration       = data.get("acceleration", self.acceleration)
-        self.deceleration       = data.get("deceleration", self.deceleration)
+        self.deceleration       = data.get("deceleration", data.get("acceleration", self.deceleration))
         self.turn_speed         = data.get("turn_speed", self.turn_speed)
         self.drifts             = data.get("drifts", self.drifts)
         self.max_velocity       = data.get("max_velocity", self.max_velocity)
@@ -449,6 +449,9 @@ class Actor (object_base.ObjectBase):
             
             # And if facing the right way we accelerate
             self._accelerate_ai(target)
+        else:
+            if vectors.total_velocity(self.velocity) > 0:
+                self._decelerate_ai()
     
     def _turn_ai(self, target):
         target_angle = vectors.angle(self.pos, target)
@@ -473,6 +476,21 @@ class Actor (object_base.ObjectBase):
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), self.max_velocity)
         else:
             self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target), dist)
+    
+    def _decelerate_ai(self):
+        total_velocity = vectors.total_velocity(self.velocity)
+        
+        if total_velocity <= self.deceleration:
+            self.velocity = [0,0,0]
+        else:
+            new_vel = total_velocity - self.deceleration
+            div = total_velocity / new_vel
+            
+            
+            self.velocity = [v / div for v in self.velocity]
+            
+            # print(total_velocity, self.deceleration, div)
+        
     
     def _help_ai(self):
         """AI handling the process of helping allies"""
