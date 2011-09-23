@@ -260,6 +260,9 @@ class BattleSim (battle_screen.BattleScreen):
         a.completion    = actor_data.get("completion", 0)
         a.hp            = actor_data.get("hp", 0.1)
         
+        if a.hp == None:
+            a.hp = a.max_hp
+        
         a.order_queue   = actor_data.get('order_queue', [])
         
         for ability in self.actor_types[actor_data['type']]['abilities']:
@@ -330,8 +333,9 @@ class BattleSim (battle_screen.BattleScreen):
         # Load actors
         for actor_data in data['actors']:
             # Assume it's complete
-            actor_data['completion'] = actor_data.get("completion", 100)
-            self.place_actor(actor_data)
+            actor_data['completion']    = actor_data.get("completion", 100)
+            actor_data['hp']            = actor_data.get("hp", None)
+            a = self.place_actor(actor_data)
             teams.add(actor_data['team'])
         
         # Any team without a specifically chosen AI gets the default one
