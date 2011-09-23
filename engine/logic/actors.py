@@ -444,14 +444,28 @@ class Actor (object_base.ObjectBase):
         return None
     
     def _move_ai(self, target):
-        # First we turn
-        if self._turn_ai(target):
-            
-            # And if facing the right way we accelerate
-            self._accelerate_ai(target)
+        # We can drift to the side (like a spaceship)
+        if self.drifts:
+            # First we turn
+            if self._turn_ai(target):
+                
+                # And if facing the right way we accelerate
+                self._accelerate_ai(target)
+            else:
+                if vectors.total_velocity(self.velocity) > 0:
+                    self._decelerate_ai()
         else:
-            if vectors.total_velocity(self.velocity) > 0:
-                self._decelerate_ai()
+            # We cannot drift (like a tank)
+            origional_facing = list(self.facing)
+            if self._turn_ai(target):
+                # We are facing the right way, lets accelerate
+                self._accelerate_ai(target)
+                
+            else:
+                # Wrong way, if we are moving we need to stop before turning
+                if vectors.total_velocity(self.velocity) > 0:
+                    self.facing = origional_facing
+                    self._decelerate_ai()
     
     def _turn_ai(self, target):
         target_angle = vectors.angle(self.pos, target)
@@ -486,10 +500,7 @@ class Actor (object_base.ObjectBase):
             new_vel = total_velocity - self.deceleration
             div = total_velocity / new_vel
             
-            
             self.velocity = [v / div for v in self.velocity]
-            
-            # print(total_velocity, self.deceleration, div)
         
     
     def _help_ai(self):
