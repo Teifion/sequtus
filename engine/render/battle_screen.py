@@ -35,7 +35,7 @@ class BattleScreen (screen.Screen):
         # it will on a Qwerty
         self.hotkeys = {
             K_m: "move",
-            K_s: "stop",
+            100: "stop",# K_s = 115, not the 100 that s seems to equal
             K_a: "attack",
             # K_a: "aid",
             K_h: "hold",
@@ -278,6 +278,27 @@ class BattleScreen (screen.Screen):
                 self.key_mod = self.hotkeys[event.key]
             else:
                 self.key_mod = None
+        
+        if len(self.keys_down) == 0:
+            if len(self.selected_actors) > 0:
+                if event.key in self.hotkeys:
+                    if self.hotkeys[event.key] == "move":
+                        pass
+                    if self.hotkeys[event.key] == "stop":
+                        for a in self.selected_actors:
+                            if a.team == self.player_team:
+                                if KMOD_SHIFT & mods:
+                                    self.queue_order(a, "stop")
+                                else:
+                                    self.add_order(a, "stop")
+                    if self.hotkeys[event.key] == "attack":
+                        pass
+                    if self.hotkeys[event.key] == "hold":
+                        pass
+                    if self.hotkeys[event.key] == "patrol":
+                        pass
+                    if self.hotkeys[event.key] == "build":
+                        pass
             
     
     def handle_keyhold(self):
