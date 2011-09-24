@@ -15,7 +15,8 @@ import pdb
 import weakref
 
 from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
-from engine.logic import actor_subtypes, ai
+from engine.logic import actor_subtypes
+from engine.ai import autotargeter
 from engine.render import battle_screen
 
 def handle_number(v):
@@ -74,7 +75,7 @@ class BattleSim (battle_screen.BattleScreen):
         self.build_lists = {}
         self.tech_trees = {}
         
-        self.ais = {}
+        self.autotargeters = {}
         self.cycle_count = [0, 0]
         
         # Used to signal that we may need to update a menu
@@ -154,7 +155,7 @@ class BattleSim (battle_screen.BattleScreen):
             print("Logic lag of %ss" % time_over)
         
         # Update the AIs
-        for t, a in self.ais.items():
+        for t, a in self.autotargeters.items():
             a.update()
         
         # Update the actors themselves
@@ -269,8 +270,8 @@ class BattleSim (battle_screen.BattleScreen):
             a.add_ability(self.ability_types[ability])
         
         # If AI's exist, assign the actor to one
-        if a.team in self.ais:
-            a.ai = self.ais[a.team]
+        if a.team in self.autotargeters:
+            a.autotargeter = self.autotargeters[a.team]
         
         self.add_actor(a)
         
@@ -340,12 +341,12 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Any team without a specifically chosen AI gets the default one
         for t in teams:
-            if t not in self.ais:
-                self.ais[t] = ai.AI(self, t)
+            if t not in self.autotargeters:
+                self.autotargeters[t] = autotargeter.Autotargeter(self, t)
         
         # Now assign the AIs
         for a in self.actors:
-            a.ai = self.ais[a.team]
+            a.autotargeter = self.autotargeters[a.team]
         
         self.loaded = True
 

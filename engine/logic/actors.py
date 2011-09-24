@@ -47,7 +47,7 @@ class Actor (object_base.ObjectBase):
         super(Actor, self).__init__()
         
         self.next_ai_update = 0
-        self.ai = None
+        self.autotargeter = None
         
         self.selected = False
         self.selector_rect = pygame.Rect(-10, -10, 1, 1)
@@ -346,8 +346,8 @@ class Actor (object_base.ObjectBase):
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
         
         # Update our objectives etc
-        if self.ai != None and self.next_ai_update < 1:
-            self.ai.update_actor(self)
+        if self.autotargeter != None and self.next_ai_update < 1:
+            self.autotargeter.update_actor(self)
             self.next_ai_update = 10
     
     def run_ai(self):
