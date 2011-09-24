@@ -1,5 +1,7 @@
 import weakref
 
+from engine.libs import vectors
+
 class AI (object):
     """An object for assigning actions to actors. In it's most basic
     incarnation it does things such as auto-assigning combat targets
@@ -29,7 +31,10 @@ class AI (object):
         self.next_update = 10
     
     def update_actor(self, the_actor):
-        if self.enemy_actors != []:
-            the_actor.enemy_targets = [self.enemy_actors[0]]
-        else:
-            the_actor.enemy_targets = []
+        the_actor.enemy_targets = []
+        
+        for a in self.enemy_actors:
+            dist = vectors.distance(a.pos, the_actor.pos)
+            
+            if dist <= the_actor.max_attack_range:
+                the_actor.enemy_targets.append(a)
