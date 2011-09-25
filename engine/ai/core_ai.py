@@ -33,6 +33,9 @@ class AICore (object):
             "actors":   self._recieve_actors,
             "quit":     self._quit,
         }
+        
+        # Flags
+        self.actors_updated = False
     
     def read_queue(self):
         try:
@@ -72,6 +75,19 @@ class AICore (object):
             else:
                 self.enemy_actors.append(a)
         
+        # This allows the AI to re-scan the lists and see if there's
+        # anything it needs to do differently
+        self.actors_updated = True
+    
+    def issue_orders(self, actor_id, cmd, pos=None, target=None):
+        self.out_queue.put({
+            "data_type":    "orders",
+            "cmd":          cmd,
+            "actor":        actor_id,
+            "target":       target,
+            "pos":          pos,
+        })
+    
     def core_cycle(self):
         """The central loop for the AI"""
         
@@ -84,27 +100,6 @@ class AICore (object):
     def cycle(self):
         """This is intended to be overwritten by the subclass"""
         pass
-    
-    def update(self):
-        self.next_update -= 1
-        if self.next_update > 0: return
-        
-        self.enemy_actors = []
-        
-        for a in self.sim.actors:
-            if a.team != self.team:
-                self.enemy_actors.append(weakref.ref(a)())
-        
-        self.next_update = 10
-    
-    def update_actor(self, the_actor):
-        the_actor.enemy_targets = []
-        
-        for a in self.enemy_actors:
-            dist = vectors.distance(a.pos, the_actor.pos)
-            
-            if dist <= the_actor.max_attack_range:
-                the_actor.enemy_targets.append(a)
 
 def _ai_process(ai_class, in_queue, out_queue):
     try:

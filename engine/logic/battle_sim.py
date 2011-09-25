@@ -84,6 +84,12 @@ class BattleSim (battle_screen.BattleScreen):
         self.signal_menu_rebuild = False
         
         self.next_ai_update = 0
+        
+        # Allows looking up of actors based on their oid
+        # rather than reference passing. Ref passing is preferred
+        # but things such as the AIs cannot use refs so must
+        # limit themselves to oids
+        self.actor_lookup = {}
     
     def quit(self, event=None):
         for k, q in self.out_queues.items():
@@ -151,12 +157,27 @@ class BattleSim (battle_screen.BattleScreen):
     def read_ai_queues(self):
         for t, q in self.in_queues.items():
             while not q.empty():
-                print("AI -> Sim: %s" % q.get())
-            
+                data = q.get()
+                
+                if data['data_type'] == "orders":
+                    a = self.actor_lookup[data['actor']]
+                    if data['target'] in self.actor_lookup:
+                        data['target'] = self.actor_lookup[data['target']]
+                    else:
+                        data['target'] = None
+                    
+                    self.add_order(a, data['cmd'], pos=data['pos'], target=data['target'])
+                else:
+                    raise Exception("No handler for AI cmd of %s (full data: %s)" % (
+                        data['data_type'], str(data))
+                    )
+                
     
     def update_ai_queues(self):
         data = []
         
+        # TODO - Make it so that each AI only gets a list of actors
+        # that it can actually see. That way it can't cheat
         data.append({
             "cmd":          "actors",
             "actor_list":   [actor_lib.strip_actor(a) for a in self.actors],
@@ -309,8 +330,9 @@ class BattleSim (battle_screen.BattleScreen):
             a.autotargeter = self.autotargeters[a.team]
         
         self.add_actor(a)
+        self.actor_lookup[a.oid] = weakref.ref(a)()
         
-        return weakref.ref(a)()
+        return self.actor_lookup[a.oid]
     
     def load_all(self, config_path, setup_path, game_path, local=True):
         """Uses a local path for each of the 3 load types"""
@@ -371,12 +393,13 @@ class BattleSim (battle_screen.BattleScreen):
                 new_data[str(k)] = v
             
             new_data['team'] = ai_team
+            new_data['cmd'] = "init"
             out_queue, in_queue = core_ai.make_ai(new_data['type'])
             
             self.out_queues[ai_team] = out_queue
             self.in_queues[ai_team] = in_queue
             
-        self.out_queues[ai_team].put({"cmd":"init","data":new_data})
+        self.out_queues[ai_team].put(new_data)
         
         # Load actors
         for actor_data in data['actors']:
