@@ -16,7 +16,7 @@ import weakref
 
 from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
 from engine.logic import actor_subtypes
-from engine.ai import autotargeter
+from engine.ai import autotargeter, core_ai
 from engine.render import battle_screen
 
 def handle_number(v):
@@ -76,10 +76,18 @@ class BattleSim (battle_screen.BattleScreen):
         self.tech_trees = {}
         
         self.autotargeters = {}
+        self.out_queues = {}
+        self.in_queues = {}
         self.cycle_count = [0, 0]
         
         # Used to signal that we may need to update a menu
         self.signal_menu_rebuild = False
+    
+    def quit(self):
+        for k, q in self.out_queues.items():
+            q.put({"cmd":"quit"})
+        
+        super(BattleSim, self).quit()
     
     def data_dump(self, file_path=None):
         """Dumps data for debugging purposes"""
@@ -329,7 +337,21 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Load AIs (AIs are optional)
         for ai_team, ai_data in data.get('ais', {}).items():
-            print(ai_team, ai_data)
+            # Annoyingly we need to convert it from a unicode dict
+            # into a standard one
+            new_data = {}
+            for k, v in ai_data.items():
+                new_data[str(k)] = v
+                
+            
+            
+            new_data['team'] = ai_team
+            out_queue, in_queue = core_ai.make_ai(new_data['type'])
+            
+            self.out_queues[ai_team] = out_queue
+            self.in_queues[ai_team] = in_queue
+            
+        self.out_queues[ai_team].put({"cmd":"init","data":new_data})
         
         # Load actors
         for actor_data in data['actors']:
