@@ -3,7 +3,7 @@ import multiprocessing
 from engine.libs import vectors
 
 ai_classes = {}
-def register_class(class_name, class_template):
+def register_ai(class_name, class_template):
     if class_name not in ai_classes:
         ai_classes[class_name] = class_template
     else:
@@ -23,12 +23,14 @@ class AICore (object):
         
         self.next_update = 0
         
-        self.actors = {}
+        self.enemy_actors = []
+        self.own_actors = []
         self.terrain = {}
         
         self.data_handlers = {
             "_default": self._default_data_handler,
             "init":     self._init,
+            "actors":   self._recieve_actors,
             "quit":     self._quit,
         }
     
@@ -40,12 +42,15 @@ class AICore (object):
             raise
         
         cmd = data['cmd']
-        kwargs = data.get('data', {})
+        del(data['cmd'])
         
         if cmd in self.data_handlers:
-            self.data_handlers[cmd](**kwargs)
+            try:
+                self.data_handlers[cmd](**data)
+            except Exception as e:
+                raise
         else:
-            self.data_handlers['_default'](cmd=cmd, **kwargs)
+            self.data_handlers['_default'](cmd=cmd, **data)
     
     def _default_data_handler(self, **kwargs):
         raise Exception("No handler for cmd: %s" % kwargs['cmd'])
@@ -54,15 +59,31 @@ class AICore (object):
         self.running = False
     
     def _init(self, **kwargs):
-        pass
+        if 'team' in kwargs:
+            self.team = int(kwargs['team'])
     
-    def cycle(self):
+    def _recieve_actors(self, actor_list):
+        self.enemy_actors = []
+        self.own_actors = []
+        
+        for a in actor_list:
+            if a.team == self.team:
+                self.own_actors.append(a)
+            else:
+                self.enemy_actors.append(a)
+        
+    def core_cycle(self):
         """The central loop for the AI"""
         
         # If there's stuff in the queue then we'll read it in
         while not self.in_queue.empty():
             self.read_queue()
         
+        self.cycle()
+    
+    def cycle(self):
+        """This is intended to be overwritten by the subclass"""
+        pass
     
     def update(self):
         self.next_update -= 1
@@ -90,7 +111,7 @@ def _ai_process(ai_class, in_queue, out_queue):
         a = ai_class(in_queue, out_queue)
         
         while a.running:
-            a.cycle()
+            a.core_cycle()
         
     except KeyboardInterrupt as e:
         pass
@@ -113,4 +134,4 @@ def make_ai(class_name):
     return ai_in_queue, ai_out_queue
 
 
-register_class("basic", AICore)
+register_ai("basic", AICore)

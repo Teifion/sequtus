@@ -3,6 +3,26 @@ from __future__ import division
 import pygame
 from engine.libs import vectors, geometry, drawing
 
+class StrippedActor (object):
+    pass
+        
+attribs = (
+    "team", "velocity", "pos", "facing",
+    "oid", "hp", "completion",
+    "offence_flags", "defence_flags")
+# Things I don't think we need but might
+# self.order_queue = []
+# self.rally_orders = []
+# self.micro_orders = []
+# self.current_order = ["stop", -1, -1]
+def strip_actor(the_actor):
+    sa = StrippedActor()
+    
+    for a in attribs:
+        setattr(sa, a, getattr(the_actor, a))
+    
+    return sa
+
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""
     

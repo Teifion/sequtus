@@ -82,12 +82,14 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Used to signal that we may need to update a menu
         self.signal_menu_rebuild = False
+        
+        self.next_ai_update = 0
     
-    def quit(self):
+    def quit(self, event=None):
         for k, q in self.out_queues.items():
             q.put({"cmd":"quit"})
         
-        super(BattleSim, self).quit()
+        super(BattleSim, self).quit(event)
     
     def data_dump(self, file_path=None):
         """Dumps data for debugging purposes"""
@@ -146,10 +148,35 @@ class BattleSim (battle_screen.BattleScreen):
                 self.data_dump()
                 raise
     
+    def read_ai_queues(self):
+        for t, q in self.in_queues.items():
+            while not q.empty():
+                print("AI -> Sim: %s" % q.get())
+            
+    
+    def update_ai_queues(self):
+        data = []
+        
+        data.append({
+            "cmd":          "actors",
+            "actor_list":   [actor_lib.strip_actor(a) for a in self.actors],
+        })
+        
+        for t, q in self.out_queues.items():
+            for d in data:
+                q.put(d)
+    
     def logic_cycle(self):
         """The core function of the sim, this is where the 'magic happens'"""
         if int(time.time()) != self.cycle_count[1]:
             self.cycle_count = [0, int(time.time())]
+        
+        self.next_ai_update -= 1
+        if self.next_ai_update <= 0:
+            self.update_ai_queues()
+            self.next_ai_update = 30
+        
+        self.read_ai_queues()
         
         self.tick += 1
         
@@ -342,8 +369,6 @@ class BattleSim (battle_screen.BattleScreen):
             new_data = {}
             for k, v in ai_data.items():
                 new_data[str(k)] = v
-                
-            
             
             new_data['team'] = ai_team
             out_queue, in_queue = core_ai.make_ai(new_data['type'])
