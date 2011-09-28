@@ -6,3 +6,4 @@ def run():
     unittest.TextTestRunner(verbosity=1).run(geometry_t.suite)
     unittest.TextTestRunner(verbosity=1).run(battle_t.suite)
     unittest.TextTestRunner(verbosity=1).run(math_lib_t.suite)
+    unittest.TextTestRunner(verbosity=1).run(screen_lib_t.suite)

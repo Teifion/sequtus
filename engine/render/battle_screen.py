@@ -35,12 +35,13 @@ class BattleScreen (screen.Screen):
         # it will on a Qwerty
         self.hotkeys = {
             K_m: "move",
-            100: "stop",# K_s = 115, not the 100 that s seems to equal
+            K_s: "stop",
             K_a: "attack",
             # K_a: "aid",
             K_h: "hold",
             K_p: "patrol",
             K_b: "build",
+            53: "unselect"# 53 = esc
         }
         
         self.image_cache = {}
@@ -261,6 +262,7 @@ class BattleScreen (screen.Screen):
         self.redraw_count[0] += 1
     
     def handle_keyup(self, event):
+        print(event)
         mods = pygame.key.get_mods()
         
         # Number key? Select or assign a control group
@@ -384,6 +386,11 @@ class BattleScreen (screen.Screen):
                     if a.team == self.player_team:
                         actor_target = a
                         break
+            
+            if actor_target:
+                print("HIT")
+            else:
+                print("MISSED")
             
             # No actor clicked, this means we're moving
             if not actor_target:
