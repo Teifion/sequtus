@@ -102,10 +102,15 @@ class AICore (object):
         pass
 
 def _ai_process(ai_class, in_queue, out_queue):
+    # Added to prevent memory leaks if the program doesn't
+    # exit correctly
+    time_to_live = 9999
+    
     try:
         a = ai_class(in_queue, out_queue)
+        time_to_live -= 1
         
-        while a.running:
+        while a.running and time_to_live > 0:
             a.core_cycle()
         
     except KeyboardInterrupt as e:
