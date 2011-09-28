@@ -76,12 +76,12 @@ class BattleTests (sim_t.SimTester):
         sim.run()
         
         # testing what happens when one actor gets there first
-        self.assertEqual([int(p) for p in sim.actors[0].pos], [240, 240, 0])
+        self.assertEqual([int(p) for p in sim.actors[0].pos], [246, 246, 0])
         self.assertEqual([int(p) for p in sim.actors[1].pos], [194, 194, 0])
         
         # one actor is stopped (having just moved) and nudged out the way
         # by another actor
-        self.assertEqual([int(p) for p in sim.actors[2].pos], [359, 100, 0])
+        self.assertEqual([int(p) for p in sim.actors[2].pos], [350, 100, 0])
         self.assertEqual([int(p) for p in sim.actors[3].pos], [408, 100, 0])
         
         # one actor is unable to be moved (building)
@@ -99,9 +99,9 @@ class BattleTests (sim_t.SimTester):
         self.assertEqual([int(p) for p in sim.actors[10].pos], [300, 500, 0])
         self.assertEqual([int(p) for p in sim.actors[11].pos], [200, 600, 0])
         
-        self.assertEqual([int(p) for p in sim.actors[12].pos], [425, 696, 0])
-        self.assertEqual([int(p) for p in sim.actors[13].pos], [443, 750, 0])
-        self.assertEqual([int(p) for p in sim.actors[14].pos], [487, 698, 0])
+        self.assertEqual([int(p) for p in sim.actors[12].pos], [449, 749, 0])
+        self.assertEqual([int(p) for p in sim.actors[13].pos], [450, 691, 0])
+        self.assertEqual([int(p) for p in sim.actors[14].pos], [496, 728, 0])
         
     
     # Tests that still need to be written
