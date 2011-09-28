@@ -386,22 +386,15 @@ class Actor (object_base.ObjectBase):
             
             # If we have a target, lets move closer to it
             if target != None:
-                attack_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
-                
-                self._move_ai(attack_pos)
-                
-                if vectors.distance(self.pos, attack_pos) <= vectors.total_velocity(self.velocity):
-                    self.pos = attack_pos
-                    self.velocity = [0,0,0]
-                
-                # dist = vectors.distance(self.pos, target.pos)
-                # 
-                # if dist > self.optimum_attack_range:
-                #     target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
-                #     self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
-                # else:
-                #     self.velocity = [0,0,0]
-                
+                # First, are we within optimum range of our target?
+                # If not then we need to get closer
+                target_distance = vectors.distance(self.pos, target.pos)
+                if target_distance > self.optimum_attack_range:
+                    attack_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_attack_range)
+                    self._move_ai(attack_pos)
+                else:
+                    # If we are close enough then we can slow down
+                    self._decelerate_ai()
         
         elif cmd == "aid":
             if target == None:
