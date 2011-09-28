@@ -71,11 +71,17 @@ class Sequtus (core.EngineV3):
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
         # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
-        self.current_screen.select_actor(self.current_screen.actors[0])
-        self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[6])
-        
-        # S key to issue stop command
-        # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
-        # self.current_screen.handle_keyup(e)
+        # Wrap it in a try block so that the screen can quit it's AI processes
+        try:
+            # Issue an attack order
+            self.current_screen.select_actor(self.current_screen.actors[0])
+            # self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[5])
+
+            # S key to issue stop command
+            # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
+            # self.current_screen.handle_keyup(e)
+        except Exception as e:
+            self.current_screen.quit()
+            raise
         
         sim_lib.set_speed(self.current_screen, 30)
