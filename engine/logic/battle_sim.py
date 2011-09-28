@@ -107,6 +107,7 @@ class BattleSim (battle_screen.BattleScreen):
         data.append("\n**** Actors ****")
         for a in self.actors:
             data.append("\nAID: %s, ID: %s" % (a.oid, str(a)))
+            data.append("team: %s" % a.team)
             data.append("pos: %s" % a.pos)
             data.append("rect: %s" % a.rect)
             data.append("velocity: %s" % a.velocity)
@@ -399,7 +400,7 @@ class BattleSim (battle_screen.BattleScreen):
             self.out_queues[ai_team] = out_queue
             self.in_queues[ai_team] = in_queue
             
-        self.out_queues[ai_team].put(new_data)
+            self.out_queues[ai_team].put(new_data)
         
         # Load actors
         for actor_data in data['actors']:
