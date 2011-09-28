@@ -387,10 +387,14 @@ class BattleScreen (screen.Screen):
                         actor_target = a
                         break
             
+            print(real_mouse_pos)
+            # print("\n".join(["%s, %s" % (str(a.pos), a.rect) for a in self.actors]))
+            print("%s, %s" % (str(self.actors[5].pos), self.actors[5].rect))
             if actor_target:
                 print("HIT")
             else:
                 print("MISSED")
+            print("")
             
             # No actor clicked, this means we're moving
             if not actor_target:
