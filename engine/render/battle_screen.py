@@ -262,7 +262,6 @@ class BattleScreen (screen.Screen):
         self.redraw_count[0] += 1
     
     def handle_keyup(self, event):
-        print(event)
         mods = pygame.key.get_mods()
         
         # Number key? Select or assign a control group

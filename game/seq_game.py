@@ -75,6 +75,10 @@ class Sequtus (core.EngineV3):
         try:
             # Issue an attack order
             self.current_screen.select_actor(self.current_screen.actors[0])
+            self.current_screen.select_actor(self.current_screen.actors[1])
+            self.current_screen.select_actor(self.current_screen.actors[2])
+            self.current_screen.select_actor(self.current_screen.actors[3])
+            self.current_screen.select_actor(self.current_screen.actors[4])
             # self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[5])
 
             # S key to issue stop command
@@ -84,4 +88,4 @@ class Sequtus (core.EngineV3):
             self.current_screen.quit()
             raise
         
-        sim_lib.set_speed(self.current_screen, 30)
+        sim_lib.set_speed(self.current_screen, 42)
