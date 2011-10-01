@@ -79,7 +79,12 @@ class Sequtus (core.EngineV3):
             self.current_screen.select_actor(self.current_screen.actors[2])
             self.current_screen.select_actor(self.current_screen.actors[3])
             self.current_screen.select_actor(self.current_screen.actors[4])
-            # self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[5])
+            
+            self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[7])
+            self.current_screen.actors[1].issue_command("attack", target=self.current_screen.actor_lookup[7])
+            self.current_screen.actors[2].issue_command("attack", target=self.current_screen.actor_lookup[7])
+            self.current_screen.actors[3].issue_command("attack", target=self.current_screen.actor_lookup[7])
+            self.current_screen.actors[4].issue_command("attack", target=self.current_screen.actor_lookup[7])
 
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
@@ -88,4 +93,4 @@ class Sequtus (core.EngineV3):
             self.current_screen.quit()
             raise
         
-        sim_lib.set_speed(self.current_screen, 42)
+        # sim_lib.set_speed(self.current_screen, 42)
