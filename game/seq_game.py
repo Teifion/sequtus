@@ -93,4 +93,4 @@ class Sequtus (core.EngineV3):
             self.current_screen.quit()
             raise
         
-        # sim_lib.set_speed(self.current_screen, 42)
+        sim_lib.set_speed(self.current_screen, 42)
