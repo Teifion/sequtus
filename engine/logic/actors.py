@@ -315,9 +315,9 @@ class Actor (object_base.ObjectBase):
             if len(self.priority_targets) == 0 or self.priority_targets[0] != target:
                 if target in self.priority_targets:
                     i = self.priority_targets.index(target)
-                    # del(self.priority_targets[i])
+                    del(self.priority_targets[i])
                 
-                self.priority_targets.insert(0, target)
+                # self.priority_targets.insert(0, target)
         
         elif cmd == "aid":
             
@@ -372,14 +372,6 @@ class Actor (object_base.ObjectBase):
                 self.pos = pos
                 self.velocity = [0,0,0]
                 self.next_order()
-            
-            # dist = vectors.distance(self.pos, pos)
-            # self.velocity = vectors.move_to_vector(vectors.angle(self.pos, pos), self.max_velocity)
-            # 
-            # if dist <= vectors.total_velocity(self.velocity):
-            #     self.pos = pos
-            #     self.velocity = [0,0,0]
-            #     self.next_order()
         
         elif cmd == "attack":
             target = self.get_first_target()
