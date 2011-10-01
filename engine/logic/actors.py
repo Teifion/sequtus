@@ -289,6 +289,11 @@ class Actor (object_base.ObjectBase):
         return True
     
     def check_ai(self):
+        to_remove = []
+        for i, a in enumerate(self.priority_targets):
+            if a.hp <= 0: to_remove.insert(0, i)
+        for i in to_remove: del(self.priority_targets[i])
+        
         self.next_ai_update -= 1
         
         # TODO Check with sim AI holder for new orders
@@ -317,7 +322,7 @@ class Actor (object_base.ObjectBase):
                     i = self.priority_targets.index(target)
                     del(self.priority_targets[i])
                 
-                # self.priority_targets.insert(0, target)
+                self.priority_targets.insert(0, target)
         
         elif cmd == "aid":
             
