@@ -283,9 +283,10 @@ class MiniMap (Panel):
         map_x = x * xratio
         map_y = y * yratio
         
-        if event.button == 3:
-            return pygame.event.Event(6, button=3, pos=(map_x, map_y))
         
+        if hasattr(event, "button") and event.button == 3:
+            return pygame.event.Event(6, button=3, pos=(map_x, map_y))
+                
         self.engine.current_screen.scroll_to_coords(map_x, map_y)
     
     def handle_mousedrag(self, event):

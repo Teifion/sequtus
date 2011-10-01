@@ -486,8 +486,6 @@ class BattleScreen (screen.Screen):
         self._selection_has_changed = True
     
     def handle_mousedrag(self, event, drag_rect):
-        print("HMD")
-        
         # First check panels, but only if the dragging started within a panel
         if drag_rect == None:
             for i, p in self.panels.items():
