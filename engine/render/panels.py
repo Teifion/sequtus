@@ -46,6 +46,9 @@ class Panel (object):
     def draw(self):
         raise Exception("{0}.draw() is not implemented".format(self.__class__))
     
+    def handle_mousedrag(self, event):
+        pass
+    
     def handle_mouseup(self, event, drag=False):
         raise Exception("{0}.handle_mouseup() is not implemented".format(self.__class__))
 
@@ -284,6 +287,9 @@ class MiniMap (Panel):
             return pygame.event.Event(6, button=3, pos=(map_x, map_y))
         
         self.engine.current_screen.scroll_to_coords(map_x, map_y)
+    
+    def handle_mousedrag(self, event):
+        self.handle_mouseup(event)
 
 # Used to display text upon a blank background
 class InfoBox (Panel):

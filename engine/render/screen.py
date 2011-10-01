@@ -151,6 +151,9 @@ class Screen (object):
         pass
     
     def _handle_mousedrag(self, event):
+        if self.mouse_down_at == None:
+            return self.handle_mousedrag(event, None)
+        
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
         
         drag_rect = (
@@ -165,6 +168,9 @@ class Screen (object):
         pass
     
     def _handle_mousedragup(self, event):
+        if self.mouse_down_at == None:
+            return self.handle_mousedragup(event, None)
+            
         real_mouse_pos = (event.pos[0] - self.scroll_x, event.pos[1] - self.scroll_y)
         
         drag_rect = (

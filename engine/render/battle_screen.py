@@ -248,12 +248,14 @@ class BattleScreen (screen.Screen):
         # Dragrect
         if self.drag_rect != None:
             # draw.rect uses a origin and size arguments, not topleft and bottomright
-            line_rect = (
+            line_rect = [
                 self.drag_rect[0] + self.draw_margin[0] + self.scroll_x,
                 self.drag_rect[1] + self.draw_margin[1] + self.scroll_y,
                 self.drag_rect[2] - self.drag_rect[0],
                 self.drag_rect[3] - self.drag_rect[1],
-            )
+            ]
+            
+            # line_rect[0] = max(line_rect[0], self.draw_margin[0])
             
             pygame.draw.rect(surf, (255, 255, 255), line_rect, 1)
         
@@ -321,7 +323,16 @@ class BattleScreen (screen.Screen):
         
         super(BattleScreen, self).handle_keyhold()
     
+    def handle_mousedown(self, event):
+        # If it's in a panel we don't want to allow a drag option
+        for i, p in self.panels.items():
+            if p.contains(event.pos):
+                self.mouse_down_at = None
+    
     def handle_mouseup(self, event, drag=False):
+        # We are no longer dragging, lets get rid of this rect
+        self.drag_rect = None
+        
         if self.mouseup_callback:
             callback_func, args = self.mouseup_callback, self.mouseup_callback_args
             
@@ -475,7 +486,22 @@ class BattleScreen (screen.Screen):
         self._selection_has_changed = True
     
     def handle_mousedrag(self, event, drag_rect):
+        print("HMD")
+        
+        # First check panels, but only if the dragging started within a panel
+        if drag_rect == None:
+            for i, p in self.panels.items():
+                if p.contains(event.pos):
+                    p.handle_mousedrag(event)
+            
+            return
+        
         if event.buttons[0] == 1:
+            # We don't want to be able to drag over the panels
+            drag_rect = list(drag_rect)
+            drag_rect[0] = max(drag_rect[0], self.draw_margin[0])
+            drag_rect[1] = max(drag_rect[1], self.draw_margin[1])
+            
             self.drag_rect = drag_rect
             
             self.drag_rect = (
@@ -486,6 +512,8 @@ class BattleScreen (screen.Screen):
             )
     
     def handle_mousedragup(self, event, drag_rect):
+        if drag_rect == None: return
+        
         mods = pygame.key.get_mods()
         self.drag_rect = None
         
@@ -527,7 +555,12 @@ class BattleScreen (screen.Screen):
             self._selection_has_changed = True
     
     def unselect_actor(self, a):
-        del(self.selected_actors[self.selected_actors.index(a)])
+        try:
+            del(self.selected_actors[self.selected_actors.index(a)])
+        except Exception as e:
+            print("""! battle_screen.unselect_actor had an exception trying
+to delete an actor from the list of selected actors.""")
+        
         a.selected = False
         self._selection_has_changed = True
     
