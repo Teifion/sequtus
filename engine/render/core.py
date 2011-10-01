@@ -1,6 +1,7 @@
 import sys
 import time
 import math
+import traceback
 
 import pygame
 from pygame.locals import *
@@ -68,24 +69,29 @@ class EngineV3 (object):
     def start(self):
         self.startup()
         
-        while True:
-            for event in pygame.event.get():
-                if event.type == ACTIVEEVENT:       self.current_screen._handle_active(event)
-                if event.type == KEYDOWN:           self.current_screen._handle_keydown(event)
-                if event.type == KEYUP:             self.current_screen._handle_keyup(event)
-                if event.type == MOUSEBUTTONUP:     self.current_screen._handle_mouseup(event)
-                if event.type == MOUSEBUTTONDOWN:   self.current_screen._handle_mousedown(event)
-                if event.type == MOUSEMOTION:       self.current_screen._handle_mousemotion(event)
-                if event.type == QUIT:              self.current_screen.quit(event)
-            
-            # Check to see if a key has been held down
-            self.current_screen._handle_keyhold()
-            
-            self.current_screen.update()
-            self.current_screen.redraw()
-            
-            if not self.current_screen.self_regulate:
-                self.clock.tick(self.fps)
+        try:
+            while True:
+                for event in pygame.event.get():
+                    if event.type == ACTIVEEVENT:       self.current_screen._handle_active(event)
+                    if event.type == KEYDOWN:           self.current_screen._handle_keydown(event)
+                    if event.type == KEYUP:             self.current_screen._handle_keyup(event)
+                    if event.type == MOUSEBUTTONUP:     self.current_screen._handle_mouseup(event)
+                    if event.type == MOUSEBUTTONDOWN:   self.current_screen._handle_mousedown(event)
+                    if event.type == MOUSEMOTION:       self.current_screen._handle_mousemotion(event)
+                    if event.type == QUIT:              self.current_screen.quit(event)
+
+                # Check to see if a key has been held down
+                self.current_screen._handle_keyhold()
+
+                self.current_screen.update()
+                self.current_screen.redraw()
+
+                if not self.current_screen.self_regulate:
+                    self.clock.tick(self.fps)
+        except Exception as e:
+            traceback.print_exc(file=sys.stdout)
+            self.current_screen.quit()
+            raise
         
         self.quit()
 
