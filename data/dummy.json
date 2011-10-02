@@ -1,19 +1,19 @@
 {
     "actors":   [
         {
-            "type": "Red circle",
+            "type": "Red tank",
             "pos":  [300, 300, 0],
             "facing": [90, 0],
             "team": 1
         },
         
         {
-            "type": "Blue circle",
+            "type": "Blue tank",
             "pos":  [300, 150, 0],
             "team": 2
         },
         {
-            "type": "Blue circle",
+            "type": "Blue tank",
             "pos":  [300, 450, 0],
             "team": 2
         }
