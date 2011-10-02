@@ -9,6 +9,7 @@ import pygame
 from engine.render import core
 from engine.logic import battle_sim
 from engine.libs import sim_lib
+from engine.utilities import game_data_editor
 from game import image_composition, seq_sim
 from game_screens import main_menu, game_setup, battle
 
@@ -60,6 +61,9 @@ class Sequtus (core.EngineV3):
         self.screens['Main menu'] = main_menu.MainMenu(self)
         self.screens['Game setup'] = game_setup.build(self)
         self.screens['Battle screen'] = battle.Battle
+        
+        self.screens['Game data editor'] = game_data_editor.GameDataEditor(self)
+        # self.screens['Map editor'] = game_setup.build(self)
         
         self.set_screen('Main menu')
         self.new_game()
