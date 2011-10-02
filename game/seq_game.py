@@ -47,7 +47,7 @@ class Sequtus (core.EngineV3):
             
             "grey_tank":                core.Animation('media/grey_tank.png'),
             "grey_tank_body":           core.Animation('media/grey_tank_body.png'),
-            "grey_tank_turret":         core.Animation('media/grey_tank_turret.png'),
+            "grey_tank_turret":         core.Animation('media/grey_tank_turret.png', rotate_about=(0, -11, 0)),
             
             "9px_bullet":               core.Animation('media/9px_bullet.png'),
             "11px_bullet":              core.Animation('media/11px_bullet.png'),
@@ -79,16 +79,6 @@ class Sequtus (core.EngineV3):
         try:
             # Issue an attack order
             self.current_screen.select_actor(self.current_screen.actors[0])
-            self.current_screen.select_actor(self.current_screen.actors[1])
-            self.current_screen.select_actor(self.current_screen.actors[2])
-            self.current_screen.select_actor(self.current_screen.actors[3])
-            self.current_screen.select_actor(self.current_screen.actors[4])
-            
-            self.current_screen.actors[0].issue_command("attack", target=self.current_screen.actor_lookup[7])
-            self.current_screen.actors[1].issue_command("attack", target=self.current_screen.actor_lookup[7])
-            self.current_screen.actors[2].issue_command("attack", target=self.current_screen.actor_lookup[7])
-            self.current_screen.actors[3].issue_command("attack", target=self.current_screen.actor_lookup[7])
-            self.current_screen.actors[4].issue_command("attack", target=self.current_screen.actor_lookup[7])
 
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)

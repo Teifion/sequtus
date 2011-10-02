@@ -197,10 +197,11 @@ class BattleScreen (screen.Screen):
                                     angle = ab_rounded_facing
                                 )
                             
+                            centre_offset = self.engine.images[ab.image].get_rotated_offset(ab_rounded_facing)
                             ability_img = self.image_cache[ab_img_name]
                             r = pygame.Rect(ability_img.get_rect())
-                            r.left = a.pos[0] + self.draw_margin[0] - r.width/2 + ab.image_offset[0]
-                            r.top = a.pos[1] + self.draw_margin[1] - r.height/2 + ab.image_offset[1]
+                            r.left = a.pos[0] + self.draw_margin[0] - r.width/2 + ab.image_offset[0] + centre_offset[0]
+                            r.top = a.pos[1] + self.draw_margin[1] - r.height/2 + ab.image_offset[1] + centre_offset[1]
                             surf.blit(ability_img, r)
                     
                     # Selection box?

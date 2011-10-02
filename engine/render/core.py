@@ -6,6 +6,8 @@ import traceback
 import pygame
 from pygame.locals import *
 
+from engine.libs import vectors
+
 class Game_error(Exception):
     """Errors related to the game in general"""
     pass
@@ -99,7 +101,7 @@ class Animation (object):
     """An object that takes a picture and cuts it up into separate frames
     so that we can animate certain objects"""
     
-    def __init__(self, filepath, columns=1, rows=1, animation_rate = 0.5):
+    def __init__(self, filepath, columns=1, rows=1, animation_rate = 0.5, rotate_about=None):
         super(Animation, self).__init__()
         
         if columns < 1:
@@ -114,6 +116,7 @@ class Animation (object):
         img = pygame.image.load(filepath)
         r = img.get_rect()
         
+        # Break it down into tiles, save the tiles
         tile_width = r.width / columns
         tile_height = r.height / rows
         
@@ -123,9 +126,31 @@ class Animation (object):
                 tile.blit(img, (0,0), (x * tile_width, y * tile_height, tile_width, tile_height))
                 
                 self.images.append(tile)
+        
+        # Default the rotate about point
+        if rotate_about == None:
+            rotate_about = 0, 0, 0
+        
+        # centre_offset is a distance and angle
+        self.centre_offset = (
+            vectors.distance(rotate_about),
+            vectors.angle(rotate_about),
+        )
     
     def get_rect(self):
         return self.images[0].get_rect()
+    
+    def get_rotated_offset(self, angle):
+        if self.centre_offset == (0, 0):
+            return 0, 0
+        
+        # Get the actual angle to use
+        offset_angle = vectors.bound_angle(
+            vectors.add_vectors(self.centre_offset[1], angle)
+        )
+        
+        return vectors.move_to_vector(offset_angle, self.centre_offset[0])
+        
     
     def real_frame(self, frame):
         """If the frame count is too high, we need to bring it back
