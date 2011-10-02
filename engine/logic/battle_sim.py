@@ -326,6 +326,9 @@ class BattleSim (battle_screen.BattleScreen):
         for ability in self.actor_types[actor_data['type']]['abilities']:
             a.add_ability(self.ability_types[ability])
         
+        for ab in a.abilities:
+            ab.facing = a.facing
+        
         # If AI's exist, assign the actor to one
         if a.team in self.autotargeters:
             a.autotargeter = self.autotargeters[a.team]
