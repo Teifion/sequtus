@@ -11,8 +11,12 @@
                 "duration": 10,
                 "degrade":  [0, 25, 0]
             },
-            "turn_speed":   1,
-            "fire_arc":     [3, 3]
+            "turn_speed":   5,
+            "fire_arc":     [3, 3],
+            
+            "image":        "grey_tank_turret",
+            "image_offset": [0, 0, 0],
+            "effect_offset":[0, -40, 0]
         },
         "Cannon":    {
             "type":         "MassDriver",
@@ -29,7 +33,11 @@
             },
             "turn_speed":   0.3,
             "fire_arc":     [3, 3],
-            "ignore_z_facing":  true
+            "ignore_z_facing":  true,
+            
+            "image":        "grey_tank_turret",
+            "image_offset": [0, 0, 0],
+            "effect_offset":[0, -40, 0]
         },
         "Construction":    {
             "type":         "Construction",
@@ -129,7 +137,7 @@
         },
         
         "Red circle": {
-            "image":            "grey_tank",
+            "image":            "grey_tank_body",
             "menu_image":       "red_rune_menu",
             
             "type":             "walker",
@@ -151,7 +159,7 @@
             "required_techs":   []
         },
         "Blue circle": {
-            "image":            "blue_rune",
+            "image":            "grey_tank_body",
             "menu_image":       "blue_rune",
             
             "type":             "walker",
