@@ -181,6 +181,28 @@ class BattleScreen (screen.Screen):
                 if r.bottom > self.draw_area[1] and r.top < self.draw_area[3]:
                     surf.blit(actor_img, r)
                     
+                    # Abilities
+                    for ab in a.abilities:
+                        if ab.image != None:
+                            ab_rounded_facing = screen_lib.get_facing_angle(ab.facing[0], self.facings)
+                            ab_img_name = "%s_%s_%s" % (
+                                ab.image,
+                                self.engine.images[ab.image].real_frame(a.frame),
+                                ab_rounded_facing
+                            )
+                            
+                            if ab_img_name not in self.image_cache:
+                                self.image_cache[ab_img_name] = screen_lib.make_rotated_image(
+                                    image = self.engine.images[ab.image].get(a.frame),
+                                    angle = ab_rounded_facing
+                                )
+                            
+                            ability_img = self.image_cache[ab_img_name]
+                            r = pygame.Rect(ability_img.get_rect())
+                            r.left = a.pos[0] + self.draw_margin[0] - r.width/2 + ab.image_offset[0]
+                            r.top = a.pos[1] + self.draw_margin[1] - r.height/2 + ab.image_offset[1]
+                            surf.blit(ability_img, r)
+                    
                     # Selection box?
                     if a.selected:
                         """Removed selection boxes for now as I'm not sure how I want them to work
