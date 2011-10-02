@@ -10,7 +10,9 @@
                 "colour":   [0, 255, 0],
                 "duration": 10,
                 "degrade":  [0, 25, 0]
-            }
+            },
+            "turn_speed":   1,
+            "fire_arc":     [3, 3]
         },
         "Cannon":    {
             "type":         "MassDriver",
@@ -24,7 +26,10 @@
                 "damage":           {"raw":1},
                 "blast_radius":     130,
                 "dissipation_func": "linear"
-            }
+            },
+            "turn_speed":   0.3,
+            "fire_arc":     [3, 3],
+            "ignore_z_facing":  true
         },
         "Construction":    {
             "type":         "Construction",

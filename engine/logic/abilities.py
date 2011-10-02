@@ -22,9 +22,27 @@ class Ability (object):
     defence_flags = []
     offence_flags = []
     
+    turn_speed = 360
+    fire_arc = [360, 360]
+    
+    # Allows us to ignore the Z facing for things like
+    # catapults that need to aim high to hit targets
+    ignore_z_facing = False
+    
+    # The location relative to our host that we draw from
+    origin_offset = [0,0]
+    
+    # These are used by the system as it's easier to calculate
+    # using these when actors are rotated etc but it's easier
+    # for a person to define where on the model it's fired from
+    # using an absolute X and Y
+    _offset_distance = 0
+    _offset_angle = 0
+    
     def __init__(self, actor, ability_data={}):
         super(Ability, self).__init__()
         self.actor = actor
+        self.facing = [0,0]
         
         self.set_stats(ability_data)
         self.charge = self.required_charge
@@ -33,7 +51,55 @@ class Ability (object):
         for k, v in ability_data.items():
             if k == "type": continue
             setattr(self, k, v)
+    
+    def turn(self, target_facing):
+        """Turn's the ability towards a specific facing, returns True
+        if the facing is achieved"""
         
+        # This allows us to cut out all the below stuff if we have a
+        # 360 degree fire-arc
+        if self.fire_arc == [360, 360]:
+            return True
+        
+        xy_diff, z_diff = vectors.angle_diff(self.facing, target_facing)
+        
+        # If it's within a certain range then BOOM, we're there
+        if abs(xy_diff) < self.turn_speed:
+            if abs(z_diff) < self.turn_speed:
+                self.facing = target_facing
+                return True
+        
+        # XY first
+        if xy_diff >= 0:
+            self.facing[0] += self.turn_speed
+        else:
+            self.facing[0] -= self.turn_speed
+        
+        # Now for Z
+        if z_diff >= 0:
+            self.facing[1] += self.turn_speed
+        else:
+            self.facing[1] -= self.turn_speed
+        
+        self.facing = vectors.bound_angle(self.facing)
+        return False
+    
+    def check_aim(self, target_facing):
+        """Checks to see if we are pointing in the right direction to use
+        the ability"""
+        
+        # This allows us to cut out all the below stuff if we have a
+        # 360 degree fire-arc
+        if self.fire_arc == [360, 360]:
+            return True
+        
+        xy_diff, z_diff = vectors.angle_diff(self.facing, target_facing)
+        
+        if abs(xy_diff) < self.turn_speed:
+            if abs(z_diff) < self.turn_speed or self.ignore_z_facing:
+                return True
+        
+        return False
     
     def update(self):
         self.charge += self.charge_rate
@@ -41,6 +107,15 @@ class Ability (object):
     def can_use(self, target=None, **kwargs):
         """Called to see if the ability can be used"""
         if self.charge < self.required_charge:
+            return False
+        
+        # Check aim
+        if type(target) in (list, tuple):
+            target_facing = vectors.angle(self.actor.pos, target)
+        else:
+            target_facing = vectors.angle(self.actor.pos, target.pos)
+        
+        if not self.check_aim(target_facing):
             return False
         
         return True

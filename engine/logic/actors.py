@@ -465,7 +465,6 @@ class Actor (object_base.ObjectBase):
             self.facing = target_angle
             return True
         
-        # Waiting for vectors.angle_direction to be ready
         if diff >= 0:
             self.facing[0] += self.turn_speed
         else:
@@ -517,6 +516,9 @@ class Actor (object_base.ObjectBase):
         if target == None: return
         
         for a in self.abilities:
+            # Turn the ability towards it's target
+            a.turn(vectors.angle(self.pos, target.pos))
+            
             if a.can_use(target):
                 a.use(target)
             
