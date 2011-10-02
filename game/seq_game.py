@@ -45,6 +45,8 @@ class Sequtus (core.EngineV3):
             "red_building_placement":       core.Animation('media/red_building_placement.png'),
             "blue_building_placement":      core.Animation('media/blue_building_placement.png'),
             
+            "grey_tank":            core.Animation('media/grey_tank.png'),
+            
             "9px_bullet":               core.Animation('media/9px_bullet.png'),
             "11px_bullet":              core.Animation('media/11px_bullet.png'),
             "15px_bullet":              core.Animation('media/15px_bullet.png'),

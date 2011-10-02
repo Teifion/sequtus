@@ -124,7 +124,7 @@
         },
         
         "Red circle": {
-            "image":            "red_rune",
+            "image":            "grey_tank",
             "menu_image":       "red_rune_menu",
             
             "type":             "walker",
