@@ -69,9 +69,9 @@ class EngineV3 (object):
     
     # Contains main execution loop
     def start(self):
-        self.startup()
-        
         try:
+            self.startup()
+            
             while True:
                 for event in pygame.event.get():
                     if event.type == ACTIVEEVENT:       self.current_screen._handle_active(event)
