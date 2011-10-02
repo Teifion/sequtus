@@ -74,7 +74,7 @@
     },
     
     "actors":    {
-        "Red building": {
+        "Red factory": {
             "image":            "red_building",
             "placement_image":  "red_building_placement",
             "menu_image":       "red_building_menu",
@@ -93,7 +93,7 @@
             
             "required_techs":   []
         },
-        "Blue building": {
+        "Blue factory": {
             "image":            "blue_building",
             "placement_image":  "blue_building_placement",
             "menu_image":       "blue_building_menu",
@@ -113,7 +113,7 @@
             "required_techs":   []
         },
         
-        "Worker": {
+        "Red worker": {
             "image":            "red_square",
             "menu_image":       "red_square_menu",
             
@@ -136,7 +136,30 @@
             "required_techs":   []
         },
         
-        "Red circle": {
+        "Blue worker": {
+            "image":            "red_square",
+            "menu_image":       "red_square_menu",
+            
+            "type":             "walker",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1.5,
+            "deceleration":     1.5,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Construction", "Repair"],
+            "flags":    ["T1 Constructor"],
+            
+            "required_techs":   []
+        },
+        
+        "Red tank": {
             "image":            "grey_tank_body",
             "menu_image":       "red_rune_menu",
             
@@ -158,7 +181,7 @@
             
             "required_techs":   []
         },
-        "Blue circle": {
+        "Blue tank": {
             "image":            "grey_tank_body",
             "menu_image":       "blue_rune",
             
@@ -183,8 +206,15 @@
     },
     
     "build_lists": {
-        "T1 Constructor": ["Red building"],
-        "T1 Factory": ["Red circle", "Worker"]
+        "Red worker": ["Red factory", "Red mine", "Red turret"],
+        "Adv red worker": ["Adv red factory", "Adv red turret"],
+        "Red factory": ["Red worker", "Red tank"],
+        "Adv red factory": ["Red heavy tank", "Red juggernaut"],
+        
+        "Blue worker": ["Blue factory", "Blue mine", "Blue turret"],
+        "Adv Blue worker": ["Adv Blue factory", "Adv Blue turret"],
+        "Blue factory": ["Blue worker", "Blue tank"],
+        "Adv Blue factory": ["Blue heavy tank", "Blue artillery"]
     },
     
     "tech_trees": {
