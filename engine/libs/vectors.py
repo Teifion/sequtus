@@ -159,7 +159,11 @@ def angle(pos1, pos2=None):
     
     return [xy, math.degrees(za)]
 
-def distance(pos1, pos2):
+def distance(pos1, pos2=None):
+    """If pos2 is left out then it gives distance to pos1 from origin"""
+    if pos2 == None:
+        pos2 = [0 for i in pos1]
+    
     x = abs(pos1[0] - pos2[0])
     y = abs(pos1[1] - pos2[1])
     
