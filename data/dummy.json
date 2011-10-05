@@ -93,6 +93,12 @@
         },
         
         {
+            "type": "Blu artillery",
+            "pos":  [1900, 1900, 0],
+            "team": 2
+        },
+        
+        {
             "type": "Blu factory",
             "pos":  [350, 100, 0],
             "team": 2

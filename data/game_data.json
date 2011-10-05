@@ -3,15 +3,15 @@
         "Red laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
-            "max_range":    400,
-            "required_charge": 40,
+            "max_range":    350,
+            "required_charge": 35,
             "damage":       {"raw":1},
             "effect":       {
                 "colour":   [0, 255, 0],
-                "duration": 10,
-                "degrade":  [0, 25, 0]
+                "duration": 7,
+                "degrade":  [0, 50, 0]
             },
-            "turn_speed":   5,
+            "turn_speed":   10,
             "fire_arc":     [3, 3],
             
             "image":        "red_tank_turret",
@@ -23,11 +23,11 @@
             "type":         "BeamWeapon",
             "min_range":    1,
             "max_range":    400,
-            "required_charge": 40,
-            "damage":       {"raw":1},
+            "required_charge": 50,
+            "damage":       {"raw":2},
             "effect":       {
                 "colour":   [0, 255, 0],
-                "duration": 10,
+                "duration": 9,
                 "degrade":  [0, 25, 0]
             },
             "turn_speed":   5,
@@ -41,15 +41,15 @@
         "Red juggernaut laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
-            "max_range":    400,
-            "required_charge": 40,
-            "damage":       {"raw":1},
+            "max_range":    800,
+            "required_charge": 80,
+            "damage":       {"raw":7},
             "effect":       {
-                "colour":   [0, 255, 0],
-                "duration": 10,
-                "degrade":  [0, 25, 0]
+                "colour":   [255, 0, 0],
+                "duration": 13,
+                "degrade":  [15, 0, 0]
             },
-            "turn_speed":   5,
+            "turn_speed":   3,
             "fire_arc":     [3, 3],
             
             "image":        "red_juggernaut_turret",
@@ -57,17 +57,18 @@
             "effect_offset":[0, -40, 0]
         },
         
+        
         "Blu cannon":    {
             "type":         "MassDriver",
             "min_range":    1,
-            "max_range":    500,
+            "max_range":    600,
             "required_charge": 50,
             "bullet":       {
                 "velocity":         15,
                 "image":            "9px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":1},
-                "blast_radius":     130,
+                "damage":           {"raw":2},
+                "blast_radius":     20,
                 "dissipation_func": "linear"
             },
             "turn_speed":   1,
@@ -81,14 +82,14 @@
         "Blu heavy cannon":    {
             "type":         "MassDriver",
             "min_range":    1,
-            "max_range":    500,
-            "required_charge": 50,
+            "max_range":    700,
+            "required_charge": 70,
             "bullet":       {
                 "velocity":         15,
                 "image":            "11px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":1},
-                "blast_radius":     130,
+                "damage":           {"raw":4},
+                "blast_radius":     40,
                 "dissipation_func": "linear"
             },
             "turn_speed":   1,
@@ -102,14 +103,14 @@
         "Blu artillery":    {
             "type":         "MassDriver",
             "min_range":    1,
-            "max_range":    500,
-            "required_charge": 50,
+            "max_range":    2000,
+            "required_charge": 200,
             "bullet":       {
                 "velocity":         15,
                 "image":            "15px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":1},
-                "blast_radius":     130,
+                "damage":           {"raw":40},
+                "blast_radius":     100,
                 "dissipation_func": "linear"
             },
             "turn_speed":   1,
