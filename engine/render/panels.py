@@ -161,7 +161,7 @@ class TabularMenu (Panel):
                         img_name = self.screen.actor_types[a]['menu_image']
                     else:
                         print(a, list(self.screen.actor_types.keys()))
-                        raise Exception("No handler")
+                        raise Exception("No handler for %s" % a)
                     
                     buttons.append([a, img_name, build_queues.get(a, 0)])
         
