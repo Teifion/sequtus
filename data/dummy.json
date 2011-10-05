@@ -1,21 +1,51 @@
 {
     "actors":   [
         {
-            "type": "Red tank",
-            "pos":  [300, 300, 0],
-            "facing": [90, 0],
+            "type": "Red worker",
+            "pos":  [100, 100, 0],
             "team": 1
         },
         
         {
-            "type": "Blue tank",
-            "pos":  [300, 150, 0],
-            "team": 2
+            "type": "Red tank",
+            "pos":  [100, 200, 0],
+            "team": 1
         },
+        
         {
-            "type": "Blue tank",
-            "pos":  [300, 450, 0],
-            "team": 2
+            "type": "Red heavy tank",
+            "pos":  [100, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red juggernaut",
+            "pos":  [100, 400, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red factory",
+            "pos":  [300, 100, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red adv factory",
+            "pos":  [300, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red turret",
+            "pos":  [500, 100, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red adv turret",
+            "pos":  [500, 300, 0],
+            "team": 1
         }
     ],
     

@@ -1,6 +1,6 @@
 {
     "abilities": {
-        "Laser":    {
+        "Red laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
             "max_range":    400,
@@ -14,10 +14,49 @@
             "turn_speed":   5,
             "fire_arc":     [3, 3],
             
-            "image":        "grey_tank_turret",
+            "image":        "red_tank_turret",
             "image_offset": [0, 0, 0],
             "effect_offset":[0, -40, 0]
         },
+        
+        "Red heavy laser":    {
+            "type":         "BeamWeapon",
+            "min_range":    1,
+            "max_range":    400,
+            "required_charge": 40,
+            "damage":       {"raw":1},
+            "effect":       {
+                "colour":   [0, 255, 0],
+                "duration": 10,
+                "degrade":  [0, 25, 0]
+            },
+            "turn_speed":   5,
+            "fire_arc":     [3, 3],
+            
+            "image":        "red_heavy_tank_turret",
+            "image_offset": [0, 0, 0],
+            "effect_offset":[0, -40, 0]
+        },
+        
+        "Red juggernaut laser":    {
+            "type":         "BeamWeapon",
+            "min_range":    1,
+            "max_range":    400,
+            "required_charge": 40,
+            "damage":       {"raw":1},
+            "effect":       {
+                "colour":   [0, 255, 0],
+                "duration": 10,
+                "degrade":  [0, 25, 0]
+            },
+            "turn_speed":   5,
+            "fire_arc":     [3, 3],
+            
+            "image":        "red_juggernaut_turret",
+            "image_offset": [0, 15, 0],
+            "effect_offset":[0, -40, 0]
+        },
+        
         "Cannon":    {
             "type":         "MassDriver",
             "min_range":    1,
@@ -35,7 +74,7 @@
             "fire_arc":     [3, 3],
             "ignore_z_facing":  true,
             
-            "image":        "grey_tank_turret",
+            "image":        "blue_tank_turret",
             "image_offset": [0, 0, 0],
             "effect_offset":[0, -40, 0]
         },
@@ -74,96 +113,34 @@
     },
     
     "actors":    {
-        "Red factory": {
-            "image":            "red_building",
-            "placement_image":  "red_building_placement",
-            "menu_image":       "red_building_menu",
+        "Red worker": {
+            "image":            "red_worker",
+            "menu_image":       "red_worker_menu",
             
-            "build_offset":     [0, 75, 0],
-            
-            "type":             "building",
-            "max_hp":           100,
+            "type":             "wheeled",
+            "max_hp":           10,
             "max_shields":      0,
+            
+            "acceleration":     1.5,
+            "deceleration":     1.5,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
             
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Unit constructor"],
-            "flags":    ["T1 Factory"],
-            
-            "required_techs":   []
-        },
-        "Blue factory": {
-            "image":            "blue_building",
-            "placement_image":  "blue_building_placement",
-            "menu_image":       "blue_building_menu",
-            
-            "build_offset":     [0, 0, 0],
-            
-            "type":             "building",
-            "max_hp":           100,
-            "max_shields":      0,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "abilities":  [],
+            "abilities":  ["Construction", "Repair"],
             "flags":    [],
             
             "required_techs":   []
         },
         
-        "Red worker": {
-            "image":            "red_square",
-            "menu_image":       "red_square_menu",
-            
-            "type":             "walker",
-            "max_hp":           10,
-            "max_shields":      0,
-            
-            "acceleration":     1.5,
-            "deceleration":     1.5,
-            "turn_speed":       90,
-            "drifts":           false,
-            "max_velocity":     5,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "abilities":  ["Construction", "Repair"],
-            "flags":    ["T1 Constructor"],
-            
-            "required_techs":   []
-        },
-        
-        "Blue worker": {
-            "image":            "red_square",
-            "menu_image":       "red_square_menu",
-            
-            "type":             "walker",
-            "max_hp":           10,
-            "max_shields":      0,
-            
-            "acceleration":     1.5,
-            "deceleration":     1.5,
-            "turn_speed":       90,
-            "drifts":           false,
-            "max_velocity":     5,
-            
-            "max_armour":           0,
-            "max_shield_armour":    0,
-            
-            "abilities":  ["Construction", "Repair"],
-            "flags":    ["T1 Constructor"],
-            
-            "required_techs":   []
-        },
-        
         "Red tank": {
-            "image":            "grey_tank_body",
-            "menu_image":       "red_rune_menu",
+            "image":            "red_tank_body",
+            "menu_image":       "red_tank_menu",
             
-            "type":             "walker",
+            "type":             "wheeled",
             "max_hp":           10,
             "max_shields":      0,
             
@@ -176,16 +153,17 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Laser"],
+            "abilities":  ["Red laser"],
             "flags":    [],
             
             "required_techs":   []
         },
-        "Blue tank": {
-            "image":            "grey_tank_body",
-            "menu_image":       "blue_rune",
+        
+        "Red heavy tank": {
+            "image":            "red_heavy_tank_body",
+            "menu_image":       "red_heavy_tank_menu",
             
-            "type":             "walker",
+            "type":             "wheeled",
             "max_hp":           10,
             "max_shields":      0,
             
@@ -193,12 +171,115 @@
             "deceleration":     1,
             "turn_speed":       10,
             "drifts":           false,
-            "max_velocity":     3,
+            "max_velocity":     4,
             
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Cannon"],
+            "abilities":  ["Red heavy laser"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
+        "Red juggernaut": {
+            "image":            "red_juggernaut_body",
+            "menu_image":       "red_juggernaut_menu",
+            
+            "type":             "wheeled",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1,
+            "deceleration":     1,
+            "turn_speed":       10,
+            "drifts":           false,
+            "max_velocity":     4,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Red juggernaut laser"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
+        "Red factory": {
+            "image":            "red_factory",
+            "placement_image":  "red_factory_placement",
+            "menu_image":       "red_factory_menu",
+            
+            "build_offset":     [0, 75, 0],
+            
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Unit constructor"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
+        "Red adv factory": {
+            "image":            "red_adv_factory",
+            "placement_image":  "red_adv_factory_placement",
+            "menu_image":       "red_adv_factory_menu",
+            
+            "build_offset":     [0, 75, 0],
+            
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Unit constructor"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
+        "Red turret": {
+            "image":            "red_turret",
+            "placement_image":  "red_turret_placement",
+            "menu_image":       "red_turret_menu",
+            
+            "build_offset":     [0, 75, 0],
+            
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Unit constructor"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
+        "Red adv turret": {
+            "image":            "red_adv_turret",
+            "placement_image":  "red_adv_turret_placement",
+            "menu_image":       "red_adv_turret_menu",
+            
+            "build_offset":     [0, 75, 0],
+            
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Unit constructor"],
             "flags":    [],
             
             "required_techs":   []
@@ -211,10 +292,10 @@
         "Red factory": ["Red worker", "Red tank"],
         "Adv red factory": ["Red heavy tank", "Red juggernaut"],
         
-        "Blue worker": ["Blue factory", "Blue mine", "Blue turret"],
-        "Adv Blue worker": ["Adv Blue factory", "Adv Blue turret"],
-        "Blue factory": ["Blue worker", "Blue tank"],
-        "Adv Blue factory": ["Blue heavy tank", "Blue artillery"]
+        "Blu worker": ["Blu factory", "Blu mine", "Blu turret"],
+        "Adv Blu worker": ["Adv Blu factory", "Adv Blu turret"],
+        "Blu factory": ["Blu worker", "Blu tank"],
+        "Adv Blu factory": ["Blu heavy tank", "Blu artillery"]
     },
     
     "tech_trees": {

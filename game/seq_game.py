@@ -27,29 +27,74 @@ class Sequtus (core.EngineV3):
         super(Sequtus, self).__init__()
         
         self.images = {
-            "battlefield":      core.Animation('media/battlefield.png'),
+            "battlefield":              core.Animation('media/battlefield.png'),
             
-            "red_rune":         core.Animation("media/red_triangle.png", 9, 1),
-            "red_rune_menu":         core.Animation('media/red_rune_menu.png'),
+            # RED
+            "red_worker":               core.Animation("media/red_worker.png"),
+            "red_worker_menu":          core.Animation('media/red_worker_menu.png'),
             
-            "red_square":       core.Animation('media/red_square.png'),
-            "red_square_menu":       core.Animation('media/red_square_menu.png'),
+            "red_tank_body":            core.Animation("media/red_tank_body.png"),
+            "red_tank_turret":          core.Animation('media/red_tank_turret.png'),
+            "red_tank_menu":            core.Animation('media/red_tank_menu.png'),
             
-            "blue_rune":        core.Animation('media/blue_rune_anim.png', 3, 3, 0.2),
+            "red_adv_worker":           core.Animation("media/red_adv_worker.png"),
+            "red_adv_worker_menu":      core.Animation('media/red_adv_worker_menu.png'),
             
-            "red_building_menu":      core.Animation('media/red_building_menu.png'),
-            "blue_building_menu":     core.Animation('media/blue_building_menu.png'),
+            "red_heavy_tank_body":      core.Animation("media/red_heavy_tank_body.png"),
+            "red_heavy_tank_turret":    core.Animation('media/red_heavy_tank_turret.png'),
+            "red_heavy_tank_menu":      core.Animation('media/red_heavy_tank_menu.png'),
             
-            "red_building":         core.Animation('media/red_building.png'),
-            "blue_building":        core.Animation('media/blue_building.png'),
+            "red_juggernaut_body":      core.Animation("media/red_juggernaut_body.png"),
+            "red_juggernaut_turret":    core.Animation('media/red_juggernaut_turret.png'),
+            "red_juggernaut_menu":      core.Animation('media/red_juggernaut_menu.png'),
             
-            "red_building_placement":       core.Animation('media/red_building_placement.png'),
-            "blue_building_placement":      core.Animation('media/blue_building_placement.png'),
+            "red_factory":              core.Animation("media/red_factory.png"),
+            "red_factory_placement":    core.Animation("media/red_factory_placement.png"),
+            "red_factory_menu":         core.Animation('media/red_factory_menu.png'),
             
-            "grey_tank":                core.Animation('media/grey_tank.png'),
-            "grey_tank_body":           core.Animation('media/grey_tank_body.png'),
-            "grey_tank_turret":         core.Animation('media/grey_tank_turret.png', rotate_about=(0, -11, 0)),
+            "red_adv_factory":          core.Animation("media/red_adv_factory.png"),
+            "red_adv_factory_placement":core.Animation("media/red_adv_factory_placement.png"),
+            "red_adv_factory_menu":     core.Animation('media/red_adv_factory_menu.png'),
             
+            "red_turret":               core.Animation("media/red_turret.png"),
+            "red_turret_placement":     core.Animation("media/red_turret_placement.png"),
+            "red_turret_menu":          core.Animation('media/red_turret_menu.png'),
+            
+            "red_adv_turret":           core.Animation("media/red_adv_turret.png"),
+            "red_adv_turret_placement": core.Animation("media/red_adv_turret_placement.png"),
+            "red_adv_turret_menu":      core.Animation('media/red_adv_turret_menu.png'),
+            
+            # BLU
+            # "blu_worker":               core.Animation("media/blu_worker.png"),
+            # "blu_worker_menu":          core.Animation('media/blu_worker_menu.png'),
+            # 
+            # "blu_tank_body":            core.Animation("media/blu_tank_body.png"),
+            # "blu_tank_turret":          core.Animation('media/blu_tank_turret.png'),
+            # "blu_tank_menu":            core.Animation('media/blu_tank_menu.png'),
+            # 
+            # "blu_adv_worker":           core.Animation("media/blu_adv_worker.png"),
+            # "blu_adv_worker_menu":      core.Animation('media/blu_adv_worker_menu.png'),
+            # 
+            # "blu_heavy_tank_body":      core.Animation("media/blu_heavy_tank_body.png"),
+            # "blu_heavy_tank_turret":    core.Animation('media/blu_heavy_tank_turret.png'),
+            # "blu_heavy_tank_menu":      core.Animation('media/blu_heavy_tank_menu.png'),
+            # 
+            # "blu_artillery":            core.Animation("media/blu_artillery.png"),
+            # "blu_juggernaut_menu":      core.Animation('media/blu_juggernaut_menu.png'),
+            # 
+            # "blu_factory":              core.Animation("media/blu_factory.png"),
+            # "blu_factory_menu":         core.Animation('media/blu_factory_menu.png'),
+            # 
+            # "blu_adv_factory":          core.Animation("media/blu_adv_factory.png"),
+            # "blu_adv_factory_menu":     core.Animation('media/blu_adv_factory_menu.png'),
+            # 
+            # "blu_turret":               core.Animation("media/blu_turret.png"),
+            # "blu_turret_menu":          core.Animation('media/blu_turret_menu.png'),
+            # 
+            # "blu_adv_turret":           core.Animation("media/blu_adv_turret.png"),
+            # "blu_adv_turret_menu":      core.Animation('media/blu_adv_turret_menu.png'),
+            
+            # Bullets
             "9px_bullet":               core.Animation('media/9px_bullet.png'),
             "11px_bullet":              core.Animation('media/11px_bullet.png'),
             "15px_bullet":              core.Animation('media/15px_bullet.png'),
