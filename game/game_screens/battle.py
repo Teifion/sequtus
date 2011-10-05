@@ -25,6 +25,7 @@ class Battle (battle_sim.BattleSim):
             position = (200, 0),
             fill_colour = (0,0,50),
         )
+        self.panels["resources"].always_changed = True
         
         # May not be needed
         # self.panels["unit_info"] = panels.InfoBox(engine,
@@ -39,13 +40,25 @@ class Battle (battle_sim.BattleSim):
         
         self.post_init()
     
-    def logic_cycle(self):
-        super(Battle, self).logic_cycle()
+    def load_game(self, *args):
+        super(Battle, self).load_game(*args)
+        
+        t = self.teams[self.player_team]
+        for i, r in enumerate(self.resources.keys()):
+            self.panels['resources'].add_text(
+                obj = t,
+                attribute = "resources",
+                key = r,
+                position = (i*150 + 50, 20),
+                prefix = "%s: " % r,
+            )
+    
+    def logic_cycle(self, *args, **kwargs):
+        super(Battle, self).logic_cycle(*args, **kwargs)
         
         if self.signal_menu_rebuild:
             self.rebuild_build_menu()
             self.signal_menu_rebuild = False
-            
     
     def rebuild_build_menu(self):
         if self.actor_types == {}:

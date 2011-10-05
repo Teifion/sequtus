@@ -24,6 +24,7 @@ class Panel (object):
         
         # Used for caching images as panels don't change that often
         self.changed = False
+        self.always_changed = False
         self._image = None
         
         self.position = pygame.Rect(0,0,0,0)
@@ -35,7 +36,7 @@ class Panel (object):
     
     def image(self):
         # Try to use the cached version
-        if self._image != None and not self.changed and not self.always_redraw:
+        if self._image != None and not self.changed and not self.always_redraw and not self.always_changed:
             return self._image, self.position
         
         # Draw the iamge
@@ -302,17 +303,52 @@ class InfoBox (Panel):
         self.fill_colour        = fill_colour
         self.text_colour        = text_colour
         
-        self.texts = {}
+        self.texts = []
+    
+    def add_text(self, obj, attribute, key=None, position=(0,0), colour=None, prefix="", suffix=""):
+        if colour == None: colour = self.text_colour
+        
+        self.texts.append({
+            "obj":          obj,
+            "attribute":    attribute,
+            "key":          key,
+            "position":     position,
+            "colour":       colour,
+            "prefix":       prefix,
+            "suffix":       suffix,
+        })  
+        
     
     def draw(self):
         self._image = pygame.Surface(self.size)
         self._image.fill(self.fill_colour, pygame.Rect(0, 0, self.size[0], self.size[1]))
         
-        for k, t in self.texts.items():
-            pass
+        font = pygame.font.SysFont("Helvetica", 16)
+        
+        for t in self.texts:
+            if t['key'] == None:
+                v = getattr(t['obj'], t['attribute'])
+            else:
+                v = getattr(t['obj'], t['attribute'])[t['key']]
+            
+            text = "%s%s%s" % (t['prefix'], v, t['suffix'])
+            textobj = font.render(text, 1, t['colour'])
+            textrect = textobj.get_rect()
+            textrect.topleft = t['position']
+            
+            self._image.blit(textobj, textrect)
         
         self.position.size = self.size
+        
+    def draw_text(self, text, surface, x, y, colour=(0,0,0), font_name="Helvetica", font_size=20):
+        font = pygame.font.SysFont(font_name, font_size)
+
+        textobj = font.render(text, 1, colour)
+        textrect = textobj.get_rect()
+        textrect.topleft = (x, y)
+        surface.blit(textobj, textrect)
     
     # Not expected to respond to mouse events
     def handle_mouseup(self, event, drag=False):
         pass
+
