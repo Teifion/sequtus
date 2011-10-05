@@ -69,34 +69,42 @@ class Sequtus (core.EngineV3):
             "red_adv_turret_menu":      core.Animation('media/red_adv_turret_menu.png'),
             
             # BLU
-            # "blu_worker":               core.Animation("media/blu_worker.png"),
-            # "blu_worker_menu":          core.Animation('media/blu_worker_menu.png'),
-            # 
-            # "blu_tank_body":            core.Animation("media/blu_tank_body.png"),
-            # "blu_tank_turret":          core.Animation('media/blu_tank_turret.png'),
-            # "blu_tank_menu":            core.Animation('media/blu_tank_menu.png'),
-            # 
-            # "blu_adv_worker":           core.Animation("media/blu_adv_worker.png"),
-            # "blu_adv_worker_menu":      core.Animation('media/blu_adv_worker_menu.png'),
-            # 
-            # "blu_heavy_tank_body":      core.Animation("media/blu_heavy_tank_body.png"),
-            # "blu_heavy_tank_turret":    core.Animation('media/blu_heavy_tank_turret.png'),
-            # "blu_heavy_tank_menu":      core.Animation('media/blu_heavy_tank_menu.png'),
-            # 
-            # "blu_artillery":            core.Animation("media/blu_artillery.png"),
-            # "blu_juggernaut_menu":      core.Animation('media/blu_juggernaut_menu.png'),
-            # 
-            # "blu_factory":              core.Animation("media/blu_factory.png"),
-            # "blu_factory_menu":         core.Animation('media/blu_factory_menu.png'),
-            # 
-            # "blu_adv_factory":          core.Animation("media/blu_adv_factory.png"),
-            # "blu_adv_factory_menu":     core.Animation('media/blu_adv_factory_menu.png'),
-            # 
-            # "blu_turret":               core.Animation("media/blu_turret.png"),
-            # "blu_turret_menu":          core.Animation('media/blu_turret_menu.png'),
-            # 
-            # "blu_adv_turret":           core.Animation("media/blu_adv_turret.png"),
-            # "blu_adv_turret_menu":      core.Animation('media/blu_adv_turret_menu.png'),
+            "blu_worker":               core.Animation("media/blu_worker.png"),
+            "blu_worker_menu":          core.Animation('media/blu_worker_menu.png'),
+            
+            "blu_tank_body":            core.Animation("media/blu_tank_body.png"),
+            "blu_tank_turret":          core.Animation('media/blu_tank_turret.png'),
+            "blu_tank_menu":            core.Animation('media/blu_tank_menu.png'),
+            
+            "blu_adv_worker":           core.Animation("media/blu_adv_worker.png"),
+            "blu_adv_worker_menu":      core.Animation('media/blu_adv_worker_menu.png'),
+            
+            "blu_heavy_tank_body":      core.Animation("media/blu_heavy_tank_body.png"),
+            "blu_heavy_tank_turret":    core.Animation('media/blu_heavy_tank_turret.png'),
+            "blu_heavy_tank_menu":      core.Animation('media/blu_heavy_tank_menu.png'),
+            
+            "blu_artillery":            core.Animation("media/blu_artillery.png"),
+            "blu_artillery_menu":       core.Animation('media/blu_artillery_menu.png'),
+            
+            "blu_factory":              core.Animation("media/blu_factory.png"),
+            "blu_factory_placement":    core.Animation('media/blu_factory_placement.png'),
+            "blu_factory_menu":         core.Animation('media/blu_factory_menu.png'),
+            
+            "blu_mine":                 core.Animation("media/blu_mine.png"),
+            "blu_mine_placement":       core.Animation("media/blu_mine_placement.png"),
+            "blu_mine_menu":            core.Animation('media/blu_mine_menu.png'),
+            
+            "blu_adv_factory":          core.Animation("media/blu_adv_factory.png"),
+            "blu_adv_factory_placement":core.Animation('media/blu_adv_factory_placement.png'),
+            "blu_adv_factory_menu":     core.Animation('media/blu_adv_factory_menu.png'),
+            
+            "blu_turret":               core.Animation("media/blu_turret.png"),
+            "blu_turret_placement":     core.Animation("media/blu_turret_placement.png"),
+            "blu_turret_menu":          core.Animation('media/blu_turret_menu.png'),
+            
+            "blu_adv_turret":           core.Animation("media/blu_adv_turret.png"),
+            "blu_adv_turret_placement": core.Animation("media/blu_adv_turret_placement.png"),
+            "blu_adv_turret_menu":      core.Animation('media/blu_adv_turret_menu.png'),
             
             # Bullets
             "9px_bullet":               core.Animation('media/9px_bullet.png'),

@@ -58,6 +58,68 @@
             "type": "Red mine",
             "pos":  [500, 400, 0],
             "team": 1
+        },
+        
+        
+        
+        {
+            "type": "Blu worker",
+            "pos":  [150, 100, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu adv worker",
+            "pos":  [150, 200, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu tank",
+            "pos":  [150, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu heavy tank",
+            "pos":  [150, 400, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu artillery",
+            "pos":  [150, 500, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu factory",
+            "pos":  [350, 100, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu adv factory",
+            "pos":  [350, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu turret",
+            "pos":  [550, 100, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu adv turret",
+            "pos":  [550, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu mine",
+            "pos":  [550, 400, 0],
+            "team": 1
         }
     ],
     
