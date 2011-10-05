@@ -214,7 +214,7 @@ class BattleScreen (screen.Screen):
                         surf.blit(*a.health_bar(self.draw_margin[0], self.draw_margin[1]))
                         
                         if a.completion < 100:
-                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1], r.width))
+                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
                     
                     # Pass effects from the actor to the battle screen
                     # this means that if the actor dies the effect still lives on
