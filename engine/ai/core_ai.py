@@ -1,4 +1,5 @@
 import multiprocessing
+import time
 
 from engine.libs import vectors
 
@@ -104,13 +105,14 @@ class AICore (object):
 def _ai_process(ai_class, in_queue, out_queue):
     # Added to prevent memory leaks if the program doesn't
     # exit correctly
-    time_to_live = 9999
+    start_time = time.time()
+    time_to_live = 60 * 10# 10 Minutes
     
     try:
         a = ai_class(in_queue, out_queue)
         time_to_live -= 1
         
-        while a.running and time_to_live > 0:
+        while a.running and time.time() - start_time < time_to_live:
             a.core_cycle()
         
     except KeyboardInterrupt as e:
