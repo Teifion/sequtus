@@ -15,7 +15,7 @@ import pdb
 import weakref
 
 from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
-from engine.logic import actor_subtypes
+from engine.logic import actor_subtypes, teams
 from engine.ai import autotargeter, core_ai
 from engine.render import battle_screen
 
@@ -74,6 +74,9 @@ class BattleSim (battle_screen.BattleScreen):
         self.ability_types = {}
         self.build_lists = {}
         self.tech_trees = {}
+        self.resources = {}
+        
+        self.teams = {}
         
         self.autotargeters = {}
         self.out_queues = {}
@@ -367,6 +370,13 @@ class BattleSim (battle_screen.BattleScreen):
             setattr(self, maps_to, v)
     
     def load_setup(self, data):
+        # Load resources
+        # Currently we're using a dictionary with only 1 entry
+        # per key but it's possible we'll need to start using more
+        # values per key so we're using a dictionary
+        for res_data in data['resources']:
+            self.resources[res_data['name']] = res_data
+        
         # Load abilities
         for type_name, type_data in data['abilities'].items():
             self.ability_types[type_name] = type_data
@@ -386,7 +396,7 @@ class BattleSim (battle_screen.BattleScreen):
             self.build_lists[build_name] = build_list
     
     def load_game(self, data):
-        teams = set()
+        team_set = set()
         
         # Load AIs (AIs are optional)
         for ai_team, ai_data in data.get('ais', {}).items():
@@ -411,10 +421,11 @@ class BattleSim (battle_screen.BattleScreen):
             actor_data['completion']    = actor_data.get("completion", 100)
             actor_data['hp']            = actor_data.get("hp", None)
             a = self.place_actor(actor_data)
-            teams.add(actor_data['team'])
+            team_set.add(actor_data['team'])
         
         # Any team without a specifically chosen AI gets the default one
-        for t in teams:
+        for t in team_set:
+            self.teams[t] = teams.Team(t, self)
             if t not in self.autotargeters:
                 self.autotargeters[t] = autotargeter.Autotargeter(self, t)
         
