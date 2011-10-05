@@ -52,6 +52,10 @@ class Sequtus (core.EngineV3):
             "red_factory_placement":    core.Animation("media/red_factory_placement.png"),
             "red_factory_menu":         core.Animation('media/red_factory_menu.png'),
             
+            "red_mine":                 core.Animation("media/red_mine.png"),
+            "red_mine_placement":       core.Animation("media/red_mine_placement.png"),
+            "red_mine_menu":            core.Animation('media/red_mine_menu.png'),
+            
             "red_adv_factory":          core.Animation("media/red_adv_factory.png"),
             "red_adv_factory_placement":core.Animation("media/red_adv_factory_placement.png"),
             "red_adv_factory_menu":     core.Animation('media/red_adv_factory_menu.png'),
