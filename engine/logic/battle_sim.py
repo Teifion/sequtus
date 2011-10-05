@@ -429,6 +429,11 @@ class BattleSim (battle_screen.BattleScreen):
             if t not in self.autotargeters:
                 self.autotargeters[t] = autotargeter.Autotargeter(self, t)
         
+        # Now load the team data
+        for team_id, team_data in data['teams'].items():
+            team_id = int(team_id)
+            self.teams[team_id].apply_data(team_data)
+        
         # Now assign the AIs
         for a in self.actors:
             a.autotargeter = self.autotargeters[a.team]

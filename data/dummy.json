@@ -23,5 +23,14 @@
         "2": {
             "type": "Basic computer"
         }
+    },
+    
+    "teams": {
+        "1": {
+            "resources": {
+                "Metal":    1000,
+                "Energy":   1000
+            }
+        }
     }
 }
