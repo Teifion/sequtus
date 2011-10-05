@@ -143,6 +143,8 @@ class TabularMenu (Panel):
         # Build a list of all the things currently in the build queues
         build_queues = {}
         for a in self.screen.selected_actors:
+            if a.team != self.screen.player_team: continue
+            
             flags.extend(a.flags)
             
             for b in a.build_queue:
