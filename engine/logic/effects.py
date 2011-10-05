@@ -71,6 +71,7 @@ class Explosion (Effect):
         real_colour = [self.colour[i] + self.colour_change[i] * self.age for i in range(3)]
         
         # Typecast to an int to stop float warning
-        draw.circle(surface, bound_colour(real_colour), adjusted_center, int(self.radius + self.radius_change * self.age), 2)
+        radius = int(self.radius + self.radius_change * self.age)
+        draw.circle(surface, bound_colour(real_colour), adjusted_center, radius, min(2, radius))
             
     
