@@ -215,15 +215,15 @@ class BattleScreen (screen.Screen):
                         
                         if a.completion < 100:
                             surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
-                    
-                    # Pass effects from the actor to the battle screen
-                    # this means that if the actor dies the effect still lives on
-                    while len(a.effects) > 0:
-                        self.effects.append(a.effects.pop())
-                    
-                    # Do same with bullets
-                    while len(a.bullets) > 0:
-                        self.bullets.append(a.bullets.pop())
+            
+            # Pass effects from the actor to the battle screen
+            # this means that if the actor dies the effect still lives on
+            while len(a.effects) > 0:
+                self.effects.append(a.effects.pop())
+            
+            # Do same with bullets
+            while len(a.bullets) > 0:
+                self.bullets.append(a.bullets.pop())
         
         # Bullets
         for b in self.bullets:
