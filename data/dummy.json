@@ -7,20 +7,26 @@
         },
         
         {
-            "type": "Red tank",
+            "type": "Red adv worker",
             "pos":  [100, 200, 0],
             "team": 1
         },
         
         {
-            "type": "Red heavy tank",
+            "type": "Red tank",
             "pos":  [100, 300, 0],
             "team": 1
         },
         
         {
-            "type": "Red juggernaut",
+            "type": "Red heavy tank",
             "pos":  [100, 400, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red juggernaut",
+            "pos":  [100, 500, 0],
             "team": 1
         },
         
@@ -45,6 +51,12 @@
         {
             "type": "Red adv turret",
             "pos":  [500, 300, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red mine",
+            "pos":  [500, 400, 0],
             "team": 1
         }
     ],

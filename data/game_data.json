@@ -131,7 +131,30 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Construction", "Repair"],
-            "flags":    [],
+            "flags":    ["Red T1 buildings"],
+            
+            "required_techs":   []
+        },
+        
+        "Red adv worker": {
+            "image":            "red_adv_worker",
+            "menu_image":       "red_adv_worker_menu",
+            
+            "type":             "wheeled",
+            "max_hp":           10,
+            "max_shields":      0,
+            
+            "acceleration":     1.5,
+            "deceleration":     1.5,
+            "turn_speed":       90,
+            "drifts":           false,
+            "max_velocity":     5,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Construction", "Repair"],
+            "flags":    ["Red T1 buildings", "Red T2 buildings"],
             
             "required_techs":   []
         },
@@ -205,6 +228,26 @@
             "required_techs":   []
         },
         
+        "Red mine": {
+            "image":            "red_mine",
+            "placement_image":  "red_mine_placement",
+            "menu_image":       "red_mine_menu",
+            
+            "build_offset":     [0, 75, 0],
+            
+            "type":             "building",
+            "max_hp":           100,
+            "max_shields":      0,
+            
+            "max_armour":           0,
+            "max_shield_armour":    0,
+            
+            "abilities":  ["Unit constructor"],
+            "flags":    [],
+            
+            "required_techs":   []
+        },
+        
         "Red factory": {
             "image":            "red_factory",
             "placement_image":  "red_factory_placement",
@@ -220,7 +263,7 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Unit constructor"],
-            "flags":    [],
+            "flags":    ["Red T1 units"],
             
             "required_techs":   []
         },
@@ -240,7 +283,7 @@
             "max_shield_armour":    0,
             
             "abilities":  ["Unit constructor"],
-            "flags":    [],
+            "flags":    ["Red T1 units", "Red T2 units"],
             
             "required_techs":   []
         },
@@ -287,15 +330,15 @@
     },
     
     "build_lists": {
-        "Red worker": ["Red factory", "Red mine", "Red turret"],
-        "Adv red worker": ["Adv red factory", "Adv red turret"],
-        "Red factory": ["Red worker", "Red tank"],
-        "Adv red factory": ["Red heavy tank", "Red juggernaut"],
+        "Red T1 buildings": ["Red factory", "Red mine", "Red turret"],
+        "Red T2 buildings": ["Red adv factory", "Red adv turret"],
+        "Red T1 units": ["Red worker", "Red tank"],
+        "Red T2 units": ["Red adv worker", "Red heavy tank", "Red juggernaut"],
         
-        "Blu worker": ["Blu factory", "Blu mine", "Blu turret"],
-        "Adv Blu worker": ["Adv Blu factory", "Adv Blu turret"],
-        "Blu factory": ["Blu worker", "Blu tank"],
-        "Adv Blu factory": ["Blu heavy tank", "Blu artillery"]
+        "Blu T1 buildings": ["Blu factory", "Blu mine", "Blu turret"],
+        "Blu T2 buildings": ["Blu adv factory", "Blu adv turret"],
+        "Blu T1 units": ["Blu worker", "Blu tank"],
+        "Blu T2 units": ["Blu adv worker", "Blu heavy tank", "Blu artillery"]
     },
     
     "tech_trees": {
