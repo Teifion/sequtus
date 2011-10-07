@@ -1,5 +1,18 @@
 {
     "abilities": {
+        "Metal generator":    {
+            "type":         "PassiveResourceGenerator",
+            
+            "required_charge": 35,
+            "production":       {"Metal":1},
+            
+            "effect":       {
+                "colour":   [0, 255, 0],
+                "duration": 7,
+                "degrade":  [0, 50, 0]
+            }
+        },
+        
         "Red laser":    {
             "type":         "BeamWeapon",
             "min_range":    1,
@@ -285,10 +298,11 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Unit constructor"],
+            "abilities":  ["Metal generator"],
             "flags":    [],
             
-            "required_techs":   []
+            "required_techs":   [],
+            "resource_dump":    true
         },
         
         "Red factory": {
@@ -503,7 +517,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Unit constructor"],
+            "abilities":  ["Metal generator"],
             "flags":    [],
             
             "requiblu_techs":   []

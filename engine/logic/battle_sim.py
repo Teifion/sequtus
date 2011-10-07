@@ -245,6 +245,18 @@ class BattleSim (battle_screen.BattleScreen):
                         self.signal_menu_rebuild = True
                         del(a.build_queue[0])
             
+            # Possible offloading of resources
+            if a.resource_dump != []:
+                if a.resource_dump == True:
+                    t = self.teams[a.team]
+                    for k, v in a.cargo.items():
+                        t.resources[k] += v
+                    
+                    a.cargo = {}
+                else:
+                    raise Exception("No handler for when a.resource_dump is a list")
+                
+            
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
         for builder, new_actor in to_add:

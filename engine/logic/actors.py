@@ -43,6 +43,11 @@ class Actor (object_base.ObjectBase):
     
     repair_rate             = 1
     
+    # Can be set to [] to show that it cannot accept resources
+    # Can be set to True to show that it can accept all resources
+    # Can be set as a list to show that it accepts all resources in the list
+    resource_dump   = []
+    
     def __init__(self):
         super(Actor, self).__init__()
         
@@ -85,6 +90,9 @@ class Actor (object_base.ObjectBase):
         
         self.frame = 0
         self.build_queue = []
+        
+        # Used to store resources etc
+        self.cargo = {}
     
     def health_bar(self, scroll_x, scroll_y):
         """Define width if the actor will be a non-standard
@@ -182,6 +190,8 @@ class Actor (object_base.ObjectBase):
         
         self.construction_rate          = data.get("construction_rate", self.construction_rate)
         self.construction_heal_rate     = self.construction_rate/100 * self.max_hp
+        
+        self.resource_dump          = data.get("resource_dump", self.resource_dump)
         
         self.abilities = []
     
@@ -361,6 +371,7 @@ class Actor (object_base.ObjectBase):
         else:
             cmd, pos, target = self.micro_orders[0]
         
+        self._passive_ai()
         self._attack_ai()
         self._help_ai()
         
@@ -527,6 +538,11 @@ class Actor (object_base.ObjectBase):
             
             if a.can_use(target):
                 a.use(target)
-            
+    
+    def _passive_ai(self):
+        for a in self.abilities:
+            if a.passive and a.can_use():
+                a.use()
+        
         
     

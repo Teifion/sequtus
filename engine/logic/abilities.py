@@ -16,6 +16,8 @@ class Ability (object):
     
     required_charge = 20
     charge_rate = 1
+    auto_charge = True
+    passive = False
     weapon = False
     
     # Flags for order types
@@ -111,7 +113,8 @@ class Ability (object):
         return False
     
     def update(self):
-        self.charge += self.charge_rate
+        if self.auto_charge:
+            self.charge += self.charge_rate
     
     def can_use(self, target=None, **kwargs):
         """Called to see if the ability can be used"""
@@ -261,6 +264,32 @@ class RepairAbility (Ability):
         )
         self.actor.effects.append(the_effect)
 
+class ResourceAbility (Ability):
+    """An ability that produces resources in some way"""
+    production = {}
+    
+    def use(self):
+        for k, v in self.production.items():
+            if k not in self.actor.cargo:
+                self.actor.cargo[k] = 0
+            
+            self.actor.cargo[k] += v
+        
+        self.charge = 0
+
+class PassiveResourceGenerator (ResourceAbility):
+    """An ability that passively generates resources every use"""
+    passive = True
+    
+    def can_use(self):
+        if self.charge < self.required_charge:
+            return False
+        
+        return True
+
+class ActiveResourceGenerator (ResourceAbility):
+    """An ability that must be targeted at something to generate resources"""
+    pass
 
 class InstantHitWeapon (WeaponAbility):
     """Weapons that instantly hit their target such as lasers"""
@@ -349,4 +378,7 @@ lookup = {
     
     "Construction": ConstructionAbility,
     "Repair": RepairAbility,
+    
+    "PassiveResourceGenerator": PassiveResourceGenerator,
+    "ActiveResourceGenerator":  ActiveResourceGenerator,
 }
