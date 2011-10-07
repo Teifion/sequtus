@@ -245,18 +245,6 @@ class BattleSim (battle_screen.BattleScreen):
                         self.signal_menu_rebuild = True
                         del(a.build_queue[0])
             
-            # Possible offloading of resources
-            if a.resource_dump != []:
-                if a.resource_dump == True:
-                    t = self.teams[a.team]
-                    for k, v in a.cargo.items():
-                        t.resources[k] += v
-                    
-                    a.cargo = {}
-                else:
-                    raise Exception("No handler for when a.resource_dump is a list")
-                
-            
             if a.hp <= 0: to_remove.insert(0, i)
         for i in to_remove: del(self.actors[i])
         for builder, new_actor in to_add:
@@ -344,9 +332,12 @@ class BattleSim (battle_screen.BattleScreen):
         for ab in a.abilities:
             ab.facing = list(a.facing)
         
-        # If AI's exist, assign the actor to one
+        # If Autotargeter's exist, assign the actor to one
         if a.team in self.autotargeters:
             a.autotargeter = self.autotargeters[a.team]
+        
+        # Assign it a team entity too
+        a.team_obj = self.teams[a.team]
         
         self.add_actor(a)
         self.actor_lookup[a.oid] = weakref.ref(a)()
@@ -410,6 +401,12 @@ class BattleSim (battle_screen.BattleScreen):
     def load_game(self, data):
         team_set = set()
         
+        # Load team objects
+        for team_id, team_data in data['teams'].items():
+            team_id = int(team_id)
+            self.teams[team_id] = teams.Team(team_id, self)
+            self.teams[team_id].apply_data(team_data)
+        
         # Load AIs (AIs are optional)
         for ai_team, ai_data in data.get('ais', {}).items():
             # Annoyingly we need to convert it from a unicode dict
@@ -437,16 +434,11 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Any team without a specifically chosen AI gets the default one
         for t in team_set:
-            self.teams[t] = teams.Team(t, self)
             if t not in self.autotargeters:
                 self.autotargeters[t] = autotargeter.Autotargeter(self, t)
         
-        # Now load the team data
-        for team_id, team_data in data['teams'].items():
-            team_id = int(team_id)
-            self.teams[team_id].apply_data(team_data)
-        
-        # Now assign the AIs
+        # Now assign the auto-targeters as they would not have been assigned
+        # when the actors were placed
         for a in self.actors:
             a.autotargeter = self.autotargeters[a.team]
         

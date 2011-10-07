@@ -51,6 +51,8 @@ class Actor (object_base.ObjectBase):
     def __init__(self):
         super(Actor, self).__init__()
         
+        self.team_obj = None
+        
         self.next_ai_update = 0
         self.autotargeter = None
         
@@ -544,5 +546,12 @@ class Actor (object_base.ObjectBase):
             if a.passive and a.can_use():
                 a.use()
         
+        if self.resource_dump != []:
+            if self.resource_dump == True:
+                for k, v in self.cargo.items():
+                    self.team_obj.resources[k] += v
+                
+                self.cargo = {}
+            else:
+                raise Exception("No handler for when self.resource_dump is a list")
         
-    
