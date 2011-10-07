@@ -1,21 +1,9 @@
 {
     "actors":   [
         {
-            "type": "Red tank",
+            "type": "Red juggernaut",
             "pos":  [100, 100, 0],
             "team": 1
-        },
-        
-        {
-            "type": "Red tank",
-            "pos":  [200, 100, 0],
-            "team": 1
-        },
-        
-        {
-            "type": "Blu tank",
-            "pos":  [300, 300, 0],
-            "team": 2
         }
     ],
     

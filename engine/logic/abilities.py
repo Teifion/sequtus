@@ -52,6 +52,9 @@ class Ability (object):
         
         self._offset_distance = vectors.distance(self.effect_offset)
         self._offset_angle = vectors.angle(self.effect_offset)
+        
+        self._img_offset_distance = vectors.distance(self.image_offset)
+        self._img_offset_angle = vectors.angle(self.image_offset)
     
     def set_stats(self, ability_data):
         for k, v in ability_data.items():

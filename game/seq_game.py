@@ -140,11 +140,11 @@ class Sequtus (core.EngineV3):
         try:
             # Issue an attack order
             # self.current_screen.select_actor(self.current_screen.actors[0])
-            self.current_screen.add_order(self.current_screen.actors[0], "move", pos=[120, 120, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[300, 10, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[500, 100, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[500, 500, 0], target=None)
-
+            self.current_screen.add_order(self.current_screen.actors[0], "move", pos=[200, 100, 0], target=None)
+            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[200, 200, 0], target=None)
+            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[100, 200, 0], target=None)
+            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[100, 100, 0], target=None)
+            
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
             # self.current_screen.handle_keyup(e)
