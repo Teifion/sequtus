@@ -4,13 +4,7 @@
             "type":         "PassiveResourceGenerator",
             
             "required_charge": 35,
-            "production":       {"Metal":1},
-            
-            "effect":       {
-                "colour":   [0, 255, 0],
-                "duration": 7,
-                "degrade":  [0, 50, 0]
-            }
+            "production":       {"Metal":1}
         },
         
         "Red laser":    {
