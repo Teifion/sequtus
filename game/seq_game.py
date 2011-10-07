@@ -134,7 +134,6 @@ class Sequtus (core.EngineV3):
         self.current_screen.player_team = 1
         
         self.current_screen.load_all("data/config.json", "data/game_data.json", "data/dummy.json")
-        # self.current_screen.load_all("data/config.json", "data/game_data.json", "engine/test_lib/battle_test_setups/collisions.json")
         
         # Wrap it in a try block so that the screen can quit it's AI processes
         try:
