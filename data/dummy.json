@@ -7,15 +7,15 @@
         },
         
         {
-            "type": "Red heavy tank",
-            "pos":  [100, 400, 0],
+            "type": "Red tank",
+            "pos":  [200, 100, 0],
             "team": 1
         },
         
         {
-            "type": "Red juggernaut",
-            "pos":  [100, 500, 0],
-            "team": 1
+            "type": "Blu tank",
+            "pos":  [300, 300, 0],
+            "team": 2
         }
     ],
     
