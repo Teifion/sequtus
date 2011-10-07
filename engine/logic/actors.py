@@ -461,7 +461,7 @@ class Actor (object_base.ObjectBase):
         target_angle = vectors.angle(self.pos, target)
         diff = vectors.angle_diff(self.facing, target_angle)[0]
         
-        if abs(diff) < self.turn_speed:
+        if abs(diff) <= self.turn_speed:
             self.facing = target_angle
             return True
         

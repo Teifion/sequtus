@@ -70,7 +70,7 @@ class Ability (object):
         xy_diff, z_diff = vectors.angle_diff(self.facing, target_facing)
         
         # If it's within a certain range then BOOM, we're there
-        if abs(xy_diff) < self.turn_speed:
+        if abs(xy_diff) <= self.turn_speed:
             if abs(z_diff) < self.turn_speed:
                 self.facing = target_facing
                 return True
