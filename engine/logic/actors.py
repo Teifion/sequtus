@@ -467,8 +467,10 @@ class Actor (object_base.ObjectBase):
         
         if diff >= 0:
             self.facing[0] += self.turn_speed
+            for a in self.abilities: a.facing[0] += self.turn_speed
         else:
             self.facing[0] -= self.turn_speed
+            for a in self.abilities: a.facing[0] -= self.turn_speed
         
         return False
     
@@ -513,7 +515,11 @@ class Actor (object_base.ObjectBase):
         
         target = self.get_first_target()
         
-        if target == None: return
+        if target == None:
+            for a in self.abilities:
+                a.turn(self.facing)
+            return
+            
         
         for a in self.abilities:
             # Turn the ability towards it's target
