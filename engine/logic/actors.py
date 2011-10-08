@@ -135,7 +135,7 @@ class Actor (object_base.ObjectBase):
             comp_percent = self.completion/100
             fill_width = self.rect.width * comp_percent
             
-            s.fill((0,0,0), pygame.Rect(0,0, self.rect.width, 3))
+            s.fill((100,100,100), pygame.Rect(0,0, self.rect.width, 3))
             s.fill((200,200,255), pygame.Rect(0,0, fill_width, 3))
             
             self._completion_bar = (s, self.completion)
