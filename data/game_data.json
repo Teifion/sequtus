@@ -133,7 +133,7 @@
             "min_range":    1,
             "max_range":    300,
             "required_charge": 2,
-            "construction_rate":   5,
+            "construction_rate":   1,
             "effect":       {
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
@@ -143,7 +143,7 @@
             "type":         "Construction",
             "max_range":    100,
             "required_charge":      2,
-            "construction_rate":    10,
+            "construction_rate":    1,
             "effect":       {
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
@@ -217,6 +217,8 @@
             "max_hp":           10,
             "max_shields":      0,
             
+            "construction_cost":    {"Metal":100},
+            
             "acceleration":     1,
             "deceleration":     1,
             "turn_speed":       10,
@@ -283,8 +285,6 @@
             "placement_image":  "red_mine_placement",
             "menu_image":       "red_mine_menu",
             
-            "build_offset":     [0, 75, 0],
-            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -304,7 +304,7 @@
             "placement_image":  "red_factory_placement",
             "menu_image":       "red_factory_menu",
             
-            "build_offset":     [0, 75, 0],
+            "build_offset":     [0, 90, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -324,7 +324,7 @@
             "placement_image":  "red_adv_factory_placement",
             "menu_image":       "red_adv_factory_menu",
             
-            "build_offset":     [0, 75, 0],
+            "build_offset":     [0, 90, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -344,8 +344,6 @@
             "placement_image":  "red_turret_placement",
             "menu_image":       "red_turret_menu",
             
-            "build_offset":     [0, 75, 0],
-            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -363,8 +361,6 @@
             "image":            "red_adv_turret",
             "placement_image":  "red_adv_turret_placement",
             "menu_image":       "red_adv_turret_menu",
-            
-            "build_offset":     [0, 75, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -502,8 +498,6 @@
             "placement_image":  "blu_mine_placement",
             "menu_image":       "blu_mine_menu",
             
-            "build_offset":     [0, 75, 0],
-            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -522,7 +516,7 @@
             "placement_image":  "blu_factory_placement",
             "menu_image":       "blu_factory_menu",
             
-            "build_offset":     [0, 75, 0],
+            "build_offset":     [0, 90, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -542,7 +536,7 @@
             "placement_image":  "blu_adv_factory_placement",
             "menu_image":       "blu_adv_factory_menu",
             
-            "build_offset":     [0, 75, 0],
+            "build_offset":     [0, 90, 0],
             
             "type":             "building",
             "max_hp":           100,
@@ -562,8 +556,6 @@
             "placement_image":  "blu_turret_placement",
             "menu_image":       "blu_turret_menu",
             
-            "build_offset":     [0, 75, 0],
-            
             "type":             "building",
             "max_hp":           100,
             "max_shields":      0,
@@ -581,8 +573,6 @@
             "image":            "blu_adv_turret",
             "placement_image":  "blu_adv_turret_placement",
             "menu_image":       "blu_adv_turret_menu",
-            
-            "build_offset":     [0, 75, 0],
             
             "type":             "building",
             "max_hp":           100,
