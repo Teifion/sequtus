@@ -1,7 +1,7 @@
 {
     "actors":   [
         {
-            "type": "Red juggernaut",
+            "type": "Red factory",
             "pos":  [100, 100, 0],
             "team": 1
         },
@@ -22,8 +22,8 @@
     "teams": {
         "1": {
             "resources": {
-                "Metal":    1000,
-                "Energy":   1000
+                "Metal":    50,
+                "Energy":   50
             }
         }
     }
