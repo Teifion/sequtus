@@ -361,10 +361,7 @@ class MassDriver (ProjectileWeapon):
             vectors.add_vectors(self._effect_offset_angle, self.facing)
         )
         
-        origin_pos = vectors.add_vectors(
-            self.actor.pos,
-            vectors.move_to_vector(offset_angle, self._effect_offset_distance)
-        )
+        origin_pos = vectors.add_vectors(self.get_offset_pos(use_effect_offset=True), self.actor.pos)
         
         # Get actual velocity we'll be using
         if type(target) == list or type(target) == tuple:
@@ -375,7 +372,7 @@ class MassDriver (ProjectileWeapon):
             target_pos = target.pos
         
         velocity = vectors.move_to_vector(direction, self.bullet['velocity'])
-        velocity[2] = math_lib.calc_trajectory(0.1, vectors.distance(self.actor.pos, target_pos), self.bullet['velocity'])
+        velocity[2] = math_lib.calc_trajectory(0.1, vectors.distance(origin_pos, target_pos), self.bullet['velocity'])
         
         the_bullet = bullets.Shell(
             pos=origin_pos,
@@ -394,10 +391,6 @@ class BeamWeapon (InstantHitWeapon):
             vectors.add_vectors(self._effect_offset_angle, self.facing)
         )
         
-        # origin_pos = vectors.add_vectors(
-        #     self.actor.pos,
-        #     vectors.move_to_vector(offset_angle, self._effect_offset_distance)
-        # )
         origin_pos = vectors.add_vectors(self.get_offset_pos(use_effect_offset=True), self.actor.pos)
         
         the_effect = effects.Beam(
