@@ -1,0 +1,39 @@
+{
+    "actors":   [     
+        {
+            "type": "Red worker",
+            "pos":  [100, 100, 0],
+            "team": 1
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1900, 0],
+            "team": 2
+        }
+    ],
+    
+    "ais": {
+        "2": {
+            "type": "Basic computer",
+            "bases":    {
+                "core": ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret"]
+            }
+        }
+    },
+    
+    "teams": {
+        "1": {
+            "resources": {
+                "Metal":    500,
+                "Energy":   500
+            }
+        },
+        
+        "2": {
+            "resources": {
+                "Metal":    500,
+                "Energy":   500
+            }
+        }
+    }
+}
