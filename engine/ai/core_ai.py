@@ -29,14 +29,19 @@ class AICore (object):
         self.terrain = {}
         
         self.data_handlers = {
-            "_default": self._default_data_handler,
-            "init":     self._init,
-            "actors":   self._recieve_actors,
-            "quit":     self._quit,
+            "_default":     self._default_data_handler,
+            "init":         self._init,
+            "actors":       self._recieve_actors,
+            "actor_types":  self._recieve_actor_types,
+            "quit":         self._quit,
         }
         
         # Flags
         self.actors_updated = False
+        
+        self.prefs = {
+            "actor_format": "list",
+        }
     
     def read_queue(self):
         try:
@@ -67,6 +72,13 @@ class AICore (object):
             self.team = int(kwargs['team'])
     
     def _recieve_actors(self, actor_list):
+        # This allows the AI to re-scan the lists and see if there's
+        # anything it needs to do differently
+        self.actors_updated = True
+        
+        if self.prefs['actor_format'] == "dict":
+            return self._recieve_actors_as_dict(actor_list)
+        
         self.enemy_actors = []
         self.own_actors = []
         
@@ -75,10 +87,19 @@ class AICore (object):
                 self.own_actors.append(a)
             else:
                 self.enemy_actors.append(a)
+    
+    def _recieve_actors_as_dict(self, actor_list):
+        self.enemy_actors = {}
+        self.own_actors = {}
         
-        # This allows the AI to re-scan the lists and see if there's
-        # anything it needs to do differently
-        self.actors_updated = True
+        for aid, a in actor_list.items():
+            if a.team == self.team:
+                self.own_actors[aid] = a
+            else:
+                self.enemy_actors[aid] = a
+    
+    def _recieve_actor_types(self, actor_types):
+        self.actor_types = actor_types
     
     def issue_orders(self, actor_id, cmd, pos=None, target=None):
         self.out_queue.put({
@@ -110,6 +131,7 @@ def _ai_process(ai_class, in_queue, out_queue):
     
     try:
         a = ai_class(in_queue, out_queue)
+        out_queue.put({"data_type":"prefs","prefs":a.prefs})
         time_to_live -= 1
         
         while a.running and time.time() - start_time < time_to_live:

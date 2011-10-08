@@ -14,7 +14,7 @@ import json
 import pdb
 import weakref
 
-from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib
+from engine.libs import actor_lib, vectors, geometry, pathing, sim_lib, ai_lib
 from engine.logic import actor_subtypes, teams
 from engine.ai import autotargeter, core_ai
 from engine.render import battle_screen
@@ -93,6 +93,8 @@ class BattleSim (battle_screen.BattleScreen):
         # but things such as the AIs cannot use refs so must
         # limit themselves to oids
         self.actor_lookup = {}
+        
+        self.ai_prefs = {}
     
     def quit(self, event=None):
         for k, q in self.out_queues.items():
@@ -171,6 +173,8 @@ class BattleSim (battle_screen.BattleScreen):
                         data['target'] = None
                     
                     self.add_order(a, data['cmd'], pos=data['pos'], target=data['target'])
+                elif data['data_type'] == "prefs":
+                    self.ai_prefs[t] = data['prefs']
                 else:
                     raise Exception("No handler for AI cmd of %s (full data: %s)" % (
                         data['data_type'], str(data))
@@ -178,16 +182,30 @@ class BattleSim (battle_screen.BattleScreen):
                 
     
     def update_ai_queues(self):
-        data = []
+        actor_list = []
+        actor_dict = {}
+        for a in self.actors:
+            sa = actor_lib.strip_actor(a)
+            
+            actor_list.append(sa)
+            actor_dict[a.oid] = sa
         
         # TODO - Make it so that each AI only gets a list of actors
         # that it can actually see. That way it can't cheat
-        data.append({
-            "cmd":          "actors",
-            "actor_list":   [actor_lib.strip_actor(a) for a in self.actors],
-        })
         
         for t, q in self.out_queues.items():
+            if t not in self.ai_prefs: continue
+            if self.ai_prefs[t].get("actor_format", "list") == "list":
+                data = [{
+                    "cmd":          "actors",
+                    "actor_list":   actor_list,
+                }]
+            else:
+                data = [{
+                    "cmd":          "actors",
+                    "actor_list":   actor_dict,
+                }]
+            
             for d in data:
                 q.put(d)
     
@@ -462,7 +480,11 @@ class BattleSim (battle_screen.BattleScreen):
             self.out_queues[ai_team] = out_queue
             self.in_queues[ai_team] = in_queue
             
+            # Definitions from the game file's AI setup
             self.out_queues[ai_team].put(new_data)
+        
+        # Send out static data
+        ai_lib.send_static_data(self, self.out_queues)
         
         # Load actors
         for actor_data in data['actors']:
