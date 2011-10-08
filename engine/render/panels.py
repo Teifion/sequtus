@@ -307,7 +307,7 @@ class InfoBox (Panel):
         
         self.texts = []
     
-    def add_text(self, obj, attribute, key=None, position=(0,0), colour=None, prefix="", suffix=""):
+    def add_text(self, obj, attribute, key=None, position=(0,0), colour=None, prefix="", suffix="", typecast="int"):
         if colour == None: colour = self.text_colour
         
         self.texts.append({
@@ -318,6 +318,7 @@ class InfoBox (Panel):
             "colour":       colour,
             "prefix":       prefix,
             "suffix":       suffix,
+            "typecast":     typecast,
         })  
         
     
@@ -333,6 +334,11 @@ class InfoBox (Panel):
             else:
                 v = getattr(t['obj'], t['attribute'])[t['key']]
             
+            if t['typecast'] == "int":
+                v = int(v)
+            else:
+                raise Exception("No handler for typecast type of '%s'" % t['typecast'])
+            
             text = "%s%s%s" % (t['prefix'], v, t['suffix'])
             textobj = font.render(text, 1, t['colour'])
             textrect = textobj.get_rect()
@@ -344,7 +350,7 @@ class InfoBox (Panel):
         
     def draw_text(self, text, surface, x, y, colour=(0,0,0), font_name="Helvetica", font_size=20):
         font = pygame.font.SysFont(font_name, font_size)
-
+        
         textobj = font.render(text, 1, colour)
         textrect = textobj.get_rect()
         textrect.topleft = (x, y)
