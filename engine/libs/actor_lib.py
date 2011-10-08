@@ -69,6 +69,24 @@ def build_template_cache(template, engine):
     template['optimum_heal_range']      = minmax_heal_range
     template['max_heal_range']          = max_heal_range
     
+    # Construction/Repair
+    template['construction_cost']       = template.get('construction_cost', {})
+    template['repair_cost']             = template.get('repair_cost', {})
+    
+    template['construction_rate']   = template.get('construction_rate', 1)
+    template['repair_rate']         = template.get('repair_rate', 1)
+    
+    construction_cycles = 100/template['construction_rate']
+    repair_cycles = template['max_hp']/template['repair_rate']
+    
+    template['_part_construction_cost'] = {}
+    for k, v in template['construction_cost'].items():
+        template['_part_construction_cost'][k] = v/construction_cycles
+    
+    template['_part_repair_cost'] = {}
+    for k, v in template['repair_cost'].items():
+        template['_part_repair_cost'][k] = v/repair_cycles
+    
     temp_img = engine.images[template['image']]
     template['size'] = temp_img.get_rect().size
 

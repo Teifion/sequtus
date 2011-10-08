@@ -41,7 +41,15 @@ class Actor (object_base.ObjectBase):
     optimum_heal_range    = 100
     max_heal_range        = 100
     
+    construction_rate       = 1
     repair_rate             = 1
+    
+    construction_cost       = {}
+    repair_cost             = {}
+    
+    # Cost to construct/repair 1 unit of the actor
+    _part_construction_cost = {}
+    _part_repair_cost = {}
     
     # Can be set to [] to show that it cannot accept resources
     # Can be set to True to show that it can accept all resources
@@ -68,7 +76,6 @@ class Actor (object_base.ObjectBase):
         self.current_order = ["stop", -1, -1]
         
         self.hp = 0
-        self.construction_rate = 1
         self.completion = 100
         
         self._health_bar = (None, None)
@@ -180,7 +187,6 @@ class Actor (object_base.ObjectBase):
         
         self.build_offset       = data.get("build_offset", self.build_offset)
         
-        # self.abilities          = data.get("abilities", self.abilities)
         self.flags              = data.get("flags", self.flags)
         self.size               = data.get("size", self.size)
         
@@ -190,8 +196,17 @@ class Actor (object_base.ObjectBase):
         self.max_heal_range         = data.get("max_heal_range", self.max_heal_range)
         self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
         
+        # Construction/Repair
+        self.construction_cost          = data.get("construction_cost", self.construction_cost)
+        self.repair_cost                = data.get("repair_cost", self.repair_cost)
+        
         self.construction_rate          = data.get("construction_rate", self.construction_rate)
         self.construction_heal_rate     = self.construction_rate/100 * self.max_hp
+        
+        self.repair_rate                = data.get("repair_rate", self.repair_rate)
+        
+        self._part_construction_cost    = data.get("_part_construction_cost", self._part_construction_cost)
+        self._part_repair_cost          = data.get("_part_repair_cost", self._part_repair_cost)
         
         self.resource_dump          = data.get("resource_dump", self.resource_dump)
         
