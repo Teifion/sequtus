@@ -146,7 +146,7 @@
             "min_range":            1,
             "max_range":            300,
             "required_charge":      2,
-            "construction_rate":    1,
+            "construction_rate":    5,
             "effect":       {
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
@@ -156,7 +156,7 @@
             "type":                 "Construction",
             "max_range":            130,
             "required_charge":      2,
-            "construction_rate":    2,
+            "construction_rate":    5,
             "effect":       {
                 "colour":   [0, 100, 100],
                 "variation":  [0, 50, 50]
