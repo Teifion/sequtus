@@ -138,11 +138,8 @@ class Sequtus (core.EngineV3):
         # Wrap it in a try block so that the screen can quit it's AI processes
         try:
             # Issue an attack order
-            # self.current_screen.select_actor(self.current_screen.actors[0])
-            self.current_screen.add_order(self.current_screen.actors[0], "move", pos=[200, 100, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[200, 200, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[100, 200, 0], target=None)
-            self.current_screen.queue_order(self.current_screen.actors[0], "move", pos=[100, 100, 0], target=None)
+            self.current_screen.select_actor(self.current_screen.actors[0])
+            self.current_screen.actors[0].build_queue = ['Red tank']
             
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
