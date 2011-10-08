@@ -199,10 +199,7 @@ class BattleScreen (screen.Screen):
                                 )
                             
                             # We now need to work out our relative coordinates
-                            rel_pos = vectors.move_to_vector(
-                                angle = vectors.add_vectors(ab._img_offset_angle, a.facing),
-                                distance = ab._img_offset_distance
-                            )
+                            rel_pos = ab.get_offset_pos()
                             
                             # Now we actually draw it
                             centre_offset = self.engine.images[ab.image].get_rotated_offset(ab_rounded_facing)

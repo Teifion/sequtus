@@ -50,25 +50,25 @@
             "min_range":    1,
             "max_range":    800,
             "required_charge": 80,
-            "damage":       {"raw":7},
+            "damage":       {"raw":0},
             "effect":       {
                 "colour":   [255, 0, 0],
                 "duration": 13,
                 "degrade":  [15, 0, 0]
             },
-            "turn_speed":   3,
+            "turn_speed":   90,
             "fire_arc":     [3, 3],
             
             "image":        "red_juggernaut_turret",
             "image_offset": [0, 16, 0],
-            "effect_offset":[0, -40, 0]
+            "effect_offset":[14, 0, 0]
         },
         
         "Red juggernaut laser upper":    {
             "inherits_from":    "Red juggernaut laser",
             
             "image_offset": [0, -16, 0],
-            "effect_offset":[0, -40, 0]
+            "effect_offset":[14, 0, 0]
         },
         
         

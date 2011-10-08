@@ -38,8 +38,8 @@ class Ability (object):
     # using these when actors are rotated etc but it's easier
     # for a person to define where on the model it's fired from
     # using an absolute X and Y
-    _offset_distance = 0
-    _offset_angle = 0
+    _effect_offset_distance = 0
+    _effect_offset_angle = 0
     
     image = None
     image_offset = [0,0,0]
@@ -52,8 +52,8 @@ class Ability (object):
         self.set_stats(ability_data)
         self.charge = self.required_charge
         
-        self._offset_distance = vectors.distance(self.effect_offset)
-        self._offset_angle = vectors.angle(self.effect_offset)
+        self._effect_offset_distance = vectors.distance(self.effect_offset)
+        self._effect_offset_angle = vectors.angle(self.effect_offset)
         
         self._img_offset_distance = vectors.distance(self.image_offset)
         self._img_offset_angle = vectors.angle(self.image_offset)
@@ -137,7 +137,22 @@ class Ability (object):
     
     def generate_effect(self, **kwargs):
         raise Exception("%s has not implemented generate_effect()")
-
+    
+    def get_offset_pos(self, use_effect_offset=False):
+        """Gets the drawing position relative to the centre of their actor"""
+        if use_effect_offset:
+            base_offset = self.get_offset_pos()
+            own_offset = vectors.move_to_vector(
+                angle = vectors.add_vectors(self._effect_offset_angle, self.actor.facing),
+                distance = self._effect_offset_distance
+            )
+            return vectors.add_vectors(base_offset, own_offset)
+        else:
+            return vectors.move_to_vector(
+                angle = vectors.add_vectors(self._img_offset_angle, self.actor.facing),
+                distance = self._img_offset_distance
+            )
+    
 class WeaponAbility (Ability):
     min_range = 0
     max_range = 10
@@ -343,12 +358,12 @@ class MassDriver (ProjectileWeapon):
     def generate_bullet(self, target):
         # Set correct origin
         offset_angle = vectors.bound_angle(
-            vectors.add_vectors(self._offset_angle, self.facing)
+            vectors.add_vectors(self._effect_offset_angle, self.facing)
         )
         
         origin_pos = vectors.add_vectors(
             self.actor.pos,
-            vectors.move_to_vector(offset_angle, self._offset_distance)
+            vectors.move_to_vector(offset_angle, self._effect_offset_distance)
         )
         
         # Get actual velocity we'll be using
@@ -376,13 +391,14 @@ class MassDriver (ProjectileWeapon):
 class BeamWeapon (InstantHitWeapon):
     def generate_effect(self, target):
         offset_angle = vectors.bound_angle(
-            vectors.add_vectors(self._offset_angle, self.facing)
+            vectors.add_vectors(self._effect_offset_angle, self.facing)
         )
         
-        origin_pos = vectors.add_vectors(
-            self.actor.pos,
-            vectors.move_to_vector(offset_angle, self._offset_distance)
-        )
+        # origin_pos = vectors.add_vectors(
+        #     self.actor.pos,
+        #     vectors.move_to_vector(offset_angle, self._effect_offset_distance)
+        # )
+        origin_pos = vectors.add_vectors(self.get_offset_pos(use_effect_offset=True), self.actor.pos)
         
         the_effect = effects.Beam(
             origin=origin_pos,
