@@ -129,7 +129,6 @@ class Sequtus (core.EngineV3):
         self.set_screen('Battle screen')
         
         self.current_screen.name = "Sequtus"
-        self.current_screen.scroll_boundaries = (self.window_width-2000, self.window_height-2000, 0, 0)
         self.current_screen.background_image = self.images['battlefield'].get().copy()
         self.current_screen.player_team = 1
         
@@ -143,9 +142,7 @@ class Sequtus (core.EngineV3):
             pass
             # self.current_screen.actors[0].build_queue = ['Red tank']
             
-            self.current_screen.place_actor({'type': u'Red factory', 'pos': [119, 227, 0], 'team': 1})
-            self.current_screen.add_order(self.current_screen.actors[0], "aid", target=self.current_screen.actors[2])
-            self.current_screen.actors[2].build_queue = ['Red tank']
+            self.current_screen.scroll_to_coords(2000, 2000)
             
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)

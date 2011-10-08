@@ -37,6 +37,7 @@ class Battle (battle_sim.BattleSim):
         self.rebuild_build_menu()
         
         self.draw_area = (200, 50, engine.window_width, engine.window_height)
+        self.scroll_boundaries = (engine.window_width-2000-200, engine.window_height-2000-50, 0, 0)
         
         self.post_init()
     
