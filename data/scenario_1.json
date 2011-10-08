@@ -23,6 +23,7 @@
     
     "teams": {
         "1": {
+            "colour": [255, 0, 0],
             "resources": {
                 "Metal":    500,
                 "Energy":   500
@@ -30,6 +31,7 @@
         },
         
         "2": {
+            "colour": [0, 0, 255],
             "resources": {
                 "Metal":    500,
                 "Energy":   500

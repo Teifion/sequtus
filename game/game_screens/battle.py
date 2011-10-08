@@ -2,6 +2,7 @@ import pygame
 
 from engine.logic import battle_sim
 from engine.render import panels
+from engine.libs import defaults
 
 class Battle (battle_sim.BattleSim):
     def __init__(self, engine):
@@ -53,6 +54,14 @@ class Battle (battle_sim.BattleSim):
                 position = (i*150 + 50, 20),
                 prefix = "%s: " % r,
             )
+        
+        # Update minimap with colours
+        for i, t in self.engine.current_screen.teams.items():
+            if t.colour == None:
+                t.colour = defaults.team_colours[i]
+            
+            self.panels['minimap'].team_colours[i] = tuple(t.colour)
+            
     
     def logic_cycle(self, *args, **kwargs):
         super(Battle, self).logic_cycle(*args, **kwargs)

@@ -241,7 +241,10 @@ class MiniMap (Panel):
         """actors is a dictionary, the keys are the team colours and the value is a list
         of tuples: (x, y, size).
         Size is in pixels"""
-        self.actors = {}
+        self.team_colours = {
+            1: (255, 0, 0),
+            2: (0, 0, 255),
+        }
     
     def draw(self):
         self._image = pygame.Surface(self.size)
@@ -254,7 +257,7 @@ class MiniMap (Panel):
             x,y = a.pos[0] / xratio, a.pos[1] / yratio
             xsize, ysize = a.size[0] / xratio, a.size[1] / yratio, 
             
-            self._image.fill((0,0,0), pygame.Rect(x, y, xsize, ysize))
+            self._image.fill(self.team_colours[a.team], pygame.Rect(x, y, xsize, ysize))
         
         # for team_colour, actor_list in self.actors.items():
         #     for x, y, size in actor_list:
