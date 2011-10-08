@@ -218,8 +218,9 @@ class BattleScreen (screen.Screen):
                         
                         surf.blit(*a.health_bar(self.draw_margin[0], self.draw_margin[1]))
                         
-                        if a.completion < 100:
-                            surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
+                    # Draw completion box anyway
+                    if a.completion < 100:
+                        surf.blit(*a.completion_bar(self.draw_margin[0], self.draw_margin[1]))
             
             # Pass effects from the actor to the battle screen
             # this means that if the actor dies the effect still lives on
@@ -418,6 +419,9 @@ class BattleScreen (screen.Screen):
                 self.key_mod = None
         
         elif event.button == 3:# Right click
+            if len(self.selected_actors) == 0:
+                return
+        
             actor_target = None
             for a in self.actors:
                 if a.contains_point(real_mouse_pos):
