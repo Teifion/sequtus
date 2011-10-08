@@ -44,6 +44,8 @@ class Actor (object_base.ObjectBase):
     construction_rate       = 1
     repair_rate             = 1
     
+    does_damage             = False
+    
     construction_cost       = {}
     repair_cost             = {}
     
@@ -190,11 +192,14 @@ class Actor (object_base.ObjectBase):
         self.flags              = data.get("flags", self.flags)
         self.size               = data.get("size", self.size)
         
+        # AI related
         self.max_attack_range       = data.get("max_attack_range", self.max_attack_range)
         self.optimum_attack_range   = data.get("optimum_attack_range", self.optimum_attack_range)
         
         self.max_heal_range         = data.get("max_heal_range", self.max_heal_range)
         self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
+        
+        self.does_damage            = data.get("does_damage", self.does_damage)
         
         # Construction/Repair
         self.construction_cost          = data.get("construction_cost", self.construction_cost)
