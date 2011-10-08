@@ -222,8 +222,11 @@ class ConstructionAbility (Ability):
         cost = teams.multiply_cost(target._part_construction_cost, self.construction_rate)
         
         if target.completion >= 100:
+            if target.current_order == ["stop", -1, -1]:
+                target.next_order()
+            
             # TODO Give back any leftover cost to the parent team
-            target.next_order()
+                
         
         self.actor.team_obj.spend(cost)
         

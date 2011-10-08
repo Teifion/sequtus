@@ -143,6 +143,10 @@ class Sequtus (core.EngineV3):
             pass
             # self.current_screen.actors[0].build_queue = ['Red tank']
             
+            self.current_screen.place_actor({'type': u'Red factory', 'pos': [119, 227, 0], 'team': 1})
+            self.current_screen.add_order(self.current_screen.actors[0], "aid", target=self.current_screen.actors[2])
+            self.current_screen.actors[2].build_queue = ['Red tank']
+            
             # S key to issue stop command
             # e = pygame.event.Event(3, scancode=2, key=100, mod=0)
             # self.current_screen.handle_keyup(e)

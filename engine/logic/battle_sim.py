@@ -229,7 +229,7 @@ class BattleSim (battle_screen.BattleScreen):
             # for an already started actor to be given a position as it defaults to 0,0
             # and this has an impact on it's rect
             if self._collision_inverval_count < 2:
-                if a.build_queue != []:
+                if a.build_queue != [] and a.completion >= 100:
                     a_type = self.actor_types[a.build_queue[0]]
                 
                     new_rect_pos = vectors.add_vectors(a.pos, a.build_offset)
