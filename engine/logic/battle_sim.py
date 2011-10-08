@@ -396,8 +396,20 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Load actors
         for type_name, type_data in data['actors'].items():
+            if "inherits_from" in type_data: continue
             actor_lib.build_template_cache(type_data, self.engine)
             self.actor_types[type_name] = type_data
+            self.actor_types[type_name]['name'] = type_name
+        
+        # Now to loop around again for inheritance
+        for type_name, type_data in data['actors'].items():
+            if "inherits_from" not in type_data: continue
+            combined_data = dict(data['actors'][type_data['inherits_from']])
+            for k, v in type_data.items():
+                combined_data[k] = v
+            
+            actor_lib.build_template_cache(combined_data, self.engine)
+            self.actor_types[type_name] = combined_data
             self.actor_types[type_name]['name'] = type_name
         
         # Load tech trees

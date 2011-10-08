@@ -87,8 +87,11 @@ def build_template_cache(template, engine):
     for k, v in template['repair_cost'].items():
         template['_part_repair_cost'][k] = v/repair_cycles
     
-    temp_img = engine.images[template['image']]
-    template['size'] = temp_img.get_rect().size
+    if "image" in template:
+        temp_img = engine.images[template['image']]
+        template['size'] = temp_img.get_rect().size
+    else:
+        template['size'] = [0,0]
 
 def apply_damage(the_actor, damage):
     """Applies damage to the actor, returns the alive status of the actor
