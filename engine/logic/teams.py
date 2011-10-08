@@ -14,7 +14,7 @@ class Team (object):
         self.team_id    = team_id
         
     
-    def can_affort(self, cost):
+    def can_afford(self, cost):
         for k, v in cost.items():
             if self.resources[k] < v:
                 return False
@@ -31,3 +31,9 @@ class Team (object):
             for k, v in data['resources'].items():
                 self.resources[k] = v
 
+
+def multiply_cost(cost, magnitude):
+    new_cost = {}
+    for k, v in cost.items():
+        new_cost[k] = v * magnitude
+    return new_cost
