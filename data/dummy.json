@@ -7,9 +7,16 @@
         },
         
         {
+            "type": "Red worker",
+            "pos":  [300, 400, 0],
+            "team": 1
+        },
+
+        {
             "type": "Red mine",
             "pos":  [300, 300, 0],
-            "team": 1
+            "team": 1,
+            "hp":   1
         }
     ],
     

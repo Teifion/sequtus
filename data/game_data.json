@@ -295,6 +295,9 @@
             "abilities":  ["Metal generator"],
             "flags":    [],
             
+            "construction_cost":    {"Metal":10, "Energy":50},
+            "repair_cost":          {"Metal":1, "Energy":30},
+            
             "required_techs":   [],
             "resource_dump":    true
         },
