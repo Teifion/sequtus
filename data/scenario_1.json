@@ -16,7 +16,11 @@
         "2": {
             "type": "Basic computer",
             "bases":    {
-                "core": ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret"]
+                "core": {
+                    "buildings":    ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret"],
+                    "location":     [1800, 1800],
+                    "size":         [400, 400]
+                }
             }
         }
     },
