@@ -7,7 +7,7 @@ class StrippedActor (object):
     pass
         
 attribs = (
-    "team", "velocity", "pos", "facing",
+    "team", "velocity", "pos", "facing", "actor_type",
     "oid", "hp", "completion",
     "offence_flags", "defence_flags")
 # Things I don't think we need but might
@@ -26,12 +26,15 @@ def strip_actor(the_actor):
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""
     
+    # Template of a template?
     if template['type'] == "building":
         template["acceleration"]    = 0
         template["deceleration"]    = 0
         template["turn_speed"]      = 0
         template["drifts"]          = False
         template["max_velocity"]    = 0
+    
+    template['does_damage'] = False
     
     max_attack_range = 0
     minmax_attack_range = 99999
@@ -45,9 +48,11 @@ def build_template_cache(template, engine):
         
         if "damage" in ability_type:
             ability_damage = ability_type['damage']
+            template['does_damage'] = True
         elif "bullet" in ability_type:
             if "damage" in ability_type['bullet']:
                 ability_damage = ability_type['bullet']['damage']
+                template['does_damage'] = True
         
         if "max_range" in ability_type:
             if ability_damage != {}:
