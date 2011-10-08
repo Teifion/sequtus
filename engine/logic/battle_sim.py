@@ -305,9 +305,14 @@ class BattleSim (battle_screen.BattleScreen):
         if KMOD_SHIFT & mods:
             self.place_actor_mode(actor_data['type'])
         
-        return self.place_actor(actor_data)
+        builders = []
+        for a in self.selected_actors:
+            if a.can_build(self.actor_types[actor_data['type']], self.build_lists):
+                builders.append(a)
+        
+        return self.place_actor(actor_data, builders=builders)
     
-    def place_actor(self, actor_data):
+    def place_actor(self, actor_data, builders=[]):
         """Called when there's a click while in placement mode.
         Returns a weakref to the actor just created"""
         class_type = self.actor_types[actor_data['type']]['type']
@@ -341,6 +346,13 @@ class BattleSim (battle_screen.BattleScreen):
         
         self.add_actor(a)
         self.actor_lookup[a.oid] = weakref.ref(a)()
+        
+        mods = pygame.key.get_mods()
+        for b in builders:
+            if KMOD_SHIFT & mods:
+                self.queue_order(b, "aid", target=self.actor_lookup[a.oid])
+            else:
+                self.add_order(b, "aid", target=self.actor_lookup[a.oid])
         
         return self.actor_lookup[a.oid]
     
