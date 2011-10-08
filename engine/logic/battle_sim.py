@@ -380,36 +380,42 @@ class BattleSim (battle_screen.BattleScreen):
         for res_data in data['resources']:
             self.resources[res_data['name']] = res_data
         
-        # Load abilities
-        for type_name, type_data in data['abilities'].items():
-            if "inherits_from" in type_data: continue
-            self.ability_types[type_name] = type_data
+        # Function to handle ability inheritance
+        def _get_ability_data(type_name):
+            type_data = data['abilities'][type_name]
+
+            if "inherits_from" in type_data:
+                combined_data = dict(_get_ability_data(type_data['inherits_from']))
+                for k, v in type_data.items():
+                    combined_data[k] = v
+
+                return combined_data
+            return type_data
         
-        # Now loop round again to catch all inheriting abilities
-        for type_name, type_data in data['abilities'].items():
-            if "inherits_from" not in type_data: continue
-            combined_data = dict(self.ability_types[type_data['inherits_from']])
-            for k, v in type_data.items():
-                combined_data[k] = v
+        # Load abilities
+        for type_name in data['abilities'].keys():
+            type_data = _get_ability_data(type_name)
+            self.ability_types[type_name] = _get_ability_data(type_name)
+        
+        
+        # Function to handle actor inheritance
+        def _get_actor_data(type_name):
+            type_data = data['actors'][type_name]
             
-            self.ability_types[type_name] = combined_data
+            if "inherits_from" in type_data:
+                combined_data = dict(_get_actor_data(type_data['inherits_from']))
+                for k, v in type_data.items():
+                    combined_data[k] = v
+                
+                return combined_data
+            return type_data
         
         # Load actors
-        for type_name, type_data in data['actors'].items():
-            if "inherits_from" in type_data: continue
+        for type_name in data['actors'].keys():
+            type_data = _get_actor_data(type_name)
             actor_lib.build_template_cache(type_data, self.engine)
-            self.actor_types[type_name] = type_data
-            self.actor_types[type_name]['name'] = type_name
-        
-        # Now to loop around again for inheritance
-        for type_name, type_data in data['actors'].items():
-            if "inherits_from" not in type_data: continue
-            combined_data = dict(data['actors'][type_data['inherits_from']])
-            for k, v in type_data.items():
-                combined_data[k] = v
             
-            actor_lib.build_template_cache(combined_data, self.engine)
-            self.actor_types[type_name] = combined_data
+            self.actor_types[type_name] = type_data
             self.actor_types[type_name]['name'] = type_name
         
         # Load tech trees
