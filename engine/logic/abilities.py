@@ -1,6 +1,6 @@
 import random
 
-from engine.logic import effects, bullets
+from engine.logic import effects, bullets, teams
 from engine.libs import vectors, actor_lib, math_lib
 
 def _convert_dict(d):
@@ -187,6 +187,11 @@ class ConstructionAbility (Ability):
         if target.completion >= 100:
             return False
         
+        # Finally, can we afford it?
+        cost = teams.multiply_cost(target._part_construction_cost, self.construction_rate)
+        if not self.actor.team_obj.can_afford(cost):
+            return False
+        
         return True
     
     def use(self, target):
@@ -199,8 +204,13 @@ class ConstructionAbility (Ability):
         
         self.generate_effect(target)
         
+        cost = teams.multiply_cost(target._part_construction_cost, self.construction_rate)
+        
         if target.completion >= 100:
+            # TODO Give back any leftover cost to the parent team
             target.next_order()
+        
+        self.actor.team_obj.spend(cost)
         
         self.charge = 0
     
@@ -244,12 +254,23 @@ class RepairAbility (Ability):
         if target.hp >= target.max_hp:
             return False
         
+        # Finally, can we afford it?
+        cost = teams.multiply_cost(target._part_repair_cost, self.repair_rate)
+        if not self.actor.team_obj.can_afford(cost):
+            return False
+        
         return True
     
     def use(self, target):
         target.hp += (self.repair_rate * target.repair_rate)
-        target.hp = min(target.hp, target.max_hp)
         self.generate_effect(target)
+        cost = teams.multiply_cost(target._part_repair_cost, self.repair_rate)
+        
+        if target.hp > target.max_hp:
+            # TODO Give back any leftover cost to the parent team
+            target.hp = target.max_hp
+        
+        self.actor.team_obj.spend(cost)
         
         self.charge = 0
     
