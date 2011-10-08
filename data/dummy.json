@@ -1,22 +1,95 @@
 {
     "actors":   [
         {
-            "type": "Red factory",
-            "pos":  [100, 100, 0],
+            "type": "Red tank",
+            "pos":  [100, 200, 0],
+            "facing":   [180, 0],
+            "team": 1
+        },
+        {
+            "type": "Red tank",
+            "pos":  [200, 200, 0],
+            "facing":   [180, 0],
+            "team": 1
+        },
+        {
+            "type": "Red tank",
+            "pos":  [300, 200, 0],
+            "facing":   [180, 0],
             "team": 1
         },
         
         {
-            "type": "Red worker",
-            "pos":  [300, 400, 0],
+            "type": "Red heavy tank",
+            "pos":  [100, 100, 0],
+            "facing":   [180, 0],
             "team": 1
         },
-
+        
         {
-            "type": "Red mine",
-            "pos":  [300, 300, 0],
-            "team": 1,
-            "hp":   1
+            "type": "Red heavy tank",
+            "pos":  [300, 100, 0],
+            "facing":   [180, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Red juggernaut",
+            "pos":  [200, 100, 0],
+            "facing":   [180, 0],
+            "team": 1
+        },
+        
+        {
+            "type": "Blu tank",
+            "pos":  [100, 2000, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu tank",
+            "pos":  [200, 2000, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu tank",
+            "pos":  [300, 2000, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu tank",
+            "pos":  [400, 2000, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu tank",
+            "pos":  [500, 2000, 0],
+            "team": 2
+        },
+        
+        {
+            "type": "Blu heavy tank",
+            "pos":  [100, 1900, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu heavy tank",
+            "pos":  [200, 1900, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu heavy tank",
+            "pos":  [300, 1900, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu heavy tank",
+            "pos":  [400, 1900, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu heavy tank",
+            "pos":  [500, 1900, 0],
+            "team": 2
         }
     ],
     
@@ -28,6 +101,13 @@
     
     "teams": {
         "1": {
+            "resources": {
+                "Metal":    50,
+                "Energy":   50
+            }
+        },
+        
+        "2": {
             "resources": {
                 "Metal":    50,
                 "Energy":   50
