@@ -382,7 +382,17 @@ class BattleSim (battle_screen.BattleScreen):
         
         # Load abilities
         for type_name, type_data in data['abilities'].items():
+            if "inherits_from" in type_data: continue
             self.ability_types[type_name] = type_data
+        
+        # Now loop round again to catch all inheriting abilities
+        for type_name, type_data in data['abilities'].items():
+            if "inherits_from" not in type_data: continue
+            combined_data = dict(self.ability_types[type_data['inherits_from']])
+            for k, v in type_data.items():
+                combined_data[k] = v
+            
+            self.ability_types[type_name] = combined_data
         
         # Load actors
         for type_name, type_data in data['actors'].items():

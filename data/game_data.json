@@ -64,6 +64,12 @@
             "effect_offset":[0, -40, 0]
         },
         
+        "Red juggernaut laser upper":    {
+            "inherits_from":    "Red juggernaut laser",
+            
+            "image_offset": [0, -16, 0]
+        },
+        
         
         "Blu cannon":    {
             "type":         "MassDriver",
@@ -274,7 +280,7 @@
             "max_armour":           0,
             "max_shield_armour":    0,
             
-            "abilities":  ["Red juggernaut laser"],
+            "abilities":  ["Red juggernaut laser", "Red juggernaut laser upper"],
             "flags":    [],
             
             "required_techs":   []
@@ -594,13 +600,13 @@
     "build_lists": {
         "Red T1 buildings": ["Red factory", "Red mine", "Red turret"],
         "Red T2 buildings": ["Red adv factory", "Red adv turret"],
-        "Red T1 units": ["Red worker", "Red tank"],
-        "Red T2 units": ["Red adv worker", "Red heavy tank", "Red juggernaut"],
+        "Red T1 units": ["Red worker", "Red tank", "Red adv worker"],
+        "Red T2 units": ["Red heavy tank", "Red juggernaut"],
         
         "Blu T1 buildings": ["Blu factory", "Blu mine", "Blu turret"],
         "Blu T2 buildings": ["Blu adv factory", "Blu adv turret"],
-        "Blu T1 units": ["Blu worker", "Blu tank"],
-        "Blu T2 units": ["Blu adv worker", "Blu heavy tank", "Blu artillery"]
+        "Blu T1 units": ["Blu worker", "Blu tank", "Blu adv worker"],
+        "Blu T2 units": ["Blu heavy tank", "Blu artillery"]
     },
     
     "tech_trees": {
