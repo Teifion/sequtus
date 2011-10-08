@@ -586,6 +586,7 @@ class BattleScreen (screen.Screen):
     
     def unselect_actor(self, a):
         try:
+            a.selected = False
             del(self.selected_actors[self.selected_actors.index(a)])
         except Exception as e:
             print("""! battle_screen.unselect_actor had an exception trying
