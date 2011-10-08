@@ -50,7 +50,7 @@
             "min_range":    1,
             "max_range":    800,
             "required_charge": 80,
-            "damage":       {"raw":0},
+            "damage":       {"raw":7},
             "effect":       {
                 "colour":   [255, 0, 0],
                 "duration": 13,
@@ -81,7 +81,7 @@
                 "velocity":         25,
                 "image":            "9px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":2},
+                "damage":           {"raw":4},
                 "blast_radius":     20,
                 "dissipation_func": "linear"
             },
@@ -102,7 +102,7 @@
                 "velocity":         20,
                 "image":            "11px_bullet",
                 "size":             [9,9],
-                "damage":           {"raw":4},
+                "damage":           {"raw":10},
                 "blast_radius":     40,
                 "dissipation_func": "linear"
             },
