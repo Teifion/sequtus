@@ -169,8 +169,6 @@ class BattleSim (battle_screen.BattleScreen):
                     a = self.actor_lookup[data['actor']]
                     if data['target'] in self.actor_lookup:
                         data['target'] = self.actor_lookup[data['target']]
-                    else:
-                        data['target'] = None
                     
                     self.add_order(a, data['cmd'], pos=data['pos'], target=data['target'])
                 elif data['data_type'] == "prefs":
@@ -240,6 +238,31 @@ class BattleSim (battle_screen.BattleScreen):
         to_remove = []
         to_add = []
         for i, a in enumerate(self.actors):
+            # First we need to check to see if it's got a build order
+            # it'd have one because the AI can't directly tell us
+            # to build something and instantly be told what the building
+            # item is, thus we place it here and automatically tell
+            # the actor to go build it
+            if a.current_order[0] == "build":
+                cmd, pos, type_name = a.current_order
+                a_type = self.actor_types[type_name]
+                
+                new_rect = pygame.Rect(pos[0], pos[1], a_type['size'][0], a_type['size'][1])
+                building_rect = ai_lib.place_actor(self.actors, new_rect)
+                
+                if building_rect != None:
+                    posx = building_rect.left + building_rect.width/2
+                    posy = building_rect.top + building_rect.height/2
+                    
+                    to_add.append((a, {
+                        "type": type_name,
+                        "pos":  [posx, posy, 0],
+                        "team": a.team,
+                        "order_queue": list(a.rally_orders),
+                    }))
+                
+                a.next_order()
+            
             a.update()
             
             # Is the actor trying to place a new unit?
@@ -249,7 +272,7 @@ class BattleSim (battle_screen.BattleScreen):
             if self._collision_inverval_count < 2:
                 if a.build_queue != [] and a.completion >= 100:
                     a_type = self.actor_types[a.build_queue[0]]
-                
+                    
                     new_rect_pos = vectors.add_vectors(a.pos, a.build_offset)
                     new_rect = pygame.Rect(new_rect_pos[0], new_rect_pos[1], a_type['size'][0], a_type['size'][1])
                 
@@ -268,7 +291,6 @@ class BattleSim (battle_screen.BattleScreen):
         for builder, new_actor in to_add:
             new_target = self.place_actor(new_actor)
             builder.issue_command("aid", target=new_target)
-            
         
         # Bullets too
         to_delete = []
