@@ -233,24 +233,6 @@ class Actor (object_base.ObjectBase):
         
         self.run_ai()
     
-    def can_build(self, item_data, build_lists):
-        print("actor.can_build() is being removed, please use actor_lib.can_build")
-        
-        """Discovers if this actor has the pre-reqs to build the item"""
-        
-        # Check for tech requirements
-        if item_data.get('required_techs', []) != []:
-            raise Exception("No handler for required techs in a unit")
-        
-        # Now we go through all the build lists we have and see if our build
-        # request is in one of them
-        for f in self.flags:
-            if f in build_lists:
-                if item_data['name'] in build_lists[f]:
-                    return True
-        
-        return False
-    
     def add_ability(self, ability_data):
         atype = ability_data['type']
         the_ability = abilities.lookup[atype](self, ability_data)

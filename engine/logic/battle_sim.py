@@ -347,7 +347,7 @@ class BattleSim (battle_screen.BattleScreen):
         
         builders = []
         for a in self.selected_actors:
-            if a.can_build(self.actor_types[actor_data['type']], self.build_lists):
+            if actor_lib.can_build(self.actor_types[a.actor_type], self.actor_types[actor_data['type']], self.build_lists):
                 builders.append(a)
         
         return self.place_actor(actor_data, builders=builders)
