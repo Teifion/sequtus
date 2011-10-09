@@ -5,6 +5,8 @@ import math
 import pygame
 from pygame.locals import *
 
+from engine.libs import actor_lib
+
 # Used to define a section of the screen used for build options
 # unit commands, resources etc etc
 class Panel (object):
@@ -207,7 +209,7 @@ class TabularMenu (Panel):
                 # and placed later
                 choice = (None, 999999)
                 for a in self.screen.selected_actors:
-                    if a.can_build(actor_type, self.screen.build_lists):
+                    if actor_lib.can_build(self.screen.actor_types[a.actor_type], actor_type, self.screen.build_lists):
                         if len(a.build_queue) < choice[1]:
                             choice = (a, len(a.build_queue))
                 
@@ -274,6 +276,9 @@ class MiniMap (Panel):
         self.position.size = self.size
     
     def handle_mouseup(self, event, drag=False):
+        if drag and not self.engine.current_screen.mouseup_callback:
+            return None
+        
         # Get the local X and Y
         x, y = event.pos
         x -= self.position[0]
@@ -283,16 +288,17 @@ class MiniMap (Panel):
         xratio = self.map_size[0] / self.size[0]
         yratio = self.map_size[1] / self.size[1]
         
-        xratio = 10
-        yratio = 10
-        
         map_x = x * xratio
         map_y = y * yratio
         
-        
         if hasattr(event, "button") and event.button == 3:
             return pygame.event.Event(6, button=3, pos=(map_x, map_y))
-                
+        
+        # If we've left it in callback mode then we need to return
+        # the "true" coordinates
+        elif self.engine.current_screen.mouseup_callback:
+            return pygame.event.Event(6, button=event.button, pos=(map_x, map_y))
+        
         self.engine.current_screen.scroll_to_coords(map_x, map_y)
     
     def handle_mousedrag(self, event):
