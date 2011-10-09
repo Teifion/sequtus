@@ -15,6 +15,7 @@ class Actor (object_base.ObjectBase):
     accepted_orders = [
         "move",
         "stop",
+        "build",
         "hold",
         "attack",
         "aid",
@@ -233,6 +234,8 @@ class Actor (object_base.ObjectBase):
         self.run_ai()
     
     def can_build(self, item_data, build_lists):
+        print("actor.can_build() is being removed, please use actor_lib.can_build")
+        
         """Discovers if this actor has the pre-reqs to build the item"""
         
         # Check for tech requirements
@@ -262,6 +265,8 @@ class Actor (object_base.ObjectBase):
         if cmd in self.accepted_orders:
             self.order_queue = [(cmd, pos, target)]
             self.next_order()
+        else:
+            raise KeyError("Unable to accept order cmd: %s (pos = %s, target = %s)" % (cmd, pos, target))
     
     def append_command(self, cmd, pos=None, target=None):
         if cmd in self.accepted_orders:
@@ -271,6 +276,8 @@ class Actor (object_base.ObjectBase):
             if self.current_order[0] == "stop":
                 if self.current_order[1] <= 0:
                     self.next_order()
+        else:
+            raise KeyError("Unable to accept order cmd: %s (pos = %s, target = %s)" % (cmd, pos, target))
     
     def next_order(self):
         # Make it update right away
