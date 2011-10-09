@@ -13,4 +13,8 @@ def send_static_data(screen, queue):
     
     # Send actor types
     queue.put({"cmd":"actor_types", "actor_types":dict(screen.actor_types)})
+    
+    # Send build lists
+    queue.put({"cmd":"build_lists", "build_lists":dict(screen.build_lists)})
+
 
