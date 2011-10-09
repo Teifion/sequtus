@@ -487,16 +487,16 @@ class Actor (object_base.ObjectBase):
                     self._decelerate_ai()
     
     def _turn_ai(self, target):
+        self.facing = vectors.bound_angle(self.facing)
+        
         target_angle = vectors.angle(self.pos, target)
         diff = vectors.angle_diff(self.facing, target_angle)[0]
-        
-        first_diff = diff
         
         if abs(diff) <= self.turn_speed:
             self.facing = target_angle
             return True
         
-        if diff > 0:
+        if diff < 0:
             self.facing[0] -= self.turn_speed
             for a in self.abilities: a.facing[0] += self.turn_speed
         else:
@@ -550,7 +550,6 @@ class Actor (object_base.ObjectBase):
             for a in self.abilities:
                 a.turn(self.facing)
             return
-            
         
         for a in self.abilities:
             # Turn the ability towards it's target
