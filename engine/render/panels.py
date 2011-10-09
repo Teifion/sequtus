@@ -239,14 +239,7 @@ class MiniMap (Panel):
         self.map_size   = map_size
         
         self.position.topleft = position
-        
-        """actors is a dictionary, the keys are the team colours and the value is a list
-        of tuples: (x, y, size).
-        Size is in pixels"""
-        self.team_colours = {
-            1: (255, 0, 0),
-            2: (0, 0, 255),
-        }
+        self.team_colours = {}
     
     def draw(self):
         self._image = pygame.Surface(self.size)
@@ -257,16 +250,22 @@ class MiniMap (Panel):
         
         for a in self.engine.current_screen.actors:
             x,y = a.pos[0] / xratio, a.pos[1] / yratio
-            xsize, ysize = a.size[0] / xratio, a.size[1] / yratio, 
+            xsize, ysize = a.size[0] / xratio, a.size[1] / yratio
             
             self._image.fill(self.team_colours[a.team], pygame.Rect(x, y, xsize, ysize))
         
-        # for team_colour, actor_list in self.actors.items():
-        #     for x, y, size in actor_list:
-        #         self._image.fill(team_colour, pygame.Rect(x,y, size, size))
+        # Draw view screen rect on map, take into account that panels
+        # take up some viewable space and draw the white "screen rect"
+        # appropriately
+        draw_area = self.engine.current_screen.draw_area
+        real_width = draw_area[2] - draw_area[0]
+        real_height = draw_area[3] - draw_area[1]
         
-        # Draw view screen rect on map
-        r = pygame.Rect(0,0, self.engine.window_width / xratio, self.engine.window_height / yratio)
+        # For some reason these overriden values work better, not sure why yet
+        real_width = self.engine.window_width - 150
+        real_height = self.engine.window_height
+        
+        r = pygame.Rect(0,0, real_width / xratio, real_height / yratio)
         
         r.left = - self.engine.current_screen.scroll_x / xratio
         r.top = - self.engine.current_screen.scroll_y / yratio
@@ -276,20 +275,24 @@ class MiniMap (Panel):
         self.position.size = self.size
     
     def handle_mouseup(self, event, drag=False):
-        if drag and not self.engine.current_screen.mouseup_callback:
-            return None
+        if drag:
+            if not self.engine.current_screen.mouseup_callback:
+                if event.button != 3:
+                    return None
         
         # Get the local X and Y
         x, y = event.pos
         x -= self.position[0]
         y -= self.position[1]
         
+        draw_area = self.engine.current_screen.draw_area
+        
         # Ratios to work out where we are
         xratio = self.map_size[0] / self.size[0]
         yratio = self.map_size[1] / self.size[1]
         
-        map_x = x * xratio
-        map_y = y * yratio
+        map_x = x * xratio + draw_area[0]
+        map_y = y * yratio + draw_area[1]
         
         if hasattr(event, "button") and event.button == 3:
             return pygame.event.Event(6, button=3, pos=(map_x, map_y))
