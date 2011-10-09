@@ -21,6 +21,20 @@ def strip_actor(the_actor):
     for a in attribs:
         setattr(sa, a, getattr(the_actor, a))
     
+    # Orders can contain a target and we don't want to pass around a
+    # reference to a whole actor by mistake
+    def _strip_order(order):
+        cmd, pos, target = order
+        
+        if target != None:
+            if type(target) != int:
+                target = target.oid
+        
+        return cmd, pos, target
+    
+    sa.current_order = _strip_order(the_actor.current_order)
+    sa.order_queue = [_strip_order(o) for o in the_actor.order_queue]
+    
     return sa
 
 def build_template_cache(template, engine):
@@ -35,6 +49,8 @@ def build_template_cache(template, engine):
         template["max_velocity"]    = 0
     
     template['does_damage'] = False
+    template['can_construct'] = False
+    template['can_repair'] = False
     
     max_attack_range = 0
     minmax_attack_range = 99999
@@ -45,6 +61,13 @@ def build_template_cache(template, engine):
     for a in template['abilities']:
         ability_type = engine.current_screen.ability_types[a]
         ability_damage = {}
+        
+        # Markers for the AIs
+        if ability_type.get('construction_rate', 0) > 0:
+            template['can_construct'] = True
+        
+        if ability_type.get('repair_rate', 0) > 0:
+            template['can_repair'] = True
         
         if "damage" in ability_type:
             ability_damage = ability_type['damage']
@@ -204,3 +227,19 @@ def _will_collide(a1, a2, target=None):
     target_rect.top = target[1] - a1.rect.height/2
     
     return geometry.rect_collision(target_rect, a2.rect, convert=True)
+
+def can_build(actor_type, item_type, build_lists):
+    """Discovers if this actor has the pre-reqs to build the item"""
+    
+    # Check for tech requirements
+    if item_type.get('required_techs', []) != []:
+        raise Exception("No handler for required techs in a unit")
+    
+    # Now we go through all the build lists we have and see if our
+    # build request is in one of them
+    for f in actor_type['flags']:
+        if f in build_lists:
+            if item_type['name'] in build_lists[f]:
+                return True
+    
+    return False
