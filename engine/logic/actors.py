@@ -45,6 +45,8 @@ class Actor (object_base.ObjectBase):
     repair_rate             = 1
     
     does_damage             = False
+    can_construct           = False
+    can_repair              = False
     
     construction_cost       = {}
     repair_cost             = {}
@@ -200,6 +202,8 @@ class Actor (object_base.ObjectBase):
         self.optimum_heal_range     = data.get("optimum_heal_range", self.optimum_heal_range)
         
         self.does_damage            = data.get("does_damage", self.does_damage)
+        self.can_construct          = data.get("can_construct", self.can_construct)
+        self.can_repair             = data.get("can_repair", self.can_repair)
         
         # Construction/Repair
         self.construction_cost          = data.get("construction_cost", self.construction_cost)
@@ -494,15 +498,17 @@ class Actor (object_base.ObjectBase):
         target_angle = vectors.angle(self.pos, target)
         diff = vectors.angle_diff(self.facing, target_angle)[0]
         
+        first_diff = diff
+        
         if abs(diff) <= self.turn_speed:
             self.facing = target_angle
             return True
         
-        if diff >= 0:
-            self.facing[0] += self.turn_speed
+        if diff > 0:
+            self.facing[0] -= self.turn_speed
             for a in self.abilities: a.facing[0] += self.turn_speed
         else:
-            self.facing[0] -= self.turn_speed
+            self.facing[0] += self.turn_speed
             for a in self.abilities: a.facing[0] -= self.turn_speed
         
         return False
