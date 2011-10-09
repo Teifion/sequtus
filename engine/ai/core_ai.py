@@ -33,6 +33,7 @@ class AICore (object):
             "init":         self._init,
             "actors":       self._recieve_actors,
             "actor_types":  self._recieve_actor_types,
+            "build_lists":  self._recieve_build_lists,
             "quit":         self._quit,
         }
         
@@ -101,6 +102,9 @@ class AICore (object):
     def _recieve_actor_types(self, actor_types):
         self.actor_types = actor_types
     
+    def _recieve_build_lists(self, build_lists):
+        self.build_lists = build_lists
+    
     def issue_orders(self, actor_id, cmd, pos=None, target=None):
         self.out_queue.put({
             "data_type":    "orders",
@@ -109,6 +113,14 @@ class AICore (object):
             "target":       target,
             "pos":          pos,
         })
+        
+        # Update our records so we don't spam the queue
+        if type(self.own_actors) == list:
+            for a in self.own_actors:
+                if a.oid == actor_id:
+                    a.current_order = cmd, pos, target
+        else:
+            self.own_actors[actor_id].current_order = cmd, pos, target
     
     def core_cycle(self):
         """The central loop for the AI"""
