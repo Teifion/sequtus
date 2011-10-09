@@ -390,6 +390,9 @@ class Actor (object_base.ObjectBase):
                 
                 self.priority_targets.insert(0, target)
         
+        elif cmd == "build":
+            raise Exception("Build order was not removed by battle_sim")
+        
         else:
             raise Exception("No handler for cmd %s (target: %s)" % (cmd, target))
         
