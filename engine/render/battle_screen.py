@@ -362,19 +362,6 @@ class BattleScreen (screen.Screen):
         # We are no longer dragging, lets get rid of this rect
         self.drag_rect = None
         
-        if self.mouseup_callback:
-            callback_func, args = self.mouseup_callback, self.mouseup_callback_args
-            
-            # Set these to nothing now incase we want to make a new callback
-            # in the current callback
-            self.mouseup_callback = None
-            self.mouseup_callback_args = []
-            
-            return callback_func(event, drag, *args)
-        
-        mods = pygame.key.get_mods()
-        real_mouse_pos = (event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1])
-        
         # First check panels
         for i, p in self.panels.items():
             if p.contains(event.pos):
@@ -388,6 +375,19 @@ class BattleScreen (screen.Screen):
                     # Panel has sent us back a new event
                     # we re-run this function with the new event
                     return self.handle_mouseup(result, drag)
+        
+        if self.mouseup_callback:
+            callback_func, args = self.mouseup_callback, self.mouseup_callback_args
+            
+            # Set these to nothing now incase we want to make a new callback
+            # in the current callback
+            self.mouseup_callback = None
+            self.mouseup_callback_args = []
+            
+            return callback_func(event, drag, *args)
+        
+        mods = pygame.key.get_mods()
+        real_mouse_pos = (event.pos[0] - self.draw_margin[0], event.pos[1] - self.draw_margin[1])
         
         if event.button == 1:# Left click
             if not drag:
