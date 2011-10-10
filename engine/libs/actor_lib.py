@@ -243,3 +243,20 @@ def can_build(actor_type, item_type, build_lists):
                 return True
     
     return False
+
+def contains_point(the_actor, point):
+    """Point is a length 2 sequence X, Y"""
+    left = the_actor.pos[0] - the_actor.rect.width/2
+    right = the_actor.pos[0] + the_actor.rect.width/2
+    
+    top = the_actor.pos[1] - the_actor.rect.height/2
+    bottom = the_actor.pos[1] + the_actor.rect.height/2
+    
+    if left <= point[0] <= right:
+        if top <= point[1] <= bottom:
+            return True
+
+def is_inside(the_actor, rect):
+    if rect[0] <= the_actor.pos[0] <= rect[2]:
+        if rect[1] <= the_actor.pos[1] <= rect[3]:
+            return True
