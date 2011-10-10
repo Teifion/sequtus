@@ -10,11 +10,11 @@ attribs = (
     "team", "velocity", "pos", "facing", "actor_type",
     "oid", "hp", "completion",
     "offence_flags", "defence_flags")
+
 # Things I don't think we need but might
-# self.order_queue = []
 # self.rally_orders = []
 # self.micro_orders = []
-# self.current_order = ["stop", -1, -1]
+
 def strip_actor(the_actor):
     sa = StrippedActor()
     
@@ -40,8 +40,11 @@ def strip_actor(the_actor):
 def build_template_cache(template, engine):
     """Takes the template of the actor and creates some cache data"""
     
+    template["uses_build_queue"] = False
+    
     # Template of a template?
     if template['type'] == "building":
+        template["uses_build_queue"]= True
         template["acceleration"]    = 0
         template["deceleration"]    = 0
         template["turn_speed"]      = 0
