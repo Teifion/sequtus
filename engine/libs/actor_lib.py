@@ -27,8 +27,10 @@ def strip_actor(the_actor):
         cmd, pos, target = order
         
         if target != None:
-            if type(target) != int:
+            if type(target) not in (int, str, unicode):
                 target = target.oid
+            
+                
         
         return cmd, pos, target
     

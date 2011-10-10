@@ -96,6 +96,7 @@ class BasicComputerAI (core_ai.AICore):
             
             # None missing? We can stop looking around now
             if missing == {}:
+                print("Base complete!")
                 continue
             
             # Now find out which builders we can use

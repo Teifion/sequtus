@@ -243,23 +243,29 @@ class BattleSim (battle_screen.BattleScreen):
             # to build something and instantly be told what the building
             # item is, thus we place it here and automatically tell
             # the actor to go build it
-            if a.current_order[0] == "build":
+            if a.current_order[0] == "build" and a.completion >= 100:
                 cmd, pos, type_name = a.current_order
-                a_type = self.actor_types[type_name]
                 
-                new_rect = pygame.Rect(pos[0], pos[1], a_type['size'][0], a_type['size'][1])
-                building_rect = ai_lib.place_actor(self.actors, new_rect)
-                
-                if building_rect != None:
-                    posx = building_rect.left + building_rect.width/2
-                    posy = building_rect.top + building_rect.height/2
+                # Should this be done via a build queue instead?
+                if self.actor_types[a.actor_type]['uses_build_queue']:
+                    a.build_queue.append(type_name)
                     
-                    to_add.append((a, {
-                        "type": type_name,
-                        "pos":  [posx, posy, 0],
-                        "team": a.team,
-                        "order_queue": list(a.rally_orders),
-                    }))
+                else:
+                    a_type = self.actor_types[type_name]
+            
+                    new_rect = pygame.Rect(pos[0], pos[1], a_type['size'][0], a_type['size'][1])
+                    building_rect = ai_lib.place_actor(self.actors, new_rect)
+            
+                    if building_rect != None:
+                        posx = building_rect.left + building_rect.width/2
+                        posy = building_rect.top + building_rect.height/2
+                
+                        to_add.append((a, {
+                            "type": type_name,
+                            "pos":  [posx, posy, 0],
+                            "team": a.team,
+                            "order_queue": list(a.rally_orders),
+                        }))
                 
                 a.next_order()
             
