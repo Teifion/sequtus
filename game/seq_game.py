@@ -137,9 +137,10 @@ class Sequtus (core.EngineV3):
         
         # Wrap it in a try block so that the screen can quit it's AI processes
         try:
-            # Issue an attack order
-            # self.current_screen.select_actor(self.current_screen.actors[1])
             pass
+            
+            # self.current_screen.select_actor(self.current_screen.actors[1])
+            
             # self.current_screen.actors[0].build_queue = ['Red tank']
             
             # self.current_screen.scroll_to_coords(2000, 2000)
@@ -150,13 +151,15 @@ class Sequtus (core.EngineV3):
             
             
             # Fake mouseclick
-            # ev = pygame.event.Event(3, button=1, pos=(960, 960))# Corner of view
-            ev = pygame.event.Event(3, button=1, pos=(74, 88))# Corner of map view
+            ev = pygame.event.Event(3, button=1, pos=(960, 960))# Corner of view
+            # ev = pygame.event.Event(3, button=1, pos=(74, 88))# Corner of map view
             # ev = pygame.event.Event(3, button=1, pos=(96, 96))# Corner of map view
             # ev = pygame.event.Event(3, button=1, pos=(1, 1))
             
             self.current_screen.place_actor_mode("Red factory")
             self.current_screen.handle_mouseup(ev)
+            
+            self.current_screen.add_order(self.current_screen.actors[0], "aid", target=self.current_screen.actors[2])
             
         except Exception as e:
             self.current_screen.quit()

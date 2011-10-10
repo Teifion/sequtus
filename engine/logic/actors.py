@@ -432,9 +432,9 @@ class Actor (object_base.ObjectBase):
                 
                 if dist > self.optimum_heal_range:
                     target_pos = vectors.get_midpoint(self.pos, target.pos, self.optimum_heal_range)
-                    self.velocity = vectors.move_to_vector(vectors.angle(self.pos, target_pos), self.max_velocity)
+                    self._move_ai(target_pos)
                 else:
-                    self.velocity = [0,0,0]
+                    self._decelerate_ai()
             
         else:
             raise Exception("No handler for cmd %s (pos: %s, target: %s)" % (cmd, pos, target))
