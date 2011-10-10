@@ -18,7 +18,7 @@
             "bases":    {
                 "core": {
                     "buildings":    ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret"],
-                    "location":     [1800, 1800],
+                    "location":     [1700, 1700],
                     "size":         [400, 400]
                 }
             }
