@@ -39,7 +39,7 @@ class BasicComputerAI (core_ai.AICore):
             "buildings":    []
         }
         
-        for b in base_data['buildings']:
+        for b in base_data['actors']:
             result = line_match.search(b)
             
             if not result:

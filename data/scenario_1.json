@@ -17,7 +17,7 @@
             "type": "Basic computer",
             "bases":    {
                 "core": {
-                    "buildings":    ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret"],
+                    "actors":       ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret", "Blu worker", "Blu adv worker"],
                     "location":     [1700, 1700],
                     "size":         [400, 400]
                 }
