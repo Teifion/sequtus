@@ -291,9 +291,9 @@
         
         "Blu factory": {
             "inherits_from":    "Factory",
-            "image":            "red_factory",
-            "placement_image":  "red_factory_placement",
-            "menu_image":       "red_factory_menu",
+            "image":            "blu_factory",
+            "placement_image":  "blu_factory_placement",
+            "menu_image":       "blu_factory_menu",
             
             "flags":    ["Blu T1 units"]
         },
