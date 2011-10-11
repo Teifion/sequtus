@@ -19,6 +19,13 @@ def send_static_data(screen, queue):
     queue.put({"cmd":"build_lists", "build_lists":dict(screen.build_lists)})
 
 def place_actor(actor_list, building_rect, distance=100):
+    if type(distance) == list:
+        for d in distance:
+            r = place_actor(actor_list, building, d)
+            if r != None:
+                return r
+        return None
+    
     """Tests several positions for the building by nudging it around. This is
     because an AI may not always have the most recent positions for actors."""
     
