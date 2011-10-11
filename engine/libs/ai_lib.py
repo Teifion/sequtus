@@ -21,7 +21,7 @@ def send_static_data(screen, queue):
 def place_actor(actor_list, building_rect, distance=100):
     if type(distance) == list:
         for d in distance:
-            r = place_actor(actor_list, building, d)
+            r = place_actor(actor_list, building_rect, d)
             if r != None:
                 return r
         return None

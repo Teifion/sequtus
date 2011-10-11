@@ -254,7 +254,7 @@ class BattleSim (battle_screen.BattleScreen):
                     a_type = self.actor_types[type_name]
             
                     new_rect = pygame.Rect(pos[0], pos[1], a_type['size'][0], a_type['size'][1])
-                    building_rect = ai_lib.place_actor(self.actors, new_rect)
+                    building_rect = ai_lib.place_actor(self.actors, new_rect, [50, 100, 200])
             
                     if building_rect != None:
                         posx = building_rect.left + building_rect.width/2
