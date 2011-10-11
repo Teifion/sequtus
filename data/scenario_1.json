@@ -18,6 +18,9 @@
             "bases":    {
                 "core": {
                     "actors":       ["Blu factory", "Blu adv factory", "5* Blu turret", "2* Blu adv turret", "Blu worker", "Blu adv worker"],
+                    "attacks":      [
+                        ["3* Blu tank"]
+                    ],
                     "location":     [1700, 1700],
                     "size":         [400, 400]
                 }
