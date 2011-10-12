@@ -34,9 +34,13 @@ class BasicComputerAI (core_ai.AICore):
     
     def _save_base(self, base_name, base_data):
         base_setup = {
-            "location": base_data['location'],
-            "size":     base_data['size'],
-            "buildings":    []
+            "location":     base_data['location'],
+            "size":         base_data['size'],
+            "attacks":      {},
+            "buildings":    [],
+            
+            "current_attack":       None,
+            "current_buildings":    [],
         }
         
         for b in base_data['actors']:
@@ -52,12 +56,27 @@ class BasicComputerAI (core_ai.AICore):
             # Save as items ready to be mapped
             for i in range(int(amount)):
                 base_setup['buildings'].append([actor_type, None])
+            
+        # Now do the same for the attacks
+        for attack_id, attack in enumerate(base_data['attacks']):
+            base_setup['attacks'][attack_id] = []
+            for a in attack:
+                result = line_match.search(a)
+                
+                if not result:
+                    raise Exception("No match for line %s in base data %s" % (a, base_data))
+                
+                # Assign values from the string
+                asterik, amount, actor_type = result.groups()
+                if amount == None: amount = 1
+                
+                # Save as items ready to be mapped
+                for i in range(int(amount)):
+                    base_setup['attacks'][attack_id].append(actor_type)
         
         self.bases[base_name] = base_setup
     
     def inspect_bases(self):
-        buildings_missing = []
-        
         # First find out which buildings we are missing
         for base_name, base_data in self.bases.items():
             base_area = (
@@ -69,6 +88,9 @@ class BasicComputerAI (core_ai.AICore):
             )
             
             buildings_needed = set([b[0] for b in base_data['buildings']])
+            
+            # Reset this now
+            base_data['current_buildings'] = []
             
             # Get all buildings within this base
             found_buildings = {}
@@ -86,6 +108,9 @@ class BasicComputerAI (core_ai.AICore):
                 if actor_lib.is_inside(a, base_area):
                     if a.actor_type in buildings_needed:
                         found_buildings[a.actor_type] += 1
+                        
+                        if a.completion >= 100:
+                            base_data['current_buildings'].append(a.oid)
             
             # Now find out what we are missing
             missing = {}
@@ -96,7 +121,6 @@ class BasicComputerAI (core_ai.AICore):
             
             # None missing? We can stop looking around now
             if missing == {}:
-                print("Base complete!")
                 continue
             
             # Now find out which builders we can use
@@ -118,9 +142,9 @@ class BasicComputerAI (core_ai.AICore):
                     for b in builders:
                         if b in closest_builder: continue
                         if actor_lib.can_build(
-                            self.actor_types[b.actor_type],
-                            self.actor_types[building_type],
-                            self.build_lists
+                            builder_type = self.actor_types[b.actor_type],
+                            item_type = self.actor_types[building_type],
+                            build_lists = self.build_lists,
                         ):
                             # If they are closest we want them to go build it
                             dist = vectors.distance(target_pos, b.pos)
@@ -133,12 +157,60 @@ class BasicComputerAI (core_ai.AICore):
                         builders_used.append(closest_builder[0])
                         self.issue_orders(closest_builder[0].oid, cmd="build", pos=target_pos, target=building_type)
             
+    def build_attacks(self):
+        for base_name, base_data in self.bases.items():
             
+            # Has it already selected an attack?
+            if base_data['current_attack'] != None:
+                # TODO check to see if attack has been constructed
+                continue
+            
+            # Find out which of the attacks it can make
+            buildable_attacks = set()
+            buildable_units = set()
+            unbuildable_units = set()
+            for attack_id, attacker_list in base_data['attacks'].items():
+                cannot_build_attack = False
+                
+                for a in attacker_list:
+                    if a in buildable_units:
+                        # print("Buildable")
+                        continue
+                    if a in unbuildable_units:
+                        # print("Unbuildable")
+                        cannot_build_attack = True
+                        continue
+                    
+                    # print("Lookup")
+                    is_buildable = False
+                    for b in base_data['current_buildings']:
+                        the_builder = self.own_actors[b].actor_type
+                        if actor_lib.can_build(
+                            builder_type = self.actor_types[the_builder],
+                            item_type = self.actor_types[a],
+                            build_lists = self.build_lists,
+                        ):
+                            is_buildable = True
+                    
+                    if is_buildable:
+                        buildable_units.add(a)
+                    else:
+                        unbuildable_units.add(a)
+                        cannot_build_attack = True
+            
+            if cannot_build_attack == True:
+                continue
+            
+            buildable_attacks.add(attack_id)
+            
+            # Build attacks
+                
             
             
     
     def cycle(self):
         self.inspect_bases()
+        self.build_attacks()
         
         for k in self.enemy_actors.keys(): first_enemy = k
         
