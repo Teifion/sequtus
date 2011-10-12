@@ -254,8 +254,8 @@ class BattleSim (battle_screen.BattleScreen):
                     a_type = self.actor_types[type_name]
             
                     new_rect = pygame.Rect(pos[0], pos[1], a_type['size'][0], a_type['size'][1])
-                    building_rect = ai_lib.place_actor(self.actors, new_rect, [50, 100, 200])
-            
+                    building_rect = ai_lib.place_actor(self.actors, new_rect, [50, 100, 200], self.battlefield['size'])
+                    
                     if building_rect != None:
                         posx = building_rect.left + building_rect.width/2
                         posy = building_rect.top + building_rect.height/2
@@ -486,6 +486,9 @@ class BattleSim (battle_screen.BattleScreen):
     
     def load_game(self, data):
         team_set = set()
+        
+        # Load battlefield
+        self.battlefield = data['battlefield']
         
         # Load team objects
         for team_id, team_data in data['teams'].items():

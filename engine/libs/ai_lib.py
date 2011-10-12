@@ -18,10 +18,10 @@ def send_static_data(screen, queue):
     # Send build lists
     queue.put({"cmd":"build_lists", "build_lists":dict(screen.build_lists)})
 
-def place_actor(actor_list, building_rect, distance=100):
+def place_actor(actor_list, building_rect, distance=100, boundries=None):
     if type(distance) == list:
         for d in distance:
-            r = place_actor(actor_list, building_rect, d)
+            r = place_actor(actor_list, building_rect, d, boundries)
             if r != None:
                 return r
         return None
@@ -49,7 +49,13 @@ def place_actor(actor_list, building_rect, distance=100):
         building_rect.top = oy + y * distance
         
         if not sim_lib.test_possible_collision(actor_list, building_rect, True):
-            return building_rect
+            
+            if boundries != None:
+                if 0 < building_rect.left and building_rect.right < boundries[0]:
+                    if 0 < building_rect.top and building_rect.bottom < boundries[1]:
+                        return building_rect
+            else:
+                return building_rect
     
     return None
 
