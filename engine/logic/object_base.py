@@ -26,19 +26,6 @@ class ObjectBase (object):
     def __lt__(self, other): return self.oid < other.oid
     def __gt__(self, other): return self.oid > other.oid
     
-    def contains_point(self, point):
-        print("ObjectBase.contains_point is depreciated, please use actor_lib.contains_point")
-        """Point is a length 2 sequence X, Y"""
-        left = self.pos[0] - self.rect.width/2
-        right = self.pos[0] + self.rect.width/2
-        
-        top = self.pos[1] - self.rect.height/2
-        bottom = self.pos[1] + self.rect.height/2
-        
-        if left <= point[0] <= right:
-            if top <= point[1] <= bottom:
-                return True
-    
     def inside(self, rect):
         print("ObjectBase.inside is depreciated, please use actor_lib.inside")
         if rect[0] <= self.pos[0] <= rect[2]:

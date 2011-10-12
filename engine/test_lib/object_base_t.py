@@ -3,6 +3,7 @@ from __future__ import division
 import pygame
 import unittest
 from engine.logic import object_base
+from engine.libs import actor_lib
 
 def new_base(pos=[0,0,0], velocity=[0,0], facing=[0,0], size=[10,10]):
     ob = object_base.ObjectBase()
@@ -31,7 +32,7 @@ class ObjectBaseTests(unittest.TestCase):
         )
         
         for point, ob, expected in test_data:
-            result = ob.contains_point(point)
+            result = actor_lib.contains_point(ob, point)
             
             self.assertEqual(result, expected)
 

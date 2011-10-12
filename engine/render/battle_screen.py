@@ -394,7 +394,7 @@ class BattleScreen (screen.Screen):
                 if self.key_mod:
                     actor_target = None
                     for a in self.actors:
-                        if a.contains_point(real_mouse_pos):
+                        if actor_lib.contains_point(a, real_mouse_pos):
                             actor_target = weakref.ref(a)()
                             break
                     
@@ -412,7 +412,7 @@ class BattleScreen (screen.Screen):
                         self.unselect_all_actors()
                 
                     for a in self.actors:
-                        if a.contains_point(real_mouse_pos):
+                        if actor_lib.contains_point(a, real_mouse_pos):
                             self.left_click_actor(a)
                             break
             elif drag:
@@ -424,7 +424,7 @@ class BattleScreen (screen.Screen):
         
             actor_target = None
             for a in self.actors:
-                if a.contains_point(real_mouse_pos):
+                if actor_lib.contains_point(a, real_mouse_pos):
                     actor_target = weakref.ref(a)()
                     break
             
@@ -478,7 +478,7 @@ class BattleScreen (screen.Screen):
         
         # Now check actors
         for a in self.actors:
-            if a.contains_point(first_real_mouse_pos) and a.contains_point(second_real_mouse_pos):
+            if actor_lib.contains_point(a, first_real_mouse_pos) and actor_lib.contains_point(a, second_real_mouse_pos):
                 self.double_left_click_actor(a)
                 break
     
