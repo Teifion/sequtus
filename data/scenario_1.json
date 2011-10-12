@@ -13,6 +13,36 @@
             "type": "Blu worker",
             "pos":  [1900, 1900, 0],
             "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1800, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1700, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1600, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1500, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1400, 0],
+            "team": 2
+        },
+        {
+            "type": "Blu worker",
+            "pos":  [1900, 1300, 0],
+            "team": 2
         }
     ],
     
@@ -25,7 +55,7 @@
                     "attacks":      [
                         ["3* Blu tank"]
                     ],
-                    "location":     [1700, 1700],
+                    "location":     [1500, 1500],
                     "size":         [400, 400]
                 }
             }
