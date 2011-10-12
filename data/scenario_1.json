@@ -1,4 +1,8 @@
 {
+    "battlefield": {
+        "size":     [2000, 2000]
+    },
+    
     "actors":   [     
         {
             "type": "Red worker",
