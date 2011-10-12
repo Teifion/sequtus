@@ -233,7 +233,7 @@ def _will_collide(a1, a2, target=None):
     
     return geometry.rect_collision(target_rect, a2.rect, convert=True)
 
-def can_build(actor_type, item_type, build_lists):
+def can_build(builder_type, item_type, build_lists):
     """Discovers if this actor has the pre-reqs to build the item"""
     
     # Check for tech requirements
@@ -242,7 +242,7 @@ def can_build(actor_type, item_type, build_lists):
     
     # Now we go through all the build lists we have and see if our
     # build request is in one of them
-    for f in actor_type['flags']:
+    for f in builder_type['flags']:
         if f in build_lists:
             if item_type['name'] in build_lists[f]:
                 return True
