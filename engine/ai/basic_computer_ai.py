@@ -7,6 +7,8 @@ from engine.libs import actor_lib, vectors
 
 line_match = re.compile(r"(([0-9])\* )?(.*)")
 
+buildings_in_progress_ttl = 100
+
 class BasicComputerAI (core_ai.AICore):
     def __init__(self, *args, **kwargs):
         super(BasicComputerAI, self).__init__(*args, **kwargs)
@@ -39,8 +41,11 @@ class BasicComputerAI (core_ai.AICore):
             "attacks":      {},
             "buildings":    [],
             
-            "current_attack":       None,
-            "current_buildings":    [],
+            "current_attack":           None,
+            "current_buildings":        [],
+            
+            # Used to track buildings about to be started
+            "buildings_in_progress":    [],
         }
         
         for b in base_data['actors']:
@@ -55,7 +60,7 @@ class BasicComputerAI (core_ai.AICore):
             
             # Save as items ready to be mapped
             for i in range(int(amount)):
-                base_setup['buildings'].append([actor_type, None])
+                base_setup['buildings'].append(actor_type)
             
         # Now do the same for the attacks
         for attack_id, attack in enumerate(base_data['attacks']):
@@ -87,7 +92,7 @@ class BasicComputerAI (core_ai.AICore):
                 base_data['location'][1] + base_data['size'][1],
             )
             
-            buildings_needed = set([b[0] for b in base_data['buildings']])
+            buildings_needed = set(base_data['buildings'])
             
             # Reset this now
             base_data['current_buildings'] = []
@@ -100,8 +105,7 @@ class BasicComputerAI (core_ai.AICore):
                 total_needed[b] = 0
             
             for b in base_data['buildings']:
-                if b[1] == None:
-                    total_needed[b[0]] += 1
+                total_needed[b] += 1
             
             # Loop through all actors and see what we've got
             for i, a in self.own_actors.items():
@@ -111,6 +115,20 @@ class BasicComputerAI (core_ai.AICore):
                         
                         if a.completion >= 100:
                             base_data['current_buildings'].append(a.oid)
+            
+            # Now also loop through all the buildings_in_progress
+            # Use a range loop so we can update the list as we go
+            for i in range(len(base_data['buildings_in_progress'])-1, -1, -1):
+                b, ttl = base_data['buildings_in_progress'][i]
+                
+                if ttl <= 0:
+                    del(base_data['buildings_in_progress'][i])
+                    continue
+                
+                base_data['buildings_in_progress'][i][1] -= 1
+                
+                if b in found_buildings:
+                    found_buildings[b] += 1
             
             # Now find out what we are missing
             missing = {}
@@ -140,7 +158,7 @@ class BasicComputerAI (core_ai.AICore):
                     
                     closest_builder = None, 9999999
                     for b in builders:
-                        if b in closest_builder: continue
+                        if b in builders_used: continue
                         if actor_lib.can_build(
                             builder_type = self.actor_types[b.actor_type],
                             item_type = self.actor_types[building_type],
@@ -156,6 +174,8 @@ class BasicComputerAI (core_ai.AICore):
                     if closest_builder[0] != None:
                         builders_used.append(closest_builder[0])
                         self.issue_orders(closest_builder[0].oid, cmd="build", pos=target_pos, target=building_type)
+                        
+                        base_data['buildings_in_progress'].append([building_type, buildings_in_progress_ttl])
             
     def build_attacks(self):
         for base_name, base_data in self.bases.items():
@@ -174,14 +194,11 @@ class BasicComputerAI (core_ai.AICore):
                 
                 for a in attacker_list:
                     if a in buildable_units:
-                        # print("Buildable")
                         continue
                     if a in unbuildable_units:
-                        # print("Unbuildable")
                         cannot_build_attack = True
                         continue
                     
-                    # print("Lookup")
                     is_buildable = False
                     for b in base_data['current_buildings']:
                         the_builder = self.own_actors[b].actor_type
