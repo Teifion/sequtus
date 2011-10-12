@@ -1,5 +1,9 @@
 from engine.libs import sim_lib
 
+def set_speed(sim, cycles_per_second):
+    sim.cycles_per_second = cycles_per_second
+    sim._cycle_delay = 1 / cycles_per_second
+
 def send_static_data(screen, queue):
     """Used to send data such as the templates of units, stuff you only need to send once"""
     if type(queue) == list:

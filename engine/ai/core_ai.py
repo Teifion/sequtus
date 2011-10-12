@@ -1,7 +1,7 @@
 import multiprocessing
 import time
 
-from engine.libs import vectors
+from engine.libs import vectors, ai_lib
 
 ai_classes = {}
 def register_ai(class_name, class_template):
@@ -27,6 +27,9 @@ class AICore (object):
         self.enemy_actors = []
         self.own_actors = []
         self.terrain = {}
+        
+        self.next_cycle = time.time()
+        ai_lib.set_speed(self, 100)
         
         self.data_handlers = {
             "_default":     self._default_data_handler,
@@ -129,7 +132,8 @@ class AICore (object):
         while not self.in_queue.empty():
             self.read_queue()
         
-        self.cycle()
+        if time.time() > self.next_cycle:
+            self.cycle()
     
     def cycle(self):
         """This is intended to be overwritten by the subclass"""
