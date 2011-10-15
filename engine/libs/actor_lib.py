@@ -9,7 +9,8 @@ class StrippedActor (object):
 attribs = (
     "team", "velocity", "pos", "facing", "actor_type",
     "oid", "hp", "completion",
-    "offence_flags", "defence_flags")
+    "offence_flags", "defence_flags",
+    "build_queue",)
 
 # Things I don't think we need but might
 # self.rally_orders = []
@@ -29,8 +30,6 @@ def strip_actor(the_actor):
         if target != None:
             if type(target) not in (int, str, unicode):
                 target = target.oid
-            
-                
         
         return cmd, pos, target
     
