@@ -277,7 +277,6 @@ class BasicComputerAI (core_ai.AICore):
                     for b in builders[a_type]:
                         the_builder = self.own_actors[b]
                         if the_builder.build_queue == []:
-                            print("Issue")
                             self.issue_orders(b, "build", pos=None, target=a_type)
                         
                 
