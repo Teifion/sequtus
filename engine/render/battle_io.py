@@ -305,7 +305,7 @@ class BattleIO (screen.Screen):
         
         for a in self.actors:
             if a.actor_type == act.actor_type:
-                if a.inside(scr_rect):
+                if actor_lib.inside(a, scr_rect):
                     actors_to_select.append(a)
         
         if KMOD_SHIFT & mods:
@@ -369,7 +369,7 @@ class BattleIO (screen.Screen):
             # if the selection contains friendlies then we
             # should only select the friendlies
             for a in self.actors:
-                if a.inside(drag_rect):
+                if actor_lib.inside(a, drag_rect):
                     if a.team == self.player_team:
                         contains_friendly = True
                     short_list.append(a)

@@ -26,12 +26,6 @@ class ObjectBase (object):
     def __lt__(self, other): return self.oid < other.oid
     def __gt__(self, other): return self.oid > other.oid
     
-    def inside(self, rect):
-        print("ObjectBase.inside is depreciated, please use actor_lib.inside")
-        if rect[0] <= self.pos[0] <= rect[2]:
-            if rect[1] <= self.pos[1] <= rect[3]:
-                return True
-    
     def new_image(self, img):
         self.image = img
         self.rect = self.image.get_rect()
