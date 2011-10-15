@@ -258,8 +258,29 @@ class BasicComputerAI (core_ai.AICore):
             self.commence_attack(base_name, found)
         
         else:
+            builders = {}
+            
             for a_type, amount in missing.items():
-                pass
+                
+                if a_type not in builders:
+                    builders[a_type] = []
+                    for b in the_base['current_buildings']:
+                        the_builder = self.own_actors[b].actor_type
+                        if actor_lib.can_build(
+                            builder_type = self.actor_types[the_builder],
+                            item_type = self.actor_types[a_type],
+                            build_lists = self.build_lists,
+                        ):
+                            builders[a_type].append(b)
+                    
+                    # Now we find out if any of them have a slot in their queue free
+                    for b in builders[a_type]:
+                        the_builder = self.own_actors[b]
+                        if the_builder.build_queue == []:
+                            print("Issue")
+                            self.issue_orders(b, "build", pos=None, target=a_type)
+                        
+                
     
     def commence_attack(self, base_name, found_units):
         """docstring for commence_attack"""
