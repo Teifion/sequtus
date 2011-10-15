@@ -1,6 +1,7 @@
 import re
 import traceback
 import sys
+import random
 
 from engine.ai import core_ai
 from engine.libs import actor_lib, vectors
@@ -8,6 +9,8 @@ from engine.libs import actor_lib, vectors
 line_match = re.compile(r"(([0-9])\* )?(.*)")
 
 buildings_in_progress_ttl = 1000
+
+random.seed()
 
 class BasicComputerAI (core_ai.AICore):
     def __init__(self, *args, **kwargs):
@@ -177,12 +180,13 @@ class BasicComputerAI (core_ai.AICore):
                         
                         base_data['buildings_in_progress'].append([building_type, buildings_in_progress_ttl])
             
-    def build_attacks(self):
+    def plan_attacks(self):
         for base_name, base_data in self.bases.items():
             
             # Has it already selected an attack?
             if base_data['current_attack'] != None:
                 # TODO check to see if attack has been constructed
+                self.construct_attack(base_name)
                 continue
             
             # Find out which of the attacks it can make
@@ -214,20 +218,57 @@ class BasicComputerAI (core_ai.AICore):
                     else:
                         unbuildable_units.add(a)
                         cannot_build_attack = True
-            
-            if cannot_build_attack == True:
-                continue
-            
-            buildable_attacks.add(attack_id)
-            
-            # Build attacks
                 
+                if cannot_build_attack == True:
+                    continue
+                
+                buildable_attacks.add(attack_id)
             
+            # Pick an attack to build, it'll get sorted in the next logic cycle
+            if len(buildable_attacks) > 0:
+                a = random.choice(list(buildable_attacks))
+                base_data['current_attack'] = a
+    
+    def construct_attack(self, base_name):
+        the_base = self.bases[base_name]
+        attacker_list = the_base['attacks'][the_base['current_attack']]
+        
+        missing = {}
+        found = []
+        for a in attacker_list:
+            if a not in missing:
+                missing[a] = 0
+            missing[a] += 1
+        
+        # Find out what we've got in the base that fits into
+        # the list of units we plan to attack with
+        for a in the_base['current_buildings']:
+            the_actor = self.own_actors[a]
             
+            if the_actor.actor_type in missing:
+                if missing[the_actor.actor_type] > 0:
+                    missing[the_actor.actor_type] -= 1
+                    found.append(a)
+        
+        # We now have a list of what we're missing
+        total_missing = sum([v for k,v in missing.items()])
+        
+        if total_missing == 0:
+            # Do stuff
+            self.commence_attack(base_name, found)
+        
+        else:
+            for a_type, amount in missing.items():
+                pass
+    
+    def commence_attack(self, base_name, found_units):
+        """docstring for commence_attack"""
+        pass
+        
     
     def cycle(self):
         self.inspect_bases()
-        self.build_attacks()
+        self.plan_attacks()
         
         for k in self.enemy_actors.keys(): first_enemy = k
         
