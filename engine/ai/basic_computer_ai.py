@@ -7,7 +7,7 @@ from engine.libs import actor_lib, vectors
 
 line_match = re.compile(r"(([0-9])\* )?(.*)")
 
-buildings_in_progress_ttl = 100
+buildings_in_progress_ttl = 1000
 
 class BasicComputerAI (core_ai.AICore):
     def __init__(self, *args, **kwargs):
