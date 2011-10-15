@@ -122,8 +122,11 @@ class AICore (object):
             for a in self.own_actors:
                 if a.oid == actor_id:
                     a.current_order = cmd, pos, target
+                    
+                    if cmd == "build": a.build_queue.append(target)
         else:
             self.own_actors[actor_id].current_order = cmd, pos, target
+            if cmd == "build": self.own_actors[actor_id].build_queue.append(target)
     
     def core_cycle(self):
         """The central loop for the AI"""
