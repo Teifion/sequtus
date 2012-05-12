@@ -207,6 +207,8 @@ class TabularMenu (Panel):
             else:
                 # No placement image, the actor is added to the build queue
                 # and placed later
+                # TODO: Make this game-specific rule go in a game-specific file
+                # When starting Downstream this errored
                 choice = (None, 999999)
                 for a in self.screen.selected_actors:
                     if actor_lib.can_build(self.screen.actor_types[a.actor_type], actor_type, self.screen.build_lists):
